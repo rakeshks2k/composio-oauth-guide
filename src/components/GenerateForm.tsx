@@ -171,9 +171,9 @@ export function GenerateForm({
                       setAppName(item.name);
                       setAppWebsite(item.website);
                     }}
-                    className="h-7 px-2.5 rounded-md bg-[#181818] border border-[#282828] hover:border-[#3a3a3a] hover:bg-[#202020] text-[#a0a0a0] hover:text-white transition-all flex items-center gap-1.5 text-xs font-medium"
+                    className="h-8 px-2.5 rounded-md bg-[#181818] border border-[#282828] hover:border-[#3a3a3a] hover:bg-[#202020] text-[#a0a0a0] hover:text-white transition-all flex items-center gap-2 text-xs font-medium"
                   >
-                    <AppIcon name={item.name} className="w-3.5 h-3.5 flex-shrink-0" />
+                    <AppIcon name={item.name} size="sm" />
                     <span>{item.name}</span>
                   </button>
                 ))}

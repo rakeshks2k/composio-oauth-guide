@@ -122,10 +122,10 @@ export default function HomePage() {
         </button>
       </div>
 
-      {/* 1. Left Sidebar (Fixed 260px on desktop, drawer on mobile) */}
+      {/* 1. Left Sidebar (Fixed 272px on desktop, drawer on mobile) */}
       <div
         className={clsx(
-          'fixed lg:static inset-y-0 left-0 z-40 lg:z-auto transition-transform duration-200 w-[260px] flex-shrink-0 h-screen',
+          'fixed lg:static inset-y-0 left-0 z-40 lg:z-auto transition-transform duration-200 w-[272px] flex-shrink-0 h-screen',
           mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         )}
       >

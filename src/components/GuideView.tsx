@@ -90,8 +90,8 @@ await composio.authConfigs.create({
       {/* 1. Header Bar matching Composio Platform */}
       <div className="h-12 px-6 sm:px-10 flex items-center justify-between border-b border-[#262626] bg-[#0f0f0f] flex-shrink-0">
         <div className="flex items-center gap-3 min-w-0">
-          <div className="flex items-center gap-2 min-w-0">
-            <AppIcon name={guide.appName} className="w-4 h-4 flex-shrink-0" />
+          <div className="flex items-center gap-2.5 min-w-0">
+            <AppIcon name={guide.appName} size="sm" />
             <h1 className="text-[14px] sm:text-[15px] font-medium text-white tracking-[-0.01em] truncate">
               {guide.appName}
             </h1>

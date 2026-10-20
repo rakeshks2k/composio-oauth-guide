@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Icon & Sidebar Test</title>
+  <style>
+    body {
+      background: #0f0f0f;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      padding: 40px;
+      display: flex;
+      gap: 40px;
+    }
+    .sidebar {
+      width: 270px;
+      background: #141414;
+      border: 1px solid #262626;
+      border-radius: 8px;
+      padding: 12px;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      color: #a3a3a3;
+      font-size: 13px;
+      margin-bottom: 2px;
+    }
+    .row.selected {
+      background: #1e1e1e;
+      color: #fff;
+      border: 1px solid #303030;
+    }
+    .badge {
+      margin-left: auto;
+      font-size: 11px;
+      color: #737373;
+      font-family: monospace;
+    }
+    .icon-tile {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div style="font-size: 11px; color: #737373; text-transform: uppercase; margin: 12px 0 6px 10px; font-weight: 600; letter-spacing: 0.05em;">Guide Library</div>
+    
+    <!-- Google Drive -->
+    <div class="row">
+      <div class="icon-tile" style="background: rgba(255,255,255,0.04);">
+        <svg viewBox="0 0 87.3 78" width="16" height="15" fill="none">
+          <path d="M6.6 66.85l3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8H0c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/>
+          <path d="M43.65 25L29.9 1.2c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44A8.9 8.9 0 000 53h27.5z" fill="#00ac47"/>
+          <path d="M73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5H59.8l6.1 10.6z" fill="#ea4335"/>
+          <path d="M43.65 25L57.4 1.2C56.05.4 54.5 0 52.9 0H34.4c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/>
+          <path d="M59.8 53H27.5L13.75 76.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/>
+          <path d="M73.4 26.5l-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3L43.65 25 59.8 53h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/>
+        </svg>
+      </div>
+      <span>Google Drive</span>
+      <span class="badge">managed</span>
+    </div>
+
+    <!-- Slack -->
+    <div class="row selected">
+      <div class="icon-tile" style="background: rgba(255,255,255,0.04);">
+        <svg viewBox="0 0 128 128" width="16" height="16">
+          <path d="M26.7 80.5a13.3 13.3 0 1 1-13.4-13.3h13.4v13.3zm6.6 0a13.3 13.3 0 1 1 26.7 0v33.4a13.3 13.3 0 1 1-26.7 0V80.5z" fill="#e01e5a"/>
+          <path d="M47.4 26.7a13.3 13.3 0 1 1 13.3-13.4V26.7H47.4zm0 6.6a13.3 13.3 0 1 1 0 26.7H14a13.3 13.3 0 1 1 0-26.7h33.4z" fill="#36c5f0"/>
+          <path d="M101.3 47.4a13.3 13.3 0 1 1 13.4 13.3h-13.4V47.4zm-6.6 0a13.3 13.3 0 1 1-26.7 0V14a13.3 13.3 0 1 1 26.7 0v33.4z" fill="#2eb67d"/>
+          <path d="M80.5 101.3a13.3 13.3 0 1 1-13.3 13.4V101.3h13.3zm0-6.6a13.3 13.3 0 1 1 0-26.7H114a13.3 13.3 0 1 1 0 26.7H80.5z" fill="#ecb22e"/>
+        </svg>
+      </div>
+      <span>Slack</span>
+      <span class="badge">managed</span>
+    </div>
+
+    <!-- GitHub -->
+    <div class="row">
+      <div class="icon-tile" style="background: #24292f; border: 1px solid #32383f;">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="#ffffff">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+        </svg>
+      </div>
+      <span>GitHub</span>
+      <span class="badge">managed</span>
+    </div>
+
+    <!-- HubSpot -->
+    <div class="row">
+      <div class="icon-tile" style="background: rgba(255, 122, 89, 0.12); border: 1px solid rgba(255, 122, 89, 0.25);">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none">
+          <path d="M17.8 7.2a2.3 2.3 0 10-2.3-2.3v1.8l-3.3 1.9V5.1a1.9 1.9 0 10-1.5 0v3.5l-3.3-1.9V4.9a2.3 2.3 0 10-2.3 2.3c0 .3.07.6.2.86L8.6 9.9v4.2L5.3 16a2.3 2.3 0 101.4 1.2l3.5-2v3.7a1.9 1.9 0 101.5 0v-3.7l3.5 2a2.3 2.3 0 101.4-1.2l-3.3-1.9V9.9l3.3-1.9c.2.14.47.2.7.2z" fill="#FF7A59"/>
+          <circle cx="12" cy="12" r="2.2" fill="#FF7A59"/>
+        </svg>
+      </div>
+      <span>HubSpot</span>
+      <span class="badge">custom</span>
+    </div>
+
+    <div style="font-size: 11px; color: #737373; text-transform: uppercase; margin: 20px 0 6px 10px; font-weight: 600; letter-spacing: 0.05em;">Recent Research</div>
+
+    <!-- Salesforce -->
+    <div class="row">
+      <div class="icon-tile" style="background: rgba(0, 161, 224, 0.12); border: 1px solid rgba(0, 161, 224, 0.25);">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="#00A1E0">
+          <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4 0-2.05 1.53-3.76 3.56-3.97l1.07-.11.5-.95C8.08 7.14 9.94 6 12 6c2.62 0 4.88 1.86 5.39 4.43l.3 1.5 1.53.11c1.56.1 2.78 1.41 2.78 2.96 0 1.65-1.35 3-3 3z"/>
+        </svg>
+      </div>
+      <span>Salesforce</span>
+      <span class="badge">medium</span>
+    </div>
+
+    <!-- Zoom -->
+    <div class="row">
+      <div class="icon-tile" style="background: #2D8CFF; border: 1px solid #3b96ff;">
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none">
+          <path d="M5 8a2 2 0 012-2h7a2 2 0 012 2v8a2 2 0 01-2 2H7a2 2 0 01-2-2V8z" fill="#fff"/>
+          <path d="M16 10.5l4-3v9l-4-3v-3z" fill="#fff"/>
+        </svg>
+      </div>
+      <span>Zoom</span>
+      <span class="badge">medium</span>
+    </div>
+
+    <!-- Linear -->
+    <div class="row">
+      <div class="icon-tile" style="background: #5E6AD2; border: 1px solid #6f7ce0;">
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none">
+          <path d="M3.5 13.5L13.5 3.5a1.4 1.4 0 012 0l5 5a1.4 1.4 0 010 2L10.5 20.5a1.4 1.4 0 01-2 0l-5-5a1.4 1.4 0 010-2z" fill="#fff"/>
+          <path d="M8.5 19.5L4.5 15.5l10-10 4 4-10 10z" fill="#5E6AD2"/>
+        </svg>
+      </div>
+      <span>Linear</span>
+      <span class="badge">medium</span>
+    </div>
+
+    <!-- Notion -->
+    <div class="row">
+      <div class="icon-tile" style="background: #ffffff; border: 1px solid #ffffff;">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="#000000">
+          <path d="M4.459 4.208c.746.606 1.026.56 2.428.466l11.458-.823c1.026-.074 1.282.28 1.048.979l-2.008 5.786 5.395 10.158c.42.747.14 1.354-.746 1.401l-14.77.886c-1.074.07-1.448-.303-1.635-.77L2.4 15.539c-.28-.7-.046-1.097.653-1.144l9.24-.653-4.994-9.534H4.46zm3.504 15.424l9.566-.574-4.887-9.3-9.588.686 4.909 9.188z"/>
+        </svg>
+      </div>
+      <span>Notion</span>
+      <span class="badge">medium</span>
+    </div>
+  </div>
+</body>
+</html>
