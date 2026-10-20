@@ -34,9 +34,9 @@ export function ResearchPanel({
   const sources = events.filter((e) => e.type === 'source' && e.url);
 
   return (
-    <aside className="w-full lg:w-[32%] xl:w-[30%] min-w-[320px] max-w-[440px] flex-shrink-0 flex flex-col bg-[#0f0f0f] border-l border-[#262626] h-screen select-none font-mono">
+    <aside className="w-full h-full flex flex-col bg-[#0f0f0f] border-l border-[#262626] select-none font-mono">
       {/* 1. Header Tab Bar */}
-      <div className="h-12 px-4 flex items-center justify-between border-b border-[#262626] bg-[#0f0f0f] flex-shrink-0">
+      <div className="h-12 px-4 sm:px-5 flex items-center justify-between border-b border-[#262626] bg-[#0f0f0f] flex-shrink-0">
         <div className="flex items-center gap-4 h-full">
           <button
             onClick={() => setActiveTab('logs')}
@@ -96,14 +96,14 @@ export function ResearchPanel({
       </div>
 
       {/* 2. Main Console Output Area */}
-      <div className="flex-1 overflow-y-auto p-4 text-[12px] font-mono bg-[#0f0f0f] space-y-2.5 leading-[1.65]">
+      <div className="flex-1 overflow-y-auto p-4 sm:p-5 text-[12px] font-mono bg-[#0f0f0f] space-y-3 leading-[1.7]">
         {events.length === 0 && !isGenerating && (
-          <div className="pt-8 px-2 space-y-3 text-[#737373]">
+          <div className="pt-8 px-1 space-y-3 text-[#737373]">
             <div className="text-white font-medium text-[12.5px] flex items-center gap-2">
               <span className="text-[#51a2ff]">&gt;</span>
               <span>oauth-research-agent ready</span>
             </div>
-            <div className="text-[11.5px] leading-[1.7] text-[#737373]">
+            <div className="text-[12px] leading-[1.75] text-[#737373]">
               Generate a guide to observe live provider documentation queries, scope sensitivity audits,
               verification requirements, and architectural path recommendations.
             </div>

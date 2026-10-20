@@ -87,7 +87,7 @@ await composio.authConfigs.create({
   return (
     <div className="flex-1 flex flex-col h-screen overflow-hidden bg-[#0f0f0f]">
       {/* 1. Header Bar matching Composio Platform */}
-      <div className="h-12 px-6 flex items-center justify-between border-b border-[#262626] bg-[#0f0f0f] flex-shrink-0">
+      <div className="h-12 px-6 sm:px-10 flex items-center justify-between border-b border-[#262626] bg-[#0f0f0f] flex-shrink-0">
         <div className="flex items-center gap-3 min-w-0">
           <h1 className="text-[14px] sm:text-[15px] font-medium text-white tracking-[-0.01em] truncate">
             {guide.appName}
@@ -147,9 +147,9 @@ await composio.authConfigs.create({
       </div>
 
       {/* 2. Scrollable Guide Body */}
-      <div className="flex-1 overflow-y-auto px-6 sm:px-10 lg:px-12 py-8 space-y-8 max-w-4xl">
+      <div className="flex-1 overflow-y-auto px-6 sm:px-10 lg:px-12 py-9 space-y-9 max-w-4xl mx-auto w-full">
         {/* Architecture Recommendation & Summary */}
-        <div className="p-5 sm:p-6 rounded-md bg-[#141414] border border-[#262626] space-y-3.5">
+        <div className="p-6 sm:p-7 rounded-md bg-[#141414] border border-[#262626] space-y-4">
           <div className="flex items-center justify-between flex-wrap gap-2">
             <div className="text-[11px] font-mono font-medium text-white uppercase tracking-wider flex items-center gap-2">
               <span className="text-[#51a2ff]">PATH:</span>
@@ -160,58 +160,58 @@ await composio.authConfigs.create({
             </div>
           </div>
 
-          <p className="text-[13.5px] text-[#a1a1a1] leading-[1.68]">
+          <p className="text-[13.5px] text-[#a1a1a1] leading-[1.75]">
             {guide.pathJustification}
           </p>
 
-          <div className="pt-3 border-t border-[#202020]">
-            <p className="text-[13.5px] text-[#e0e0e0] leading-[1.68]">
+          <div className="pt-4 border-t border-[#202020]">
+            <p className="text-[13.5px] text-[#e0e0e0] leading-[1.75]">
               {guide.summary}
             </p>
           </div>
         </div>
 
         {/* Effort & Time Breakdown Strip */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="p-4 rounded-md bg-[#141414] border border-[#262626]">
-            <div className="text-[#737373] text-[11px] font-mono uppercase tracking-wider mb-1">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="p-5 rounded-md bg-[#141414] border border-[#262626]">
+            <div className="text-[#737373] text-[11px] font-mono uppercase tracking-wider mb-1.5">
               Hands-on Effort
             </div>
-            <div className="text-white font-mono font-medium text-base sm:text-lg">
+            <div className="text-white font-mono font-medium text-lg sm:text-xl my-1">
               {guide.handsOnHours.min}–{guide.handsOnHours.max} hours
             </div>
-            <div className="text-[#666666] text-[11.5px] mt-0.5">
+            <div className="text-[#666666] text-[12px] mt-1">
               Direct engineering setup
             </div>
           </div>
 
-          <div className="p-4 rounded-md bg-[#141414] border border-[#262626]">
-            <div className="text-[#737373] text-[11px] font-mono uppercase tracking-wider mb-1">
+          <div className="p-5 rounded-md bg-[#141414] border border-[#262626]">
+            <div className="text-[#737373] text-[11px] font-mono uppercase tracking-wider mb-1.5">
               Calendar Elapsed
             </div>
-            <div className="text-white font-mono font-medium text-base sm:text-lg">
+            <div className="text-white font-mono font-medium text-lg sm:text-xl my-1">
               {guide.elapsedDays.min}–{guide.elapsedDays.max} days
             </div>
-            <div className="text-[#666666] text-[11.5px] mt-0.5">
+            <div className="text-[#666666] text-[12px] mt-1">
               Kickoff to production live
             </div>
           </div>
 
-          <div className="p-4 rounded-md bg-[#141414] border border-[#262626]">
-            <div className="text-[#737373] text-[11px] font-mono uppercase tracking-wider mb-1">
+          <div className="p-5 rounded-md bg-[#141414] border border-[#262626]">
+            <div className="text-[#737373] text-[11px] font-mono uppercase tracking-wider mb-1.5">
               External Approval
             </div>
-            <div className="text-white font-mono font-medium text-base sm:text-lg">
+            <div className="text-white font-mono font-medium text-lg sm:text-xl my-1">
               {guide.approvalDays ? `${guide.approvalDays.min}–${guide.approvalDays.max} days` : 'Immediate (0d)'}
             </div>
-            <div className="text-[#666666] text-[11.5px] mt-0.5">
+            <div className="text-[#666666] text-[12px] mt-1">
               {guide.approvalDays ? 'Provider review queue' : 'No review required'}
             </div>
           </div>
         </div>
 
         {/* Composio Integration Code Snippet */}
-        <div className="space-y-2.5">
+        <div className="space-y-3">
           <div className="flex items-center justify-between">
             <h2 className="text-[12px] font-mono uppercase tracking-wider text-[#737373]">
               Composio Integration Code
@@ -228,7 +228,7 @@ await composio.authConfigs.create({
 
         {/* Setup Checklist */}
         {guide.setupChecklist.length > 0 && (
-          <div className="space-y-3">
+          <div className="space-y-3.5">
             <div className="flex items-center justify-between">
               <h2 className="text-[12px] font-mono uppercase tracking-wider text-[#737373]">
                 Ordered Setup Checklist
@@ -240,15 +240,15 @@ await composio.authConfigs.create({
 
             <div className="rounded-md border border-[#262626] bg-[#141414] divide-y divide-[#1f1f1f] overflow-hidden">
               {guide.setupChecklist.map((step) => (
-                <div key={step.id} className="p-4 sm:p-5 space-y-2">
-                  <div className="flex items-start gap-3.5">
-                    <div className="w-5 h-5 rounded bg-[#1a1a1a] border border-[#262626] text-[#737373] font-mono text-[11px] flex items-center justify-center flex-shrink-0 mt-0.5">
+                <div key={step.id} className="p-5 sm:p-6 space-y-3">
+                  <div className="flex items-start gap-4">
+                    <div className="w-6 h-6 rounded bg-[#1a1a1a] border border-[#262626] text-[#737373] font-mono text-[11px] flex items-center justify-center flex-shrink-0 mt-0.5">
                       {step.step}
                     </div>
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-baseline justify-between gap-2 flex-wrap">
-                        <h3 className="text-[13.5px] font-medium text-white tracking-normal">
+                        <h3 className="text-[14px] font-medium text-white tracking-normal">
                           {step.title}
                         </h3>
                         {step.estimatedTime && (
@@ -258,11 +258,11 @@ await composio.authConfigs.create({
                         )}
                       </div>
 
-                      <p className="text-[13.5px] text-[#a1a1a1] leading-[1.65] mt-1.5">
+                      <p className="text-[13.5px] text-[#a1a1a1] leading-[1.7] mt-2">
                         {step.description}
                       </p>
 
-                      <div className="flex items-center flex-wrap gap-2.5 text-[11px] text-[#737373] pt-2.5 font-mono">
+                      <div className="flex items-center flex-wrap gap-3 text-[11px] text-[#737373] pt-3 font-mono border-t border-[#1a1a1a] mt-3">
                         <span className="px-2 py-0.5 rounded bg-[#1a1a1a] border border-[#262626] text-[#8c8c8c]">
                           {STEP_TYPE_LABELS[step.type]}
                         </span>
@@ -293,7 +293,7 @@ await composio.authConfigs.create({
 
         {/* Scopes Table */}
         {guide.scopes.length > 0 && (
-          <div className="space-y-3">
+          <div className="space-y-3.5">
             <div className="flex items-center justify-between">
               <h2 className="text-[12px] font-mono uppercase tracking-wider text-[#737373]">
                 OAuth Scopes &amp; Permissions
@@ -307,23 +307,23 @@ await composio.authConfigs.create({
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr className="border-b border-[#262626] bg-[#161616] text-[#737373] font-mono text-[11px] uppercase tracking-wider">
-                    <th className="py-2.5 px-4 font-normal">Scope</th>
-                    <th className="py-2.5 px-4 font-normal">Description</th>
-                    <th className="py-2.5 px-4 font-normal">Access Tier</th>
+                    <th className="py-3 px-5 font-normal">Scope</th>
+                    <th className="py-3 px-5 font-normal">Description</th>
+                    <th className="py-3 px-5 font-normal">Access Tier</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#1f1f1f]">
                   {guide.scopes.map((s, idx) => (
                     <tr key={idx} className="hover:bg-[#181818] transition-colors">
-                      <td className="py-3 px-4 font-mono text-xs whitespace-nowrap">
-                        <code className="bg-[#1a1a1a] border border-[#262626] text-white">
+                      <td className="py-3.5 px-5 font-mono text-xs whitespace-nowrap">
+                        <code className="bg-[#1a1a1a] border border-[#262626] text-white px-2 py-0.5 rounded">
                           {s.scope}
                         </code>
                       </td>
-                      <td className="py-3 px-4 text-[#a1a1a1] text-[13px] leading-[1.6]">
+                      <td className="py-3.5 px-5 text-[#a1a1a1] text-[13px] leading-[1.65]">
                         {s.description}
                       </td>
-                      <td className="py-3 px-4 font-mono text-[11px] whitespace-nowrap">
+                      <td className="py-3.5 px-5 font-mono text-[11px] whitespace-nowrap">
                         <span
                           className={clsx(
                             'capitalize',
@@ -345,7 +345,7 @@ await composio.authConfigs.create({
 
         {/* Common Blockers */}
         {guide.commonBlockers.length > 0 && (
-          <div className="space-y-3">
+          <div className="space-y-3.5">
             <div className="flex items-center justify-between">
               <h2 className="text-[12px] font-mono uppercase tracking-wider text-[#737373]">
                 Potential Blockers &amp; Resolutions
@@ -363,9 +363,9 @@ await composio.authConfigs.create({
                   <div key={idx} className="text-xs">
                     <button
                       onClick={() => setExpandedBlocker(isOpen ? null : idx)}
-                      className="w-full p-4 flex items-center justify-between text-left hover:bg-[#181818] transition-colors"
+                      className="w-full p-4.5 sm:p-5 flex items-center justify-between text-left hover:bg-[#181818] transition-colors"
                     >
-                      <span className="font-medium text-white text-[13.5px] truncate pr-3">
+                      <span className="font-medium text-white text-[14px] truncate pr-3">
                         {b.title}
                       </span>
 
@@ -380,13 +380,13 @@ await composio.authConfigs.create({
                     </button>
 
                     {isOpen && (
-                      <div className="px-4 pb-4 pt-1 space-y-3 text-[#a1a1a1] leading-[1.68] text-[13px] border-t border-[#1c1c1c]">
+                      <div className="px-5 pb-5 pt-1 space-y-3.5 text-[#a1a1a1] leading-[1.7] text-[13px] border-t border-[#1c1c1c]">
                         <p>{b.description}</p>
-                        <div className="p-3 rounded bg-[#181818] border border-[#262626] text-white">
+                        <div className="p-3.5 rounded bg-[#181818] border border-[#262626] text-white">
                           <span className="text-[#737373] font-mono text-[11px] uppercase tracking-wider block mb-1">
                             Resolution:
                           </span>
-                          <span className="text-[#e0e0e0] leading-[1.6]">
+                          <span className="text-[#e0e0e0] leading-[1.65]">
                             {b.resolution}
                           </span>
                         </div>
@@ -401,7 +401,7 @@ await composio.authConfigs.create({
 
         {/* Agent Automation Matrix */}
         {guide.agentCapabilities.length > 0 && (
-          <div className="space-y-3">
+          <div className="space-y-3.5">
             <div className="flex items-center justify-between">
               <h2 className="text-[12px] font-mono uppercase tracking-wider text-[#737373]">
                 Agent Automation vs. Developer Responsibilities
@@ -412,25 +412,25 @@ await composio.authConfigs.create({
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr className="border-b border-[#262626] bg-[#161616] text-[#737373] font-mono text-[11px] uppercase tracking-wider">
-                    <th className="py-2.5 px-4 font-normal">Action</th>
-                    <th className="py-2.5 px-4 font-normal">Automation Tier</th>
-                    <th className="py-2.5 px-4 font-normal">Implementation Notes</th>
+                    <th className="py-3 px-5 font-normal">Action</th>
+                    <th className="py-3 px-5 font-normal">Automation Tier</th>
+                    <th className="py-3 px-5 font-normal">Implementation Notes</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#1f1f1f]">
                   {guide.agentCapabilities.map((cap, idx) => (
                     <tr key={idx} className="hover:bg-[#181818] transition-colors">
-                      <td className="py-3 px-4 text-white text-[13px] font-medium">
+                      <td className="py-3.5 px-5 text-white text-[13.5px] font-medium">
                         {cap.action}
                       </td>
-                      <td className="py-3 px-4 font-mono text-xs whitespace-nowrap">
+                      <td className="py-3.5 px-5 font-mono text-xs whitespace-nowrap">
                         {cap.canDo ? (
                           <span className="text-white">Autonomous</span>
                         ) : (
                           <span className="text-[#737373]">Manual</span>
                         )}
                       </td>
-                      <td className="py-3 px-4 text-[#737373] text-[12.5px] leading-[1.6]">
+                      <td className="py-3.5 px-5 text-[#737373] text-[13px] leading-[1.65]">
                         {cap.notes || '—'}
                       </td>
                     </tr>
@@ -443,7 +443,7 @@ await composio.authConfigs.create({
 
         {/* Sources & Audit Citations */}
         {guide.sources.length > 0 && (
-          <div className="space-y-3">
+          <div className="space-y-3.5">
             <div className="flex items-center justify-between">
               <h2 className="text-[12px] font-mono uppercase tracking-wider text-[#737373]">
                 Official Documentation &amp; Policies
@@ -453,18 +453,18 @@ await composio.authConfigs.create({
               </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
               {guide.sources.map((src, idx) => (
                 <a
                   key={idx}
                   href={src.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-between p-3 rounded bg-[#141414] border border-[#262626] hover:border-[#383838] text-white hover:text-[#51a2ff] transition-colors group"
+                  className="flex items-center justify-between p-3.5 sm:p-4 rounded bg-[#141414] border border-[#262626] hover:border-[#383838] text-white hover:text-[#51a2ff] transition-colors group"
                 >
                   <div className="min-w-0 pr-2">
                     <div className="truncate font-medium text-[13px]">{src.title}</div>
-                    <div className="text-[11px] font-mono text-[#737373] truncate mt-0.5">
+                    <div className="text-[11px] font-mono text-[#737373] truncate mt-1">
                       {src.type} · {src.accessedAt}
                     </div>
                   </div>
@@ -477,21 +477,21 @@ await composio.authConfigs.create({
 
         {/* Caveats & Audit Notes */}
         {(guide.assumptions.length > 0 || guide.unverifiedClaims.length > 0) && (
-          <div className="p-4 rounded-md bg-[#141414] border border-[#262626] text-xs text-[#737373] space-y-1.5">
+          <div className="p-5 rounded-md bg-[#141414] border border-[#262626] text-xs text-[#737373] space-y-2">
             <div className="font-mono text-white text-[11px] uppercase tracking-wider mb-2">
               Audit Notes &amp; Assumptions
             </div>
             {guide.assumptions.map((a, i) => (
-              <div key={i} className="leading-[1.65]">• {a}</div>
+              <div key={i} className="leading-[1.7]">• {a}</div>
             ))}
             {guide.unverifiedClaims.map((c, i) => (
-              <div key={i} className="text-[#a1a1a1] leading-[1.65]">• {c}</div>
+              <div key={i} className="text-[#a1a1a1] leading-[1.7]">• {c}</div>
             ))}
           </div>
         )}
 
         {/* Footer Meta */}
-        <div className="pt-4 border-t border-[#262626] flex items-center justify-between text-xs font-mono text-[#666666]">
+        <div className="pt-5 border-t border-[#262626] flex items-center justify-between text-xs font-mono text-[#666666]">
           <div>Researched: {guide.researchDate}</div>
           <div>Slug: {guide.slug}</div>
         </div>
