@@ -37,6 +37,10 @@ data/*.db-shm
 # vercel
 .vercel
 
+# binaries & tunnels
+cloudflared.exe
+*.exe
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
