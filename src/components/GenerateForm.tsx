@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { ResearchEvent } from '@/lib/types';
-import { Globe, ArrowRight, Loader2, Copy, Check } from 'lucide-react';
+import { Globe, ArrowRight, Loader2 } from 'lucide-react';
 import { clsx } from 'clsx';
 
 interface GenerateFormProps {
@@ -21,14 +21,6 @@ const QUICK_SUGGESTIONS = [
   { name: 'Spotify', website: 'spotify.com' },
 ];
 
-const SAMPLE_SCHEMA_CODE = `// OAuth Guide Generation Pipeline
-const guide = await researchOAuthApp({
-  appName: "Linear",
-  checkCatalog: "https://docs.composio.dev/toolkits",
-  extractScopes: true,
-  evaluateApprovals: ["CASA", "Marketplace", "Verification"],
-});`;
-
 export function GenerateForm({
   initialAppName = '',
   onEventsUpdate,
@@ -40,7 +32,6 @@ export function GenerateForm({
   const [appWebsite, setAppWebsite] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [copiedCode, setCopiedCode] = useState(false);
 
   useEffect(() => {
     if (initialAppName) {
@@ -135,8 +126,8 @@ export function GenerateForm({
             Research third-party application
           </h2>
           <p className="text-xs text-[#a3a3a3] leading-relaxed">
-            Enter an application name to evaluate Composio managed auth availability, extract required
-            scopes, and estimate production review timelines.
+            Enter an application name or website to evaluate Composio managed OAuth availability,
+            extract required scopes, and estimate hands-on setup time separately from external approval delays.
           </p>
         </div>
 
@@ -223,26 +214,15 @@ export function GenerateForm({
           </button>
         </form>
 
-        {/* Code Preview matching Composio Getting Started */}
-        <div className="space-y-2">
-          <div className="text-sm font-medium text-white">Pipeline execution definition</div>
-          <div className="rounded-md bg-[#141414] border border-[#2c2c2c] overflow-hidden font-mono text-xs">
-            <div className="h-9 px-3.5 flex items-center justify-between border-b border-[#2c2c2c] bg-[#171717] text-[#737373]">
-              <span>research.ts</span>
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(SAMPLE_SCHEMA_CODE);
-                  setCopiedCode(true);
-                  setTimeout(() => setCopiedCode(false), 1800);
-                }}
-                className="hover:text-white"
-              >
-                {copiedCode ? <Check className="w-3.5 h-3.5 text-white" /> : <Copy className="w-3.5 h-3.5" />}
-              </button>
-            </div>
-            <div className="p-3.5 text-[#e0e0e0] leading-relaxed">
-              <pre className="whitespace-pre font-mono">{SAMPLE_SCHEMA_CODE}</pre>
-            </div>
+        {/* Real Pipeline Stages Information */}
+        <div className="p-4 rounded-md bg-[#141414] border border-[#2c2c2c] space-y-2 text-xs">
+          <div className="font-mono text-white text-xs">Research pipeline checklist</div>
+          <div className="text-[#a3a3a3] leading-relaxed space-y-1 font-mono text-[11px]">
+            <div>1. Identify official developer portal &amp; authorization endpoints</div>
+            <div>2. Check Composio Managed OAuth support across 1,600+ toolkits</div>
+            <div>3. Extract scopes &amp; classify into basic, sensitive, or restricted tiers</div>
+            <div>4. Calculate external approval wait times (CASA, Marketplace) vs. hands-on effort</div>
+            <div>5. Output structured guide with completion criteria and official citations</div>
           </div>
         </div>
       </div>

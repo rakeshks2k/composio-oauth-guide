@@ -2,16 +2,21 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { ResearchEvent } from '@/lib/types';
-import { ExternalLink, MessageSquare, Copy, Check } from 'lucide-react';
+import { ExternalLink, Copy, Check, Trash2 } from 'lucide-react';
 import { clsx } from 'clsx';
 
 interface ResearchPanelProps {
   events: ResearchEvent[];
   isGenerating: boolean;
   onCloseMobile?: () => void;
+  onClearEvents?: () => void;
 }
 
-export function ResearchPanel({ events, isGenerating }: ResearchPanelProps) {
+export function ResearchPanel({
+  events,
+  isGenerating,
+  onClearEvents,
+}: ResearchPanelProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const [activeTab, setActiveTab] = useState<'logs' | 'sources'>('logs');
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
@@ -29,9 +34,9 @@ export function ResearchPanel({ events, isGenerating }: ResearchPanelProps) {
   const sources = events.filter((e) => e.type === 'source' && e.url);
 
   return (
-    <aside className="w-full lg:w-[32%] xl:w-[30%] min-w-[320px] max-w-[440px] flex-shrink-0 flex flex-col bg-[#0f0f0f] border-l border-[#2c2c2c] h-screen select-none relative font-mono">
-      {/* Top Header Tab Bar matching Composio screenshot */}
-      <div className="h-12 px-4 flex items-center justify-between border-b border-[#2c2c2c] bg-[#0f0f0f]">
+    <aside className="w-full lg:w-[32%] xl:w-[30%] min-w-[320px] max-w-[440px] flex-shrink-0 flex flex-col bg-[#0f0f0f] border-l border-[#2c2c2c] h-screen select-none font-mono">
+      {/* 1. Header Tab Bar */}
+      <div className="h-12 px-4 flex items-center justify-between border-b border-[#2c2c2c] bg-[#0f0f0f] flex-shrink-0">
         <div className="flex items-center gap-5 h-full">
           <button
             onClick={() => setActiveTab('logs')}
@@ -43,7 +48,7 @@ export function ResearchPanel({ events, isGenerating }: ResearchPanelProps) {
             )}
           >
             <span>&gt;_</span>
-            <span>Logs</span>
+            <span>Research Activity</span>
             {events.length > 0 && (
               <span className="text-[10px] text-[#737373]">({events.length})</span>
             )}
@@ -58,32 +63,45 @@ export function ResearchPanel({ events, isGenerating }: ResearchPanelProps) {
                 : 'border-transparent text-[#737373] hover:text-[#a3a3a3]'
             )}
           >
-            <span>Sources</span>
+            <span>Citations</span>
             {sources.length > 0 && (
               <span className="text-[10px] text-[#737373]">({sources.length})</span>
             )}
           </button>
         </div>
 
-        {/* Status indicator */}
-        <div className="text-[11px] font-mono text-[#737373]">
-          {isGenerating ? (
-            <span className="text-[#51a2ff]">running...</span>
-          ) : (
-            <span>idle</span>
+        {/* Action / Status */}
+        <div className="flex items-center gap-2">
+          {events.length > 0 && onClearEvents && (
+            <button
+              onClick={onClearEvents}
+              className="text-[#737373] hover:text-white p-1 rounded transition-colors"
+              title="Clear activity log"
+            >
+              <Trash2 className="w-3 h-3" />
+            </button>
           )}
+
+          <div className="text-[11px] font-mono text-[#737373]">
+            {isGenerating ? (
+              <span className="text-[#51a2ff]">researching...</span>
+            ) : (
+              <span>ready</span>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Main Console Output Area */}
+      {/* 2. Main Console Output Area */}
       <div className="flex-1 overflow-y-auto p-4 text-xs font-mono bg-[#0f0f0f] space-y-2">
         {events.length === 0 && !isGenerating && (
-          <div className="pt-6 space-y-1">
+          <div className="pt-6 space-y-2 text-[#737373]">
             <div className="text-white font-medium text-xs">
-              &gt; waiting for your tool calls
+              &gt; waiting for research workflow
             </div>
-            <div className="text-[#737373] text-[11px]">
-              run your agent code to see execution logs
+            <div className="text-[11px] leading-relaxed">
+              When you generate an OAuth guide, real-time agent operations, official documentation queries,
+              scope classifications, and approval policy evaluations will stream here.
             </div>
           </div>
         )}
@@ -159,14 +177,14 @@ export function ResearchPanel({ events, isGenerating }: ResearchPanelProps) {
             {isGenerating && (
               <div className="flex items-center gap-2 p-1.5 text-[11px] text-[#737373]">
                 <span className="text-[#51a2ff]">&gt;</span>
-                <span>executing retrieval pipeline...</span>
+                <span>agent analyzing provider requirements...</span>
               </div>
             )}
           </div>
         ) : (
           <div className="space-y-1.5">
             {sources.length === 0 ? (
-              <div className="text-xs text-[#737373] py-4">No discovered sources yet.</div>
+              <div className="text-xs text-[#737373] py-4">No discovered citations yet.</div>
             ) : (
               sources.map((src, idx) => (
                 <a
@@ -191,15 +209,6 @@ export function ResearchPanel({ events, isGenerating }: ResearchPanelProps) {
 
         <div ref={bottomRef} />
       </div>
-
-      {/* Floating Chat / Help Bubble matching Composio screenshot */}
-      <button
-        type="button"
-        className="absolute bottom-4 right-4 w-9 h-9 rounded-full bg-[#1e1e1e] border border-[#2c2c2c] hover:border-[#383838] text-white flex items-center justify-center shadow-lg transition-transform hover:scale-105 active:scale-95"
-        title="Agent Assistant"
-      >
-        <MessageSquare className="w-3.5 h-3.5 text-[#a3a3a3] hover:text-white" />
-      </button>
     </aside>
   );
 }

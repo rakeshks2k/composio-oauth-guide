@@ -162,6 +162,7 @@ export default function HomePage() {
           events={researchEvents}
           isGenerating={isGenerating}
           onCloseMobile={() => setMobileLogsOpen(false)}
+          onClearEvents={() => setResearchEvents([])}
         />
       </div>
 

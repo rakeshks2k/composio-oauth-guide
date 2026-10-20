@@ -24,83 +24,12 @@ const STEP_TYPE_LABELS: Record<ChecklistItem['type'], string> = {
   'marketplace-review': 'Marketplace Review',
 };
 
-function CodeSnippetCard({
-  title,
-  tabs,
-  activeTab,
-  onTabChange,
-  code,
-  language = 'bash',
-}: {
-  title: string;
-  tabs?: string[];
-  activeTab?: string;
-  onTabChange?: (tab: string) => void;
-  code: string;
-  language?: string;
-}) {
-  const [copied, setCopied] = useState(false);
-
-  function copyCode() {
-    navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1800);
-  }
-
-  return (
-    <div className="space-y-2">
-      <div className="text-sm font-medium text-white">{title}</div>
-      <div className="rounded-md bg-[#141414] border border-[#2c2c2c] overflow-hidden font-mono">
-        {/* Card Header Bar */}
-        <div className="h-9 px-3.5 flex items-center justify-between border-b border-[#2c2c2c] bg-[#171717]">
-          {tabs && tabs.length > 0 ? (
-            <div className="flex items-center gap-3">
-              {tabs.map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => onTabChange?.(tab)}
-                  className={clsx(
-                    'text-xs font-mono transition-colors',
-                    activeTab === tab
-                      ? 'text-white font-medium'
-                      : 'text-[#737373] hover:text-[#a3a3a3]'
-                  )}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
-          ) : (
-            <div className="text-xs text-[#737373]">{language}</div>
-          )}
-
-          <button
-            onClick={copyCode}
-            className="text-[#737373] hover:text-white p-1 rounded transition-colors flex items-center gap-1 text-xs"
-            title="Copy snippet"
-          >
-            {copied ? (
-              <Check className="w-3.5 h-3.5 text-white" />
-            ) : (
-              <Copy className="w-3.5 h-3.5" />
-            )}
-          </button>
-        </div>
-
-        {/* Code Content */}
-        <div className="p-3.5 overflow-x-auto text-xs text-[#e0e0e0] leading-relaxed">
-          <pre className="whitespace-pre font-mono">{code}</pre>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export function GuideView({ guide }: GuideViewProps) {
   const [copiedMd, setCopiedMd] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [copiedCode, setCopiedCode] = useState(false);
   const [expandedBlocker, setExpandedBlocker] = useState<number | null>(null);
-  const [packageTab, setPackageTab] = useState('npm');
+  const [authTab, setAuthTab] = useState<'cli' | 'typescript'>('cli');
 
   const shareUrl =
     typeof window !== 'undefined'
@@ -120,32 +49,46 @@ export function GuideView({ guide }: GuideViewProps) {
     setTimeout(() => setCopiedLink(false), 1800);
   }
 
-  const sampleInstallCommand =
-    packageTab === 'npm'
-      ? `npm install @composio/core @composio/vercel ai`
-      : packageTab === 'pnpm'
-      ? `pnpm add @composio/core @composio/vercel ai`
-      : packageTab === 'yarn'
-      ? `yarn add @composio/core @composio/vercel ai`
-      : `bun add @composio/core @composio/vercel ai`;
+  // Real, working Composio OAuth commands tailored to this specific guide
+  const cliSnippet =
+    guide.recommendedPath === 'managed'
+      ? `# Connect with Composio Managed OAuth (no custom client ID or secret needed)
+composio add ${guide.slug}`
+      : `# Add your custom OAuth credentials for ${guide.appName}
+composio auth add-config ${guide.slug} \\
+  --client-id "<YOUR_CLIENT_ID>" \\
+  --client-secret "<YOUR_CLIENT_SECRET>"`;
 
-  const sampleAgentCode = `import { Composio } from "@composio/core";
-import { VercelProvider } from "@composio/vercel";
-import { streamText } from "ai";
+  const tsSnippet =
+    guide.recommendedPath === 'managed'
+      ? `import { Composio } from "@composio/core";
 
-const composio = new Composio({
-  apiKey: process.env.COMPOSIO_API_KEY,
+const composio = new Composio({ apiKey: process.env.COMPOSIO_API_KEY });
+
+// Initiate OAuth flow using Composio Managed App
+const connection = await composio.connectedAccounts.initiate({
+  appName: "${guide.slug}",
+  redirectUrl: "https://your-domain.com/api/oauth/callback",
 });
 
-// Configure OAuth tools for ${guide.appName}
-const tools = await composio.getTools({
-  tools: ["${guide.slug.toUpperCase().replace('-', '_')}_*"],
-  entityId: "user_default",
+console.log("Redirect user to:", connection.redirectUrl);`
+      : `import { Composio } from "@composio/core";
+
+const composio = new Composio({ apiKey: process.env.COMPOSIO_API_KEY });
+
+// Register custom OAuth client credentials
+await composio.authConfigs.create({
+  appName: "${guide.slug}",
+  authScheme: "OAUTH2",
+  credentials: {
+    clientId: process.env.${guide.slug.toUpperCase().replace('-', '_')}_CLIENT_ID,
+    clientSecret: process.env.${guide.slug.toUpperCase().replace('-', '_')}_CLIENT_SECRET,
+  },
 });`;
 
   return (
     <div className="flex-1 flex flex-col h-screen overflow-hidden bg-[#0f0f0f]">
-      {/* 1. Header Bar matching Composio Getting Started */}
+      {/* 1. Header Bar matching Composio Platform */}
       <div className="h-12 px-6 flex items-center justify-between border-b border-[#2c2c2c] bg-[#0f0f0f] flex-shrink-0">
         <div className="flex items-center gap-3 min-w-0">
           <h1 className="text-sm font-medium text-white tracking-tight truncate">
@@ -167,7 +110,7 @@ const tools = await composio.getTools({
           )}
         </div>
 
-        {/* Action Buttons matching Composio screenshot */}
+        {/* Action Buttons */}
         <div className="flex items-center gap-2 flex-shrink-0">
           <button
             onClick={copyMarkdown}
@@ -184,7 +127,7 @@ const tools = await composio.getTools({
           <button
             onClick={copyShareLink}
             className="h-7 px-2.5 rounded bg-[#1a1a1a] border border-[#2c2c2c] hover:border-[#3a3a3a] text-[#a3a3a3] hover:text-white text-xs font-medium flex items-center gap-1.5 transition-colors"
-            title="Copy share link"
+            title="Copy permanent share link"
           >
             {copiedLink ? (
               <Check className="w-3.5 h-3.5 text-white" />
@@ -233,21 +176,49 @@ const tools = await composio.getTools({
           </div>
         </div>
 
-        {/* Code Snippets matching Composio screenshot */}
-        <CodeSnippetCard
-          title="Install packages"
-          tabs={['npm', 'pnpm', 'yarn', 'bun']}
-          activeTab={packageTab}
-          onTabChange={setPackageTab}
-          code={sampleInstallCommand}
-        />
+        {/* Composio Integration Code Snippet */}
+        <div className="space-y-2">
+          <div className="text-sm font-medium text-white">Composio integration code</div>
+          <div className="rounded-md bg-[#141414] border border-[#2c2c2c] overflow-hidden font-mono text-xs">
+            <div className="h-9 px-3.5 flex items-center justify-between border-b border-[#2c2c2c] bg-[#171717]">
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setAuthTab('cli')}
+                  className={clsx(
+                    'text-xs font-mono transition-colors',
+                    authTab === 'cli' ? 'text-white font-medium' : 'text-[#737373] hover:text-[#a3a3a3]'
+                  )}
+                >
+                  CLI
+                </button>
+                <button
+                  onClick={() => setAuthTab('typescript')}
+                  className={clsx(
+                    'text-xs font-mono transition-colors',
+                    authTab === 'typescript' ? 'text-white font-medium' : 'text-[#737373] hover:text-[#a3a3a3]'
+                  )}
+                >
+                  TypeScript SDK
+                </button>
+              </div>
 
-        <CodeSnippetCard
-          title="Add agent code"
-          tabs={['agent.ts']}
-          code={sampleAgentCode}
-          language="typescript"
-        />
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(authTab === 'cli' ? cliSnippet : tsSnippet);
+                  setCopiedCode(true);
+                  setTimeout(() => setCopiedCode(false), 1800);
+                }}
+                className="text-[#737373] hover:text-white"
+                title="Copy code"
+              >
+                {copiedCode ? <Check className="w-3.5 h-3.5 text-white" /> : <Copy className="w-3.5 h-3.5" />}
+              </button>
+            </div>
+            <div className="p-3.5 overflow-x-auto text-xs text-[#e0e0e0] leading-relaxed">
+              <pre className="whitespace-pre font-mono">{authTab === 'cli' ? cliSnippet : tsSnippet}</pre>
+            </div>
+          </div>
+        </div>
 
         {/* Setup Checklist */}
         {guide.setupChecklist.length > 0 && (
@@ -466,7 +437,7 @@ function guideToMarkdown(guide: Guide): string {
   const lines: string[] = [
     `# ${guide.appName} — OAuth Integration Guide for Composio`,
     '',
-    `> **Recommended Path:** ${guide.recommendedPath === 'managed' ? 'Composio Managed OAuth' : 'Custom OAuth App'}`,
+    `> **Recommended Path:** ${guide.recommendedPath.toUpperCase()}`,
     `> **Effort:** ${guide.handsOnHours.min}–${guide.handsOnHours.max}h hands-on | **Total Calendar:** ${guide.elapsedDays.min}–${guide.elapsedDays.max} days | **Approval Wait:** ${guide.approvalDays ? `${guide.approvalDays.min}–${guide.approvalDays.max} days` : 'None required'}`,
     '',
     '## Overview',
