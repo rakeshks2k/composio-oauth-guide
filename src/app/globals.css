@@ -1,22 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;450;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'abcDiatype';
+  src: local('abcDiatype'), local('Diatype'), local('ABC Diatype');
+  font-weight: 400 700;
+  font-display: swap;
+}
+
 :root {
   --bg-primary: #0f0f0f;
   --bg-secondary: #141414;
-  --bg-raised: #1a1a1a;
-  --bg-card: #1e1e1e;
-  --bg-popover: #2a2a2a;
-  --bg-border: #2c2c2c;
-  --bg-border-light: #383838;
+  --bg-raised: #181818;
+  --bg-card: #1c1c1c;
+  --bg-popover: #262626;
+  --bg-border: #262626;
+  --bg-border-light: #333333;
   --accent-brand: #51a2ff;
   --accent-blue: #51a2ff;
   --accent-amber: #f59e0b;
   --accent-red: #ef4444;
   --accent-green: #10b981;
   --text-primary: #ffffff;
-  --text-secondary: #a0a0a0;
+  --text-secondary: #a3a3a3;
   --text-muted: #737373;
 }
 
@@ -32,6 +41,11 @@ body {
   background-color: #0f0f0f;
   color: #ffffff;
   overflow: hidden;
+  font-family: "abcDiatype", var(--font-inter), "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
 
 /* Custom Composio Dark Scrollbar */
@@ -45,15 +59,15 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2c2c2c;
-  border-radius: 2px;
+  background: #282828;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3f3f3f;
+  background: #3a3a3a;
 }
 
-/* Focus styles matching Composio */
+/* Focus styles matching Composio Developer Console */
 :focus-visible {
   outline: 1.5px solid #51a2ff;
   outline-offset: 1px;
@@ -61,17 +75,81 @@ body {
 
 /* Monospace code styling */
 code, pre, kbd {
-  font-family: var(--font-jetbrains), 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-family: var(--font-jetbrains), 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 /* Inline code pills */
 code {
-  font-size: 0.85em;
-  background: #1e1e1e;
-  border: 1px solid #2c2c2c;
-  padding: 0.1rem 0.35rem;
+  font-size: 0.84em;
+  background: #17181c;
+  border: 1px solid #2a2e39;
+  padding: 0.12rem 0.38rem;
   border-radius: 4px;
+  color: #79c0ff;
+  letter-spacing: -0.01em;
+}
+
+/* Code Editor Syntax Coloring Tokens (Dark Theme inspired by JetBrains / VS Code) */
+.syntax-comment {
+  color: #768390;
+  font-style: italic;
+}
+
+.syntax-keyword {
+  color: #ff7b72;
+  font-weight: 500;
+}
+
+.syntax-string {
+  color: #a5d6ff;
+}
+
+.syntax-fn {
+  color: #d2a8ff;
+}
+
+.syntax-type {
+  color: #79c0ff;
+  font-weight: 500;
+}
+
+.syntax-prop {
+  color: #7ee787;
+}
+
+.syntax-punct {
+  color: #c9d1d9;
+}
+
+.syntax-cli-cmd {
   color: #51a2ff;
+  font-weight: 600;
+}
+
+.syntax-cli-sub {
+  color: #d2a8ff;
+  font-weight: 500;
+}
+
+.syntax-cli-flag {
+  color: #ffa657;
+}
+
+.syntax-cli-val {
+  color: #a5d6ff;
+}
+
+.syntax-cli-placeholder {
+  color: #f0883e;
+  font-weight: 500;
+}
+
+.syntax-line-num {
+  color: #484f58;
+  user-select: none;
+  text-align: right;
+  min-width: 1.5rem;
+  padding-right: 1rem;
 }
 
 /* Animated subtle pulse for active agent states */

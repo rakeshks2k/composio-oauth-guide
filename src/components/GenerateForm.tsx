@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { ResearchEvent } from '@/lib/types';
-import { Globe, ArrowRight, Loader2 } from 'lucide-react';
+import { Globe, ArrowRight, Loader2, Sparkles, CheckCircle2 } from 'lucide-react';
 import { clsx } from 'clsx';
 
 interface GenerateFormProps {
@@ -108,48 +108,49 @@ export function GenerateForm({
   return (
     <div className="flex-1 flex flex-col h-screen overflow-hidden bg-[#0f0f0f]">
       {/* 1. Header Bar */}
-      <div className="h-12 px-6 flex items-center justify-between border-b border-[#2c2c2c] bg-[#0f0f0f] flex-shrink-0">
-        <div className="flex items-center gap-2">
-          <h1 className="text-sm font-medium text-white tracking-tight">
+      <div className="h-12 px-6 flex items-center justify-between border-b border-[#262626] bg-[#0f0f0f] flex-shrink-0">
+        <div className="flex items-center gap-2.5">
+          <h1 className="text-[14px] sm:text-[15px] font-medium text-white tracking-[-0.01em]">
             Generate Guide
           </h1>
-          <span className="text-xs text-[#737373] font-mono">
-            OAuth Research Pipeline
+          <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-[#0e2439] border border-[#1a5676] text-[#51a2ff]">
+            Live AI Research
           </span>
         </div>
       </div>
 
       {/* 2. Form Body */}
-      <div className="flex-1 overflow-y-auto px-6 sm:px-12 py-7 max-w-2xl space-y-6">
-        <div className="space-y-1">
-          <h2 className="text-sm font-medium text-white">
+      <div className="flex-1 overflow-y-auto px-6 sm:px-10 lg:px-12 py-8 max-w-3xl space-y-7">
+        <div className="space-y-2">
+          <h2 className="text-base sm:text-lg font-medium text-white tracking-tight">
             Research third-party application
           </h2>
-          <p className="text-xs text-[#a3a3a3] leading-relaxed">
-            Enter an application name or website to evaluate Composio managed OAuth availability,
-            extract required scopes, and estimate hands-on setup time separately from external approval delays.
+          <p className="text-[13.5px] text-[#b0b0b0] leading-[1.68]">
+            Enter an application name or developer website to initiate an autonomous OAuth analysis.
+            The agent evaluates Composio managed OAuth availability, audits scope sensitivity, and
+            quantifies developer hands-on hours vs. external vendor approval waiting periods.
           </p>
         </div>
 
         {/* Input Card */}
-        <form onSubmit={handleSubmit} className="p-4 rounded-md bg-[#141414] border border-[#2c2c2c] space-y-4">
-          <div>
-            <label htmlFor="appName" className="block text-xs font-mono text-[#a3a3a3] mb-1.5">
-              App name <span className="text-[#ef4444]">*</span>
+        <form onSubmit={handleSubmit} className="p-5 sm:p-6 rounded-lg bg-[#141414] border border-[#262626] space-y-5">
+          <div className="space-y-2">
+            <label htmlFor="appName" className="block text-[12px] font-mono uppercase tracking-wider text-[#a0a0a0]">
+              Application Name <span className="text-[#ff7b72]">*</span>
             </label>
             <input
               id="appName"
               type="text"
               value={appName}
               onChange={(e) => setAppName(e.target.value)}
-              placeholder="e.g. Linear, Notion, Zoom, Stripe"
+              placeholder="e.g. Linear, Notion, Zoom, Salesforce, Stripe"
               disabled={isLoading}
-              className="w-full h-8 px-3 rounded bg-[#1a1a1a] border border-[#2c2c2c] focus:border-[#51a2ff] text-xs text-white placeholder:text-[#737373] outline-none transition-colors font-mono"
+              className="w-full h-9 px-3.5 rounded-md bg-[#1a1a1a] border border-[#262626] focus:border-[#51a2ff] text-[13px] text-white placeholder:text-[#666666] outline-none transition-colors font-mono"
             />
 
             {/* Quick Suggestions */}
-            <div className="flex items-center gap-1.5 mt-2 flex-wrap">
-              <span className="text-[11px] text-[#737373] font-mono">Try:</span>
+            <div className="flex items-center gap-1.5 pt-1.5 flex-wrap">
+              <span className="text-[11px] text-[#737373] font-mono">Suggested:</span>
               {QUICK_SUGGESTIONS.map((item) => (
                 <button
                   key={item.name}
@@ -158,7 +159,7 @@ export function GenerateForm({
                     setAppName(item.name);
                     setAppWebsite(item.website);
                   }}
-                  className="text-[11px] font-mono px-2 py-0.5 rounded bg-[#1e1e1e] border border-[#2c2c2c] hover:border-[#3a3a3a] text-[#a3a3a3] hover:text-white transition-colors"
+                  className="text-[11px] font-mono px-2 py-0.5 rounded bg-[#1c1c1c] border border-[#282828] hover:border-[#383838] text-[#a0a0a0] hover:text-white transition-colors"
                 >
                   {item.name}
                 </button>
@@ -166,12 +167,12 @@ export function GenerateForm({
             </div>
           </div>
 
-          <div>
-            <label htmlFor="appWebsite" className="block text-xs font-mono text-[#a3a3a3] mb-1.5">
-              Official website or docs URL <span className="text-[#737373]">(optional)</span>
+          <div className="space-y-2">
+            <label htmlFor="appWebsite" className="block text-[12px] font-mono uppercase tracking-wider text-[#a0a0a0]">
+              Developer Documentation or Website <span className="text-[#666666] font-normal normal-case">(optional)</span>
             </label>
             <div className="relative">
-              <Globe className="w-3.5 h-3.5 text-[#737373] absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <Globe className="w-4 h-4 text-[#737373] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 id="appWebsite"
                 type="text"
@@ -179,50 +180,72 @@ export function GenerateForm({
                 onChange={(e) => setAppWebsite(e.target.value)}
                 placeholder="e.g. linear.app or https://developers.notion.com"
                 disabled={isLoading}
-                className="w-full h-8 pl-8 pr-3 rounded bg-[#1a1a1a] border border-[#2c2c2c] focus:border-[#51a2ff] text-xs text-white placeholder:text-[#737373] outline-none transition-colors font-mono"
+                className="w-full h-9 pl-9 pr-3.5 rounded-md bg-[#1a1a1a] border border-[#262626] focus:border-[#51a2ff] text-[13px] text-white placeholder:text-[#666666] outline-none transition-colors font-mono"
               />
             </div>
           </div>
 
           {error && (
-            <div className="p-2.5 rounded bg-[#1e1e1e] border border-[#ef4444]/40 text-[#ef4444] text-xs font-mono">
+            <div className="p-3 rounded-md bg-[#1c1414] border border-[#5e2020] text-[#ff7b72] text-xs font-mono">
               {error}
             </div>
           )}
 
-          <button
-            type="submit"
-            disabled={!appName.trim() || isLoading}
-            className={clsx(
-              'h-8 px-3.5 rounded font-medium text-xs flex items-center justify-center gap-2 transition-colors',
-              !appName.trim() || isLoading
-                ? 'bg-[#1a1a1a] border border-[#2c2c2c] text-[#737373] cursor-not-allowed'
-                : 'bg-white hover:bg-[#e0e0e0] text-black active:scale-[0.98]'
-            )}
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                <span>Generating...</span>
-              </>
-            ) : (
-              <>
-                <span>Generate guide</span>
-                <ArrowRight className="w-3 h-3" />
-              </>
-            )}
-          </button>
+          <div className="pt-2">
+            <button
+              type="submit"
+              disabled={!appName.trim() || isLoading}
+              className={clsx(
+                'h-9 px-4 rounded-md font-medium text-xs flex items-center justify-center gap-2 transition-all',
+                !appName.trim() || isLoading
+                  ? 'bg-[#1e1e1e] border border-[#2a2a2a] text-[#666666] cursor-not-allowed'
+                  : 'bg-white hover:bg-[#eaeaea] text-black active:scale-[0.99] shadow-sm'
+              )}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <span>Researching {appName}...</span>
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Generate Production Guide</span>
+                  <ArrowRight className="w-3.5 h-3.5 ml-0.5" />
+                </>
+              )}
+            </button>
+          </div>
         </form>
 
         {/* Real Pipeline Stages Information */}
-        <div className="p-4 rounded-md bg-[#141414] border border-[#2c2c2c] space-y-2 text-xs">
-          <div className="font-mono text-white text-xs">Research pipeline checklist</div>
-          <div className="text-[#a3a3a3] leading-relaxed space-y-1 font-mono text-[11px]">
-            <div>1. Identify official developer portal &amp; authorization endpoints</div>
-            <div>2. Check Composio Managed OAuth support across 1,600+ toolkits</div>
-            <div>3. Extract scopes &amp; classify into basic, sensitive, or restricted tiers</div>
-            <div>4. Calculate external approval wait times (CASA, Marketplace) vs. hands-on effort</div>
-            <div>5. Output structured guide with completion criteria and official citations</div>
+        <div className="p-5 sm:p-6 rounded-lg bg-[#141414] border border-[#262626] space-y-3.5">
+          <div className="text-[12px] font-mono uppercase tracking-wider text-white flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-[#51a2ff]" />
+            <span>Autonomous Research Pipeline Architecture</span>
+          </div>
+
+          <div className="space-y-2 font-mono text-[11.5px] text-[#9c9c9c] leading-[1.6]">
+            <div className="flex items-start gap-2.5">
+              <span className="text-[#51a2ff]">01</span>
+              <span>Resolve provider domain, official developer portals, and OAuth 2.0 specs.</span>
+            </div>
+            <div className="flex items-start gap-2.5">
+              <span className="text-[#51a2ff]">02</span>
+              <span>Audit Composio catalog for managed authentication availability.</span>
+            </div>
+            <div className="flex items-start gap-2.5">
+              <span className="text-[#51a2ff]">03</span>
+              <span>Extract scope matrix and categorize access tiers (basic, sensitive, restricted).</span>
+            </div>
+            <div className="flex items-start gap-2.5">
+              <span className="text-[#51a2ff]">04</span>
+              <span>Differentiate developer engineering hours from vendor approval calendar delays.</span>
+            </div>
+            <div className="flex items-start gap-2.5">
+              <span className="text-[#51a2ff]">05</span>
+              <span>Synthesize production checklist with clickable evidence citations.</span>
+            </div>
           </div>
         </div>
       </div>

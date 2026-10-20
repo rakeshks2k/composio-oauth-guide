@@ -29,7 +29,7 @@ export default function GuidePage({ params }: PageProps) {
   return (
     <div className="min-h-screen bg-[#0f0f0f] text-white flex flex-col font-sans">
       {/* Top Navigation Bar matching Composio Platform */}
-      <header className="h-12 bg-[#141414] border-b border-[#2c2c2c] px-6 flex items-center justify-between flex-shrink-0 z-10 sticky top-0">
+      <header className="h-12 bg-[#141414] border-b border-[#262626] px-6 flex items-center justify-between flex-shrink-0 z-10 sticky top-0">
         <div className="flex items-center gap-3">
           <Link
             href="/"
@@ -38,10 +38,10 @@ export default function GuidePage({ params }: PageProps) {
             <ArrowLeft className="w-3.5 h-3.5 text-[#737373]" />
             <span>Dashboard</span>
           </Link>
-          <span className="text-[#2c2c2c]">/</span>
+          <span className="text-[#333333]">/</span>
           <div className="flex items-center gap-2">
             <span className="text-xs text-white font-medium">{guide.appName}</span>
-            <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#0d2636] border border-[#1a5676] text-[#51a2ff] uppercase">
+            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#0e2439] border border-[#1a5676] text-[#51a2ff] uppercase">
               {guide.recommendedPath}
             </span>
           </div>

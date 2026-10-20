@@ -90,7 +90,7 @@ export default function HomePage() {
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-[#0f0f0f] text-white">
       {/* Mobile Top Navigation Bar */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 h-12 bg-[#141414] border-b border-[#2c2c2c] px-4 flex items-center justify-between z-30">
+      <div className="lg:hidden fixed top-0 left-0 right-0 h-12 bg-[#141414] border-b border-[#262626] px-4 flex items-center justify-between z-30">
         <button
           onClick={() => setMobileSidebarOpen(true)}
           className="p-1.5 rounded-md hover:bg-[#1a1a1a] text-[#a0a0a0] hover:text-white"
