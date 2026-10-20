@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Guide, ChecklistItem } from '@/lib/types';
+import { AppIcon } from '@/components/AppIcon';
 import {
   Copy,
   Check,
@@ -89,9 +90,12 @@ await composio.authConfigs.create({
       {/* 1. Header Bar matching Composio Platform */}
       <div className="h-12 px-6 sm:px-10 flex items-center justify-between border-b border-[#262626] bg-[#0f0f0f] flex-shrink-0">
         <div className="flex items-center gap-3 min-w-0">
-          <h1 className="text-[14px] sm:text-[15px] font-medium text-white tracking-[-0.01em] truncate">
-            {guide.appName}
-          </h1>
+          <div className="flex items-center gap-2 min-w-0">
+            <AppIcon name={guide.appName} className="w-4 h-4 flex-shrink-0" />
+            <h1 className="text-[14px] sm:text-[15px] font-medium text-white tracking-[-0.01em] truncate">
+              {guide.appName}
+            </h1>
+          </div>
 
           <span
             className={clsx(
@@ -141,7 +145,7 @@ await composio.authConfigs.create({
             ) : (
               <Share2 className="w-3.5 h-3.5 text-[#737373]" />
             )}
-            <span className="hidden sm:inline">Share</span>
+            <span className="hidden sm:inline">Share link</span>
           </button>
         </div>
       </div>

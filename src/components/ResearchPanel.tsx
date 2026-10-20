@@ -35,29 +35,29 @@ export function ResearchPanel({
 
   return (
     <aside className="w-full h-full flex flex-col bg-[#0f0f0f] border-l border-[#262626] select-none font-mono">
-      {/* 1. Header Tab Bar */}
-      <div className="h-12 px-4 sm:px-5 flex items-center justify-between border-b border-[#262626] bg-[#0f0f0f] flex-shrink-0">
-        <div className="flex items-center gap-4 h-full">
+      {/* 1. Header Tab Bar - spacious, clean, and never wraps */}
+      <div className="h-12 px-4 flex items-center justify-between border-b border-[#262626] bg-[#0f0f0f] flex-shrink-0">
+        <div className="flex items-center gap-5 h-full">
           <button
             onClick={() => setActiveTab('logs')}
             className={clsx(
-              'h-full flex items-center gap-1.5 text-[12px] font-mono font-medium transition-colors border-b-2 px-1 -mb-[1px]',
+              'h-full flex items-center gap-2 text-[12px] font-mono font-medium transition-colors border-b-2 px-1 -mb-[1px] whitespace-nowrap flex-shrink-0',
               activeTab === 'logs'
                 ? 'border-white text-white'
                 : 'border-transparent text-[#737373] hover:text-[#a3a3a3]'
             )}
           >
-            <span>&gt;_</span>
+            <span className="text-[#51a2ff]">&gt;_</span>
             <span>Research Activity</span>
             {events.length > 0 && (
-              <span className="text-[10px] text-[#737373]">({events.length})</span>
+              <span className="text-[10px] text-[#737373] font-normal">({events.length})</span>
             )}
           </button>
 
           <button
             onClick={() => setActiveTab('sources')}
             className={clsx(
-              'h-full flex items-center gap-1.5 text-[12px] font-mono font-medium transition-colors border-b-2 px-1 -mb-[1px]',
+              'h-full flex items-center gap-2 text-[12px] font-mono font-medium transition-colors border-b-2 px-1 -mb-[1px] whitespace-nowrap flex-shrink-0',
               activeTab === 'sources'
                 ? 'border-white text-white'
                 : 'border-transparent text-[#737373] hover:text-[#a3a3a3]'
@@ -65,34 +65,18 @@ export function ResearchPanel({
           >
             <span>Citations</span>
             {sources.length > 0 && (
-              <span className="text-[10px] text-[#737373]">({sources.length})</span>
+              <span className="text-[10px] text-[#737373] font-normal">({sources.length})</span>
             )}
           </button>
         </div>
 
-        {/* Action / Status */}
-        <div className="flex items-center gap-2">
-          {events.length > 0 && onClearEvents && (
-            <button
-              onClick={onClearEvents}
-              className="text-[#737373] hover:text-white p-1 rounded transition-colors"
-              title="Clear activity log"
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-            </button>
-          )}
-
-          <div className="text-[11px] font-mono">
-            {isGenerating ? (
-              <span className="text-[#51a2ff] flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#51a2ff] animate-ping" />
-                researching
-              </span>
-            ) : (
-              <span className="text-[#555555]">idle</span>
-            )}
+        {/* Live indicator only during active research (no 'idle' text) */}
+        {isGenerating && (
+          <div className="flex items-center gap-1.5 text-[11px] font-mono text-[#51a2ff]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#51a2ff] animate-ping" />
+            <span className="hidden sm:inline">active</span>
           </div>
-        </div>
+        )}
       </div>
 
       {/* 2. Main Console Output Area */}
@@ -214,6 +198,34 @@ export function ResearchPanel({
         )}
 
         <div ref={bottomRef} />
+      </div>
+
+      {/* 3. Bottom Terminal Toolbar: Better UX position for log actions */}
+      <div className="h-9 px-4 border-t border-[#262626] bg-[#121212] flex items-center justify-between text-[11px] font-mono text-[#737373] flex-shrink-0">
+        <div className="flex items-center gap-2">
+          {isGenerating ? (
+            <span className="text-[#51a2ff] flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#51a2ff] animate-ping" />
+              <span>streaming execution...</span>
+            </span>
+          ) : (
+            <span className="text-[#666666] flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#3a3a3a]" />
+              <span>{events.length} {events.length === 1 ? 'event' : 'events'} logged</span>
+            </span>
+          )}
+        </div>
+
+        {events.length > 0 && onClearEvents && (
+          <button
+            onClick={onClearEvents}
+            className="flex items-center gap-1.5 px-2 py-0.5 rounded text-[#737373] hover:text-[#e0e0e0] hover:bg-[#1e1e1e] transition-colors"
+            title="Clear activity log"
+          >
+            <Trash2 className="w-3 h-3" />
+            <span>Clear log</span>
+          </button>
+        )}
       </div>
     </aside>
   );

@@ -1,5 +1,6 @@
 import { getGuideByIdOrSlug } from '@/lib/db';
 import { GuideView } from '@/components/GuideView';
+import { AppIcon } from '@/components/AppIcon';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -41,6 +42,7 @@ export default function GuidePage({ params }: PageProps) {
           </Link>
           <span className="text-[#333333]">/</span>
           <div className="flex items-center gap-2">
+            <AppIcon name={guide.appName} className="w-3.5 h-3.5 flex-shrink-0" />
             <span className="text-xs text-white font-medium">{guide.appName}</span>
             <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#181818] border border-[#2c2c2c] text-[#a1a1a1] uppercase">
               {guide.recommendedPath}
