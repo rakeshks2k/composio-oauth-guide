@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo, useRef, useEffect } from 'react';
+import Image from 'next/image';
 import { Guide } from '@/lib/types';
 import {
   Search,
@@ -12,26 +13,6 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { clsx } from 'clsx';
-
-function ComposioLogoMark({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M3.75 8.25L12 3.5L20.25 8.25V15.75L12 20.5L3.75 15.75V8.25Z"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M12 3.5V12M12 12L20.25 8.25M12 12L3.75 8.25M12 12V20.5M12 12L20.25 15.75M12 12L3.75 15.75"
-        stroke="currentColor"
-        strokeWidth="1.25"
-        strokeLinejoin="round"
-        strokeOpacity="0.4"
-      />
-    </svg>
-  );
-}
 
 interface SidebarProps {
   guides: Guide[];
@@ -91,8 +72,14 @@ export function Sidebar({
       {/* 1. Header: Composio Logo + OAuth Guides Context */}
       <div className="h-12 px-4 flex items-center justify-between border-b border-[#262626] flex-shrink-0">
         <div className="flex items-center gap-2.5">
-          <ComposioLogoMark className="w-4 h-4 text-white" />
-          <span className="font-semibold text-white tracking-tight text-[13.5px]">Composio</span>
+          <Image
+            src="/composio-logo-white.png"
+            alt="Composio"
+            width={94}
+            height={18}
+            priority
+            className="h-[18px] w-auto object-contain"
+          />
           <span className="text-[10px] font-mono font-medium px-1.5 py-0.5 rounded bg-[#0e2439] border border-[#1a5676] text-[#51a2ff] tracking-wider">
             OAUTH
           </span>

@@ -2,6 +2,7 @@ import { getGuideByIdOrSlug } from '@/lib/db';
 import { GuideView } from '@/components/GuideView';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowLeft } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -12,9 +13,9 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps) {
   const guide = getGuideByIdOrSlug(params.slug);
-  if (!guide) return { title: 'Guide Not Found — Composio' };
+  if (!guide) return { title: 'Guide Not Found - Composio' };
   return {
-    title: `${guide.appName} OAuth Guide — Composio Platform`,
+    title: `${guide.appName} - Composio OAuth Guide`,
     description: guide.summary,
   };
 }
@@ -47,8 +48,18 @@ export default function GuidePage({ params }: PageProps) {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <span className="text-[11px] font-mono text-[#737373]">Composio Platform</span>
+        <div className="flex items-center gap-2.5">
+          <Image
+            src="/composio-logo-white.png"
+            alt="Composio"
+            width={84}
+            height={16}
+            priority
+            className="h-[16px] w-auto object-contain"
+          />
+          <span className="text-[10px] font-mono font-medium px-1.5 py-0.5 rounded bg-[#0e2439] border border-[#1a5676] text-[#51a2ff] tracking-wider">
+            OAUTH
+          </span>
         </div>
       </header>
 

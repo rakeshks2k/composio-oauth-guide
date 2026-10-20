@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import { Guide, ResearchEvent } from '@/lib/types';
 import { Sidebar } from '@/components/Sidebar';
 import { GuideView } from '@/components/GuideView';
@@ -98,9 +99,19 @@ export default function HomePage() {
           <Menu className="w-4 h-4" />
         </button>
 
-        <span className="text-xs font-semibold font-mono tracking-tight text-white">
-          Composio Platform
-        </span>
+        <div className="flex items-center gap-2">
+          <Image
+            src="/composio-logo-white.png"
+            alt="Composio"
+            width={84}
+            height={16}
+            priority
+            className="h-4 w-auto object-contain"
+          />
+          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#0e2439] border border-[#1a5676] text-[#51a2ff]">
+            OAUTH
+          </span>
+        </div>
 
         <button
           onClick={() => setMobileLogsOpen(!mobileLogsOpen)}
