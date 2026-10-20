@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
-import { Inter, JetBrains_Mono } from 'next/font/google';
+import localFont from 'next/font/local';
+import { JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
+const geistSans = localFont({
+  src: './fonts/GeistVF.woff',
+  variable: '--font-geist-sans',
   display: 'swap',
 });
 
@@ -16,7 +17,7 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: 'Composio Platform — OAuth Guides',
-  description: 'AI-powered OAuth integration guides for connecting apps to Composio. Covers managed OAuth vs custom OAuth, setup steps, scopes, and approval requirements.',
+  description: 'Production OAuth integration guides for connecting apps to Composio. Managed vs. custom OAuth, scopes, verification, and agent capabilities.',
 };
 
 export default function RootLayout({
@@ -26,7 +27,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans bg-[#0f0f0f] text-[#ffffff] min-h-screen antialiased selection:bg-[#51a2ff]/20 selection:text-[#51a2ff]`}>
+      <body className={`${geistSans.variable} ${jetbrainsMono.variable} font-sans bg-[#0f0f0f] text-[#ffffff] min-h-screen antialiased selection:bg-[#51a2ff]/20 selection:text-[#51a2ff]`}>
         {children}
       </body>
     </html>

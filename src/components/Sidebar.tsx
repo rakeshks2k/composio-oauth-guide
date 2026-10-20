@@ -8,8 +8,6 @@ import {
   Search,
   X,
   FileText,
-  Hash,
-  Circle,
   HelpCircle,
   ArrowUpRight,
   Settings,
@@ -18,7 +16,10 @@ import {
   KeyRound,
   Zap,
   Activity,
-  Sparkles,
+  Play,
+  Box,
+  Users,
+  MessageSquare,
 } from 'lucide-react';
 import { clsx } from 'clsx';
 
@@ -42,32 +43,12 @@ function ComposioLogoMark({ className }: { className?: string }) {
   );
 }
 
-function GithubIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-      />
-    </svg>
-  );
-}
-
-const PRESET_APP_ICONS: Record<string, React.ReactNode> = {
-  'google-drive': <FileText className="w-3.5 h-3.5 text-[#51a2ff]" />,
-  'slack': <Hash className="w-3.5 h-3.5 text-[#a855f7]" />,
-  'github': <GithubIcon className="w-3.5 h-3.5 text-[#e0e0e0]" />,
-  'hubspot': <Circle className="w-3.5 h-3.5 text-[#f97316]" />,
-};
-
 interface SidebarProps {
   guides: Guide[];
   selectedGuide: Guide | null;
   onSelectGuide: (guide: Guide) => void;
   onGenerateClick: (prefillName?: string) => void;
   isGenerating: boolean;
-  onOpenDocs?: () => void;
   onCloseMobile?: () => void;
 }
 
@@ -82,7 +63,6 @@ export function Sidebar({
   const [searchQuery, setSearchQuery] = useState('');
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  // Keyboard shortcut Ctrl+K or / to focus search
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (
@@ -121,28 +101,28 @@ export function Sidebar({
       {/* 1. Header: Composio Logo + PLATFORM Badge */}
       <div className="h-12 px-3.5 flex items-center justify-between border-b border-[#2c2c2c]">
         <div className="flex items-center gap-2">
-          <ComposioLogoMark className="w-5 h-5 text-white" />
+          <ComposioLogoMark className="w-4 h-4 text-white" />
           <span className="font-semibold text-white tracking-tight text-[13px]">Composio</span>
-          <span className="text-[9px] font-mono font-semibold px-1.5 py-0.5 rounded bg-[#0d2636] border border-[#1a5676] text-[#51a2ff] tracking-wider">
+          <span className="text-[9px] font-mono font-medium px-1.5 py-0.5 rounded bg-[#0d2636] border border-[#1a5676] text-[#51a2ff] tracking-wider">
             PLATFORM
           </span>
         </div>
         <ChevronDown className="w-3.5 h-3.5 text-[#737373]" />
       </div>
 
-      {/* 2. Project Selector Card */}
+      {/* 2. Project Selector Card matching Composio screenshot */}
       <div className="p-2 border-b border-[#2c2c2c]">
-        <div className="p-2 rounded-md bg-[#1a1a1a] border border-[#2c2c2c] hover:border-[#383838] transition-colors flex items-center justify-between cursor-pointer">
+        <div className="p-2 rounded bg-[#1a1a1a] border border-[#2c2c2c] hover:border-[#383838] transition-colors flex items-center justify-between cursor-pointer">
           <div className="flex items-center gap-2 min-w-0">
-            <div className="w-5 h-5 rounded-full bg-[#10b981] text-black font-bold text-[10px] flex items-center justify-center flex-shrink-0">
+            <div className="w-5 h-5 rounded-full bg-[#10b981] text-black font-semibold text-[10px] flex items-center justify-center flex-shrink-0">
               R
             </div>
             <div className="min-w-0 flex-1">
-              <div className="text-[9px] text-[#737373] uppercase tracking-wider font-medium leading-none mb-0.5">
+              <div className="text-[9px] text-[#737373] tracking-wide font-normal leading-none mb-0.5">
                 Project
               </div>
-              <div className="text-[11px] text-white font-mono font-medium truncate leading-tight">
-                oauth_workspace_prod
+              <div className="text-xs text-white font-mono font-medium truncate leading-tight">
+                ryan_workspace_first_pr...
               </div>
             </div>
           </div>
@@ -150,7 +130,7 @@ export function Sidebar({
         </div>
       </div>
 
-      {/* 3. Search Bar */}
+      {/* 3. Search Row */}
       <div className="px-2 pt-2 pb-1">
         <div className="relative flex items-center">
           <Search className="w-3.5 h-3.5 text-[#737373] absolute left-2.5 pointer-events-none" />
@@ -160,7 +140,7 @@ export function Sidebar({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search"
-            className="w-full bg-[#1a1a1a] border border-[#2c2c2c] rounded-md pl-8 pr-12 py-1.5 text-xs text-white placeholder:text-[#737373] focus:outline-none focus:border-[#51a2ff] transition-colors"
+            className="w-full bg-[#1a1a1a] border border-[#2c2c2c] rounded pl-8 pr-12 py-1.5 text-xs text-white placeholder:text-[#737373] focus:outline-none focus:border-[#3a3a3a] transition-colors"
           />
           {searchQuery ? (
             <button
@@ -177,9 +157,9 @@ export function Sidebar({
         </div>
       </div>
 
-      {/* 4. Navigation Links (Scrollable Area) */}
+      {/* 4. Primary Navigation Items matching Composio screenshot */}
       <div className="flex-1 overflow-y-auto px-2 py-1 space-y-0.5">
-        {/* Core Actions */}
+        {/* Generate Guide / Getting Started action */}
         <button
           onClick={() => {
             onGenerateClick();
@@ -187,33 +167,29 @@ export function Sidebar({
           }}
           disabled={isGenerating}
           className={clsx(
-            'w-full h-8 px-2.5 rounded-md flex items-center gap-2 transition-colors text-left font-medium',
+            'w-full h-8 px-2.5 rounded flex items-center gap-2 transition-colors text-left text-xs',
             selectedGuide === null
-              ? 'bg-[#1e1e1e] text-white'
-              : 'text-[#a0a0a0] hover:text-white hover:bg-[#1a1a1a]'
+              ? 'bg-[#1e1e1e] text-white font-medium'
+              : 'text-[#a3a3a3] hover:text-white hover:bg-[#1a1a1a]'
           )}
         >
           {isGenerating ? (
             <div className="w-3.5 h-3.5 border-2 border-[#51a2ff] border-t-transparent rounded-full animate-spin flex-shrink-0" />
           ) : (
-            <Sparkles className="w-3.5 h-3.5 text-[#51a2ff] flex-shrink-0" />
+            <Plus className="w-3.5 h-3.5 text-[#737373] flex-shrink-0" />
           )}
-          <span className="truncate">Generate Guide</span>
-          <span className="ml-auto text-[9px] font-mono text-[#51a2ff] bg-[#0d2636] border border-[#1a5676] px-1 py-0.2 rounded">
-            AI
-          </span>
+          <span className="truncate flex-1">Generate Guide</span>
         </button>
 
         {/* Section Divider */}
-        <div className="pt-2 pb-1 px-2.5 flex items-center justify-between text-[10px] font-semibold text-[#737373] uppercase tracking-wider">
-          <span>Verified Toolkits</span>
-          <span className="font-mono text-[9px] text-[#737373]">{presetGuides.length}</span>
+        <div className="pt-2 pb-1 px-2.5 flex items-center justify-between text-[11px] text-[#737373]">
+          <span>Guides &amp; Toolkits</span>
+          <span className="font-mono text-[10px] text-[#737373]">{presetGuides.length}</span>
         </div>
 
-        {/* Preset Guides */}
+        {/* Presets - Neutral icons matching Composio console */}
         {presetGuides.map((guide) => {
           const isSelected = selectedGuide?.id === guide.id;
-          const icon = PRESET_APP_ICONS[guide.slug] ?? <BookOpen className="w-3.5 h-3.5 text-[#737373]" />;
 
           return (
             <button
@@ -223,27 +199,27 @@ export function Sidebar({
                 onCloseMobile?.();
               }}
               className={clsx(
-                'w-full h-8 px-2.5 rounded-md flex items-center gap-2 transition-colors text-left group',
+                'w-full h-8 px-2.5 rounded flex items-center gap-2 transition-colors text-left text-xs group',
                 isSelected
                   ? 'bg-[#1e1e1e] text-white font-medium'
-                  : 'text-[#a0a0a0] hover:text-white hover:bg-[#1a1a1a]'
+                  : 'text-[#a3a3a3] hover:text-white hover:bg-[#1a1a1a]'
               )}
             >
-              <span className="flex-shrink-0">{icon}</span>
+              <FileText className="w-3.5 h-3.5 text-[#737373] flex-shrink-0" />
               <span className="truncate flex-1">{guide.appName}</span>
               {guide.composioManaged && (
-                <span className="text-[9px] text-[#51a2ff] font-mono">managed</span>
+                <span className="text-[10px] text-[#737373] font-mono">managed</span>
               )}
             </button>
           );
         })}
 
-        {/* Generated Guides Section */}
+        {/* Custom Researched Guides */}
         {recentGuides.length > 0 && (
           <>
-            <div className="pt-3 pb-1 px-2.5 flex items-center justify-between text-[10px] font-semibold text-[#737373] uppercase tracking-wider">
-              <span>Custom Researched</span>
-              <span className="font-mono text-[9px] text-[#737373]">{recentGuides.length}</span>
+            <div className="pt-3 pb-1 px-2.5 flex items-center justify-between text-[11px] text-[#737373]">
+              <span>Researched</span>
+              <span className="font-mono text-[10px] text-[#737373]">{recentGuides.length}</span>
             </div>
             {recentGuides.map((guide) => {
               const isSelected = selectedGuide?.id === guide.id;
@@ -255,59 +231,75 @@ export function Sidebar({
                     onCloseMobile?.();
                   }}
                   className={clsx(
-                    'w-full h-8 px-2.5 rounded-md flex items-center gap-2 transition-colors text-left group',
+                    'w-full h-8 px-2.5 rounded flex items-center gap-2 transition-colors text-left text-xs group',
                     isSelected
                       ? 'bg-[#1e1e1e] text-white font-medium'
-                      : 'text-[#a0a0a0] hover:text-white hover:bg-[#1a1a1a]'
+                      : 'text-[#a3a3a3] hover:text-white hover:bg-[#1a1a1a]'
                   )}
                 >
-                  <div className="w-3.5 h-3.5 rounded bg-[#1e1e1e] text-[#51a2ff] flex items-center justify-center text-[9px] font-bold border border-[#2c2c2c]">
-                    {guide.appName.charAt(0).toUpperCase()}
-                  </div>
+                  <FileText className="w-3.5 h-3.5 text-[#737373] flex-shrink-0" />
                   <span className="truncate flex-1">{guide.appName}</span>
-                  <span className="text-[9px] font-mono text-[#737373]">{guide.difficulty}</span>
+                  <span className="text-[10px] font-mono text-[#737373]">{guide.difficulty}</span>
                 </button>
               );
             })}
           </>
         )}
 
-        {/* No Results Fallback */}
+        {/* Search empty fallback */}
         {filteredGuides.length === 0 && (
           <div className="py-4 px-2 text-center space-y-2">
-            <div className="text-[11px] text-[#737373]">No guides for &quot;{searchQuery}&quot;</div>
+            <div className="text-xs text-[#737373]">No guides for &quot;{searchQuery}&quot;</div>
             <button
               onClick={() => {
                 onGenerateClick(searchQuery.trim());
                 onCloseMobile?.();
               }}
-              className="w-full py-1.5 px-2 rounded bg-[#1e1e1e] border border-[#2c2c2c] hover:border-[#51a2ff] text-[#51a2ff] text-[11px] font-medium flex items-center justify-center gap-1"
+              className="w-full py-1.5 px-2 rounded bg-[#1e1e1e] border border-[#2c2c2c] hover:border-[#3a3a3a] text-white text-xs font-medium"
             >
-              <Plus className="w-3 h-3" />
-              <span>Generate {searchQuery}</span>
+              Generate {searchQuery}
             </button>
           </div>
         )}
 
-        {/* Additional Platform Links matching Composio screenshot */}
-        <div className="pt-3 pb-1 px-2.5 text-[10px] font-semibold text-[#737373] uppercase tracking-wider">
+        {/* Standard Composio Platform Links matching screenshot */}
+        <div className="pt-3 pb-1 px-2.5 text-[11px] text-[#737373]">
           <span>Platform</span>
         </div>
 
-        <div className="w-full h-8 px-2.5 rounded-md flex items-center gap-2 text-[#737373] hover:text-[#a0a0a0] transition-colors cursor-default">
-          <KeyRound className="w-3.5 h-3.5 text-[#737373]" />
-          <span>Auth Configs</span>
-          <span className="ml-auto text-[9px] font-mono text-[#737373]">OAuth</span>
+        <div className="w-full h-8 px-2.5 rounded flex items-center gap-2 text-[#737373] hover:text-[#a3a3a3] transition-colors cursor-default">
+          <Play className="w-3.5 h-3.5 text-[#737373]" />
+          <span>Playground</span>
         </div>
 
-        <div className="w-full h-8 px-2.5 rounded-md flex items-center gap-2 text-[#737373] hover:text-[#a0a0a0] transition-colors cursor-default">
+        <div className="w-full h-8 px-2.5 rounded flex items-center gap-2 text-[#737373] hover:text-[#a3a3a3] transition-colors cursor-default">
+          <Box className="w-3.5 h-3.5 text-[#737373]" />
+          <span>Toolkits</span>
+        </div>
+
+        <div className="w-full h-8 px-2.5 rounded flex items-center gap-2 text-[#737373] hover:text-[#a3a3a3] transition-colors cursor-default">
+          <Users className="w-3.5 h-3.5 text-[#737373]" />
+          <span>Users</span>
+        </div>
+
+        <div className="w-full h-8 px-2.5 rounded flex items-center gap-2 text-[#737373] hover:text-[#a3a3a3] transition-colors cursor-default">
+          <MessageSquare className="w-3.5 h-3.5 text-[#737373]" />
+          <span>Sessions</span>
+        </div>
+
+        <div className="w-full h-8 px-2.5 rounded flex items-center gap-2 text-[#737373] hover:text-[#a3a3a3] transition-colors cursor-default">
+          <KeyRound className="w-3.5 h-3.5 text-[#737373]" />
+          <span>Auth Configs</span>
+        </div>
+
+        <div className="w-full h-8 px-2.5 rounded flex items-center gap-2 text-[#737373] hover:text-[#a3a3a3] transition-colors cursor-default">
           <Zap className="w-3.5 h-3.5 text-[#737373]" />
           <span>Triggers</span>
         </div>
 
-        <div className="w-full h-8 px-2.5 rounded-md flex items-center gap-2 text-[#737373] hover:text-[#a0a0a0] transition-colors cursor-default">
+        <div className="w-full h-8 px-2.5 rounded flex items-center gap-2 text-[#737373] hover:text-[#a3a3a3] transition-colors cursor-default">
           <Activity className="w-3.5 h-3.5 text-[#737373]" />
-          <span>Tool Router Logs</span>
+          <span>Logs</span>
         </div>
       </div>
 
@@ -317,7 +309,7 @@ export function Sidebar({
           href="https://composio.dev"
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full h-8 px-2.5 rounded-md flex items-center gap-2 text-[#a0a0a0] hover:text-white hover:bg-[#1a1a1a] transition-colors"
+          className="w-full h-8 px-2.5 rounded flex items-center gap-2 text-[#a3a3a3] hover:text-white hover:bg-[#1a1a1a] transition-colors"
         >
           <HelpCircle className="w-3.5 h-3.5 text-[#737373]" />
           <span>Support</span>
@@ -327,7 +319,7 @@ export function Sidebar({
           href="https://docs.composio.dev/toolkits/managed-auth"
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full h-8 px-2.5 rounded-md flex items-center justify-between text-[#a0a0a0] hover:text-white hover:bg-[#1a1a1a] transition-colors"
+          className="w-full h-8 px-2.5 rounded flex items-center justify-between text-[#a3a3a3] hover:text-white hover:bg-[#1a1a1a] transition-colors"
         >
           <div className="flex items-center gap-2">
             <BookOpen className="w-3.5 h-3.5 text-[#737373]" />
@@ -336,15 +328,15 @@ export function Sidebar({
           <ArrowUpRight className="w-3 h-3 text-[#737373]" />
         </a>
 
-        <div className="w-full h-8 px-2.5 rounded-md flex items-center gap-2 text-[#a0a0a0] hover:text-white hover:bg-[#1a1a1a] transition-colors cursor-pointer">
+        <div className="w-full h-8 px-2.5 rounded flex items-center gap-2 text-[#a3a3a3] hover:text-white hover:bg-[#1a1a1a] transition-colors cursor-pointer">
           <Settings className="w-3.5 h-3.5 text-[#737373]" />
           <span>Settings</span>
         </div>
       </div>
 
-      {/* 6. User Account Footer matching Composio screenshot */}
+      {/* 6. User Account Footer matching screenshot */}
       <div className="p-2 border-t border-[#2c2c2c]">
-        <div className="p-1.5 rounded-md hover:bg-[#1a1a1a] transition-colors flex items-center justify-between cursor-pointer">
+        <div className="p-1.5 rounded hover:bg-[#1a1a1a] transition-colors flex items-center justify-between cursor-pointer">
           <div className="flex items-center gap-2 min-w-0">
             <div className="w-6 h-6 rounded-full bg-[#10b981] text-black font-semibold text-[11px] flex items-center justify-center flex-shrink-0">
               R
