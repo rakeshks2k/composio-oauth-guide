@@ -80,7 +80,7 @@ export function Sidebar({
             priority
             className="h-[18px] w-auto object-contain"
           />
-          <span className="text-[10px] font-mono font-medium px-1.5 py-0.5 rounded bg-[#0e2439] border border-[#1a5676] text-[#51a2ff] tracking-wider">
+          <span className="text-[10px] font-mono font-medium px-1.5 py-0.5 rounded bg-[#181818] border border-[#2c2c2c] text-[#a1a1a1] tracking-wider">
             OAUTH
           </span>
         </div>
@@ -109,7 +109,7 @@ export function Sidebar({
             )}
             <span className="font-medium">Generate Guide</span>
           </div>
-          <span className="text-[10px] font-mono text-[#51a2ff] px-1.5 py-0.5 rounded bg-[#0e2439] border border-[#1a5676]">
+          <span className="text-[10px] font-mono text-[#a1a1a1] px-1.5 py-0.5 rounded bg-[#181818] border border-[#2c2c2c]">
             AI
           </span>
         </button>
@@ -169,14 +169,7 @@ export function Sidebar({
             >
               <FileText className="w-3.5 h-3.5 text-[#737373] group-hover:text-[#a0a0a0] flex-shrink-0" />
               <span className="truncate flex-1 tracking-tight">{guide.appName}</span>
-              <span
-                className={clsx(
-                  'text-[10px] font-mono px-1 py-0.5 rounded',
-                  guide.recommendedPath === 'managed'
-                    ? 'text-[#51a2ff] bg-[#0e2439]'
-                    : 'text-[#f59e0b] bg-[#291e0a]'
-                )}
-              >
+              <span className="text-[10px] font-mono text-[#666666] group-hover:text-[#8c8c8c]">
                 {guide.recommendedPath === 'managed' ? 'managed' : 'custom'}
               </span>
             </button>

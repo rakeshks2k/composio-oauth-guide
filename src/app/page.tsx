@@ -108,7 +108,7 @@ export default function HomePage() {
             priority
             className="h-4 w-auto object-contain"
           />
-          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#0e2439] border border-[#1a5676] text-[#51a2ff]">
+          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#181818] border border-[#2c2c2c] text-[#a1a1a1]">
             OAUTH
           </span>
         </div>

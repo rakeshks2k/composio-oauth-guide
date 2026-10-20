@@ -14,18 +14,15 @@
 :root {
   --bg-primary: #0f0f0f;
   --bg-secondary: #141414;
-  --bg-raised: #181818;
+  --bg-raised: #1a1a1a;
   --bg-card: #1c1c1c;
   --bg-popover: #262626;
   --bg-border: #262626;
   --bg-border-light: #333333;
   --accent-brand: #51a2ff;
   --accent-blue: #51a2ff;
-  --accent-amber: #f59e0b;
-  --accent-red: #ef4444;
-  --accent-green: #10b981;
   --text-primary: #ffffff;
-  --text-secondary: #a3a3a3;
+  --text-secondary: #a1a1a1;
   --text-muted: #737373;
 }
 
@@ -45,7 +42,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
 
 /* Custom Composio Dark Scrollbar */
@@ -59,12 +55,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #282828;
+  background: #262626;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3a3a3a;
+  background: #333333;
 }
 
 /* Focus styles matching Composio Developer Console */
@@ -80,45 +76,44 @@ code, pre, kbd {
 
 /* Inline code pills */
 code {
-  font-size: 0.84em;
-  background: #17181c;
-  border: 1px solid #2a2e39;
-  padding: 0.12rem 0.38rem;
+  font-size: 0.85em;
+  background: #181818;
+  border: 1px solid #262626;
+  padding: 0.12rem 0.35rem;
   border-radius: 4px;
-  color: #79c0ff;
-  letter-spacing: -0.01em;
+  color: #ffffff;
 }
 
-/* Code Editor Syntax Coloring Tokens (Dark Theme inspired by JetBrains / VS Code) */
+/* Restrained, Developer-Console Syntax Highlighting (Composio Brand Style) */
 .syntax-comment {
-  color: #768390;
+  color: #6e7681;
   font-style: italic;
 }
 
 .syntax-keyword {
-  color: #ff7b72;
+  color: #51a2ff;
   font-weight: 500;
 }
 
 .syntax-string {
-  color: #a5d6ff;
+  color: #e6edf3;
 }
 
 .syntax-fn {
-  color: #d2a8ff;
-}
-
-.syntax-type {
-  color: #79c0ff;
+  color: #ffffff;
   font-weight: 500;
 }
 
+.syntax-type {
+  color: #51a2ff;
+}
+
 .syntax-prop {
-  color: #7ee787;
+  color: #a1a1a1;
 }
 
 .syntax-punct {
-  color: #c9d1d9;
+  color: #737373;
 }
 
 .syntax-cli-cmd {
@@ -127,21 +122,21 @@ code {
 }
 
 .syntax-cli-sub {
-  color: #d2a8ff;
+  color: #ffffff;
   font-weight: 500;
 }
 
 .syntax-cli-flag {
-  color: #ffa657;
+  color: #a1a1a1;
 }
 
 .syntax-cli-val {
-  color: #a5d6ff;
+  color: #e6edf3;
 }
 
 .syntax-cli-placeholder {
-  color: #f0883e;
-  font-weight: 500;
+  color: #8c8c8c;
+  font-style: italic;
 }
 
 .syntax-line-num {

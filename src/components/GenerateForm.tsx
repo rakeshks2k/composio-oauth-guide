@@ -113,7 +113,7 @@ export function GenerateForm({
           <h1 className="text-[14px] sm:text-[15px] font-medium text-white tracking-[-0.01em]">
             Generate Guide
           </h1>
-          <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-[#0e2439] border border-[#1a5676] text-[#51a2ff]">
+          <span className="text-[11px] font-mono px-2 py-0.5 rounded border border-[#262626] bg-[#141414] text-[#a1a1a1]">
             Live AI Research
           </span>
         </div>
@@ -219,31 +219,31 @@ export function GenerateForm({
         </form>
 
         {/* Real Pipeline Stages Information */}
-        <div className="p-5 sm:p-6 rounded-lg bg-[#141414] border border-[#262626] space-y-3.5">
+        <div className="p-5 sm:p-6 rounded-md bg-[#141414] border border-[#262626] space-y-3.5">
           <div className="text-[12px] font-mono uppercase tracking-wider text-white flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-[#51a2ff]" />
-            <span>Autonomous Research Pipeline Architecture</span>
+            <CheckCircle2 className="w-3.5 h-3.5 text-[#737373]" />
+            <span>Autonomous Research Pipeline</span>
           </div>
 
-          <div className="space-y-2 font-mono text-[11.5px] text-[#9c9c9c] leading-[1.6]">
+          <div className="space-y-2 font-mono text-[11.5px] text-[#8c8c8c] leading-[1.6]">
             <div className="flex items-start gap-2.5">
-              <span className="text-[#51a2ff]">01</span>
+              <span className="text-[#666666]">01</span>
               <span>Resolve provider domain, official developer portals, and OAuth 2.0 specs.</span>
             </div>
             <div className="flex items-start gap-2.5">
-              <span className="text-[#51a2ff]">02</span>
+              <span className="text-[#666666]">02</span>
               <span>Audit Composio catalog for managed authentication availability.</span>
             </div>
             <div className="flex items-start gap-2.5">
-              <span className="text-[#51a2ff]">03</span>
+              <span className="text-[#666666]">03</span>
               <span>Extract scope matrix and categorize access tiers (basic, sensitive, restricted).</span>
             </div>
             <div className="flex items-start gap-2.5">
-              <span className="text-[#51a2ff]">04</span>
+              <span className="text-[#666666]">04</span>
               <span>Differentiate developer engineering hours from vendor approval calendar delays.</span>
             </div>
             <div className="flex items-start gap-2.5">
-              <span className="text-[#51a2ff]">05</span>
+              <span className="text-[#666666]">05</span>
               <span>Synthesize production checklist with clickable evidence citations.</span>
             </div>
           </div>

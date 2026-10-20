@@ -134,12 +134,12 @@ export function ResearchPanel({
                       <span className="text-[#666666] mr-1.5">&gt;</span>
                       <span
                         className={clsx(
-                          event.type === 'error' && 'text-[#ff7b72] font-medium',
-                          event.type === 'warning' && 'text-[#f59e0b]',
+                          event.type === 'error' && 'text-[#ef4444]',
+                          event.type === 'warning' && 'text-[#a1a1a1]',
                           event.type === 'finding' && 'text-white font-medium',
-                          event.type === 'complete' && 'text-[#7ee787] font-semibold',
+                          event.type === 'complete' && 'text-white font-medium',
                           event.type === 'step' && 'text-[#d4d4d4]',
-                          event.type === 'source' && 'text-[#79c0ff]'
+                          event.type === 'source' && 'text-[#a1a1a1]'
                         )}
                       >
                         {event.message}
@@ -171,7 +171,7 @@ export function ResearchPanel({
                     title="Copy line"
                   >
                     {copiedIndex === i ? (
-                      <Check className="w-3 h-3 text-[#7ee787]" />
+                      <Check className="w-3 h-3 text-white" />
                     ) : (
                       <Copy className="w-3 h-3" />
                     )}

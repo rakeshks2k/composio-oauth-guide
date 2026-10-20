@@ -42,7 +42,7 @@ export default function GuidePage({ params }: PageProps) {
           <span className="text-[#333333]">/</span>
           <div className="flex items-center gap-2">
             <span className="text-xs text-white font-medium">{guide.appName}</span>
-            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#0e2439] border border-[#1a5676] text-[#51a2ff] uppercase">
+            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#181818] border border-[#2c2c2c] text-[#a1a1a1] uppercase">
               {guide.recommendedPath}
             </span>
           </div>
@@ -57,7 +57,7 @@ export default function GuidePage({ params }: PageProps) {
             priority
             className="h-[16px] w-auto object-contain"
           />
-          <span className="text-[10px] font-mono font-medium px-1.5 py-0.5 rounded bg-[#0e2439] border border-[#1a5676] text-[#51a2ff] tracking-wider">
+          <span className="text-[10px] font-mono font-medium px-1.5 py-0.5 rounded bg-[#181818] border border-[#2c2c2c] text-[#a1a1a1] tracking-wider">
             OAUTH
           </span>
         </div>
