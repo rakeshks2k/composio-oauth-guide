@@ -82,7 +82,7 @@ export function ResearchPanel({
       {/* 2. Main Console Output Area */}
       <div className="flex-1 overflow-y-auto p-4 sm:p-5 text-[12px] font-mono bg-[#0f0f0f] space-y-3 leading-[1.7]">
         {events.length === 0 && !isGenerating && (
-          <div className="pt-8 px-1 space-y-3 text-[#737373]">
+          <div className="pt-1.5 px-1 space-y-3 text-[#737373]">
             <div className="text-white font-medium text-[12.5px] flex items-center gap-2">
               <span className="text-[#51a2ff]">&gt;</span>
               <span>oauth-research-agent ready</span>

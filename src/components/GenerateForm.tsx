@@ -131,7 +131,7 @@ export function GenerateForm({
       </div>
 
       {/* 2. Form Body - Centered, well-spaced, filling width nicely without voids */}
-      <div className="flex-1 overflow-y-auto px-6 sm:px-10 lg:px-12 py-9 space-y-8 max-w-4xl mx-auto w-full">
+      <div className="flex-1 overflow-y-auto px-6 sm:px-10 lg:px-12 pt-5 pb-12 space-y-6 max-w-4xl mx-auto w-full">
         <div className="space-y-2">
           <h2 className="text-base sm:text-lg font-medium text-white tracking-tight">
             Research Third-Party Application

@@ -69,8 +69,8 @@ export function Sidebar({
 
   return (
     <aside className="w-full h-full flex flex-col bg-[#141414] border-r border-[#262626] select-none text-[13px]">
-      {/* 1. Header: Composio Logo + OAuth Badge */}
-      <div className="h-13 px-4 flex items-center justify-between border-b border-[#262626] flex-shrink-0">
+      {/* 1. Header: Composio Logo + OAuth Badge (Strict 48px height aligned with center & right headers) */}
+      <div className="h-12 px-4 flex items-center justify-between border-b border-[#262626] flex-shrink-0">
         <div className="flex items-center gap-2.5">
           <Image
             src="/composio-logo-white.png"
@@ -87,7 +87,7 @@ export function Sidebar({
       </div>
 
       {/* 2. Primary Actions & Search Area */}
-      <div className="p-3.5 space-y-2.5 border-b border-[#262626] flex-shrink-0">
+      <div className="p-3 space-y-2 border-b border-[#262626] flex-shrink-0">
         <button
           onClick={() => {
             onGenerateClick();
@@ -122,7 +122,7 @@ export function Sidebar({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search guides..."
-            className="w-full h-8.5 bg-[#181818] border border-[#262626] rounded-md pl-9 pr-12 text-[12.5px] text-white placeholder:text-[#666666] focus:outline-none focus:border-[#51a2ff] transition-colors"
+            className="w-full h-9 bg-[#181818] border border-[#262626] rounded-md pl-9 pr-12 text-[12.5px] text-white placeholder:text-[#666666] focus:outline-none focus:border-[#51a2ff] transition-colors"
           />
           {searchQuery ? (
             <button
@@ -142,7 +142,7 @@ export function Sidebar({
       {/* 3. Navigation Links: Guide Library & Recent Guides */}
       <div className="flex-1 overflow-y-auto px-2.5 py-3 space-y-1">
         {/* Section: Researched Guide Library */}
-        <div className="pt-1.5 pb-1.5 px-2.5 flex items-center justify-between text-[11px] font-medium uppercase tracking-wider text-[#737373]">
+        <div className="pt-2 pb-1.5 px-2.5 flex items-center justify-between text-[11px] font-medium uppercase tracking-wider text-[#737373]">
           <span>Guide Library</span>
           <span className="text-[10px] font-mono text-[#555555]">{presetGuides.length}</span>
         </div>

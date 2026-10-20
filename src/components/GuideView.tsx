@@ -151,64 +151,64 @@ await composio.authConfigs.create({
       </div>
 
       {/* 2. Scrollable Guide Body */}
-      <div className="flex-1 overflow-y-auto px-6 sm:px-10 lg:px-12 py-9 space-y-9 max-w-4xl mx-auto w-full">
+      <div className="flex-1 overflow-y-auto px-6 sm:px-10 lg:px-12 pt-5 pb-12 space-y-6 max-w-4xl mx-auto w-full">
         {/* Architecture Recommendation & Summary */}
-        <div className="p-6 sm:p-7 rounded-md bg-[#141414] border border-[#262626] space-y-4">
+        <div className="p-5 sm:p-6 rounded-lg bg-[#141414] border border-[#262626] space-y-3.5">
           <div className="flex items-center justify-between flex-wrap gap-2">
-            <div className="text-[11px] font-mono font-medium text-white uppercase tracking-wider flex items-center gap-2">
-              <span className="text-[#51a2ff]">PATH:</span>
-              <span>{guide.recommendedPath === 'managed' ? 'Composio Managed OAuth' : 'Custom OAuth App'}</span>
+            <div className="text-[11px] font-medium text-white uppercase tracking-wider flex items-center gap-2">
+              <span className="text-[#51a2ff] font-mono">PATH:</span>
+              <span className="font-medium">{guide.recommendedPath === 'managed' ? 'Composio Managed OAuth' : 'Custom OAuth App'}</span>
             </div>
-            <div className="text-[11px] font-mono text-[#737373] bg-[#181818] border border-[#262626] px-2 py-0.5 rounded capitalize">
+            <div className="text-[11px] font-mono text-[#8c8c8c] bg-[#1a1a1a] border border-[#262626] px-2 py-0.5 rounded capitalize">
               Difficulty: {guide.difficulty.replace('-', ' ')}
             </div>
           </div>
 
-          <p className="text-[13.5px] text-[#a1a1a1] leading-[1.75]">
+          <p className="text-[13.5px] text-[#a0a0a0] leading-[1.7]">
             {guide.pathJustification}
           </p>
 
-          <div className="pt-4 border-t border-[#202020]">
-            <p className="text-[13.5px] text-[#e0e0e0] leading-[1.75]">
+          <div className="pt-3 border-t border-[#1f1f1f]">
+            <p className="text-[13.5px] text-[#d4d4d4] leading-[1.7]">
               {guide.summary}
             </p>
           </div>
         </div>
 
         {/* Effort & Time Breakdown Strip */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="p-5 rounded-md bg-[#141414] border border-[#262626]">
-            <div className="text-[#737373] text-[11px] font-mono uppercase tracking-wider mb-1.5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+          <div className="p-4 sm:p-4.5 rounded-lg bg-[#141414] border border-[#262626]">
+            <div className="text-[#737373] text-[11px] font-medium uppercase tracking-wider mb-1">
               Hands-on Effort
             </div>
-            <div className="text-white font-mono font-medium text-lg sm:text-xl my-1">
+            <div className="text-white font-mono font-medium text-lg sm:text-xl my-0.5">
               {guide.handsOnHours.min}–{guide.handsOnHours.max} hours
             </div>
-            <div className="text-[#666666] text-[12px] mt-1">
+            <div className="text-[#666666] text-[11.5px] mt-0.5">
               Direct engineering setup
             </div>
           </div>
 
-          <div className="p-5 rounded-md bg-[#141414] border border-[#262626]">
-            <div className="text-[#737373] text-[11px] font-mono uppercase tracking-wider mb-1.5">
+          <div className="p-4 sm:p-4.5 rounded-lg bg-[#141414] border border-[#262626]">
+            <div className="text-[#737373] text-[11px] font-medium uppercase tracking-wider mb-1">
               Calendar Elapsed
             </div>
-            <div className="text-white font-mono font-medium text-lg sm:text-xl my-1">
+            <div className="text-white font-mono font-medium text-lg sm:text-xl my-0.5">
               {guide.elapsedDays.min}–{guide.elapsedDays.max} days
             </div>
-            <div className="text-[#666666] text-[12px] mt-1">
+            <div className="text-[#666666] text-[11.5px] mt-0.5">
               Kickoff to production live
             </div>
           </div>
 
-          <div className="p-5 rounded-md bg-[#141414] border border-[#262626]">
-            <div className="text-[#737373] text-[11px] font-mono uppercase tracking-wider mb-1.5">
+          <div className="p-4 sm:p-4.5 rounded-lg bg-[#141414] border border-[#262626]">
+            <div className="text-[#737373] text-[11px] font-medium uppercase tracking-wider mb-1">
               External Approval
             </div>
-            <div className="text-white font-mono font-medium text-lg sm:text-xl my-1">
+            <div className="text-white font-mono font-medium text-lg sm:text-xl my-0.5">
               {guide.approvalDays ? `${guide.approvalDays.min}–${guide.approvalDays.max} days` : 'Immediate (0d)'}
             </div>
-            <div className="text-[#666666] text-[12px] mt-1">
+            <div className="text-[#666666] text-[11.5px] mt-0.5">
               {guide.approvalDays ? 'Provider review queue' : 'No review required'}
             </div>
           </div>
@@ -217,7 +217,7 @@ await composio.authConfigs.create({
         {/* Composio Integration Code Snippet */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-[12px] font-mono uppercase tracking-wider text-[#737373]">
+            <h2 className="text-[11.5px] font-medium uppercase tracking-wider text-[#737373]">
               Composio Integration Code
             </h2>
             <span className="text-[11px] font-mono text-[#555555]">Production-ready</span>
@@ -234,7 +234,7 @@ await composio.authConfigs.create({
         {guide.setupChecklist.length > 0 && (
           <div className="space-y-3.5">
             <div className="flex items-center justify-between">
-              <h2 className="text-[12px] font-mono uppercase tracking-wider text-[#737373]">
+              <h2 className="text-[11.5px] font-medium uppercase tracking-wider text-[#737373]">
                 Ordered Setup Checklist
               </h2>
               <span className="text-[11px] font-mono text-[#555555]">
@@ -299,7 +299,7 @@ await composio.authConfigs.create({
         {guide.scopes.length > 0 && (
           <div className="space-y-3.5">
             <div className="flex items-center justify-between">
-              <h2 className="text-[12px] font-mono uppercase tracking-wider text-[#737373]">
+              <h2 className="text-[11.5px] font-medium uppercase tracking-wider text-[#737373]">
                 OAuth Scopes &amp; Permissions
               </h2>
               <span className="text-[11px] font-mono text-[#555555]">
@@ -351,7 +351,7 @@ await composio.authConfigs.create({
         {guide.commonBlockers.length > 0 && (
           <div className="space-y-3.5">
             <div className="flex items-center justify-between">
-              <h2 className="text-[12px] font-mono uppercase tracking-wider text-[#737373]">
+              <h2 className="text-[11.5px] font-medium uppercase tracking-wider text-[#737373]">
                 Potential Blockers &amp; Resolutions
               </h2>
               <span className="text-[11px] font-mono text-[#555555]">
@@ -407,7 +407,7 @@ await composio.authConfigs.create({
         {guide.agentCapabilities.length > 0 && (
           <div className="space-y-3.5">
             <div className="flex items-center justify-between">
-              <h2 className="text-[12px] font-mono uppercase tracking-wider text-[#737373]">
+              <h2 className="text-[11.5px] font-medium uppercase tracking-wider text-[#737373]">
                 Agent Automation vs. Developer Responsibilities
               </h2>
             </div>
@@ -449,7 +449,7 @@ await composio.authConfigs.create({
         {guide.sources.length > 0 && (
           <div className="space-y-3.5">
             <div className="flex items-center justify-between">
-              <h2 className="text-[12px] font-mono uppercase tracking-wider text-[#737373]">
+              <h2 className="text-[11.5px] font-medium uppercase tracking-wider text-[#737373]">
                 Official Documentation &amp; Policies
               </h2>
               <span className="text-[11px] font-mono text-[#555555]">
