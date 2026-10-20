@@ -1,283 +1,418 @@
 'use client';
 
-import { Guide } from '@/lib/types';
+import { useState } from 'react';
+import { Guide, ChecklistItem } from '@/lib/types';
 import {
-  CheckCircle,
-  XCircle,
+  Copy,
+  Check,
+  Share2,
+  ExternalLink,
   Clock,
   Calendar,
   AlertTriangle,
-  ExternalLink,
-  Copy,
-  Share2,
-  Shield,
-  Zap,
-  Info,
   ChevronDown,
   ChevronUp,
+  ShieldCheck,
+  CheckCircle2,
+  XCircle,
 } from 'lucide-react';
 import { clsx } from 'clsx';
-import { useState } from 'react';
 
 interface GuideViewProps {
   guide: Guide;
 }
 
-const DIFFICULTY_COLORS: Record<string, string> = {
-  'easy': 'text-green-400 bg-green-400/10 border-green-400/30',
-  'medium': 'text-yellow-400 bg-yellow-400/10 border-yellow-400/30',
-  'hard': 'text-orange-400 bg-orange-400/10 border-orange-400/30',
-  'very-hard': 'text-accent-red bg-accent-red/10 border-accent-red/30',
-};
-
-const STEP_TYPE_COLORS: Record<string, string> = {
-  'app-registration': 'text-blue-400 bg-blue-400/10',
-  'end-user-auth': 'text-green-400 bg-green-400/10',
-  'provider-verification': 'text-orange-400 bg-orange-400/10',
-  'marketplace-review': 'text-purple-400 bg-purple-400/10',
-};
-
-const STEP_TYPE_LABELS: Record<string, string> = {
+const STEP_TYPE_LABELS: Record<ChecklistItem['type'], string> = {
   'app-registration': 'App Registration',
   'end-user-auth': 'End User Auth',
   'provider-verification': 'Provider Verification',
   'marketplace-review': 'Marketplace Review',
 };
 
-const SENSITIVITY_COLORS: Record<string, string> = {
-  'basic': 'text-green-400 bg-green-400/10',
-  'sensitive': 'text-accent-amber bg-accent-amber/10',
-  'restricted': 'text-accent-red bg-accent-red/10',
+const STEP_TYPE_BADGES: Record<ChecklistItem['type'], { text: string; bg: string; border: string }> = {
+  'app-registration': { text: '#51a2ff', bg: '#0d2636', border: '#1a5676' },
+  'end-user-auth': { text: '#10b981', bg: '#0b291e', border: '#135e45' },
+  'provider-verification': { text: '#f59e0b', bg: '#291d06', border: '#664708' },
+  'marketplace-review': { text: '#a855f7', bg: '#260f38', border: '#592285' },
 };
 
-const SEVERITY_COLORS: Record<string, string> = {
-  'low': 'border-l-blue-400',
-  'medium': 'border-l-accent-amber',
-  'high': 'border-l-accent-red',
-};
+function CodeSnippetCard({
+  title,
+  tabs,
+  activeTab,
+  onTabChange,
+  code,
+  language = 'bash',
+}: {
+  title: string;
+  tabs?: string[];
+  activeTab?: string;
+  onTabChange?: (tab: string) => void;
+  code: string;
+  language?: string;
+}) {
+  const [copied, setCopied] = useState(false);
 
-function Section({ title, icon, children }: { title: string; icon?: React.ReactNode; children: React.ReactNode }) {
+  function copyCode() {
+    navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
   return (
-    <div className="space-y-3">
-      <div className="flex items-center gap-2">
-        {icon && <span className="text-text-muted">{icon}</span>}
-        <h2 className="text-sm font-semibold text-text-primary uppercase tracking-wider">{title}</h2>
+    <div className="space-y-2">
+      <div className="text-xs font-semibold text-white tracking-tight">{title}</div>
+      <div className="rounded-md bg-[#141414] border border-[#2c2c2c] overflow-hidden font-mono">
+        {/* Card Header Bar */}
+        <div className="h-9 px-3 flex items-center justify-between border-b border-[#2c2c2c] bg-[#1a1a1a]">
+          {tabs && tabs.length > 0 ? (
+            <div className="flex items-center gap-3">
+              {tabs.map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => onTabChange?.(tab)}
+                  className={clsx(
+                    'text-[11px] font-mono transition-colors',
+                    activeTab === tab
+                      ? 'text-white font-medium'
+                      : 'text-[#737373] hover:text-[#a0a0a0]'
+                  )}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="text-[11px] text-[#737373]">{language}</div>
+          )}
+
+          <button
+            onClick={copyCode}
+            className="text-[#737373] hover:text-white p-1 rounded transition-colors flex items-center gap-1 text-[11px]"
+            title="Copy snippet"
+          >
+            {copied ? (
+              <Check className="w-3.5 h-3.5 text-[#10b981]" />
+            ) : (
+              <Copy className="w-3.5 h-3.5" />
+            )}
+          </button>
+        </div>
+
+        {/* Code Content */}
+        <div className="p-3.5 overflow-x-auto text-xs text-white leading-relaxed">
+          <pre className="whitespace-pre">{code}</pre>
+        </div>
       </div>
-      {children}
     </div>
   );
 }
 
 export function GuideView({ guide }: GuideViewProps) {
-  const [expandedBlocker, setExpandedBlocker] = useState<number | null>(null);
-  const [copied, setCopied] = useState(false);
   const [copiedMd, setCopiedMd] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
+  const [expandedBlocker, setExpandedBlocker] = useState<number | null>(null);
+  const [packageTab, setPackageTab] = useState('npm');
 
-  const shareUrl = typeof window !== 'undefined'
-    ? `${window.location.origin}/guides/${guide.slug}`
-    : `/guides/${guide.slug}`;
+  const shareUrl =
+    typeof window !== 'undefined'
+      ? `${window.location.origin}/guides/${guide.slug}`
+      : `/guides/${guide.slug}`;
 
-  async function copyShareUrl() {
-    await navigator.clipboard.writeText(shareUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }
-
-  async function copyAsMarkdown() {
+  function copyMarkdown() {
     const md = guideToMarkdown(guide);
-    await navigator.clipboard.writeText(md);
+    navigator.clipboard.writeText(md);
     setCopiedMd(true);
     setTimeout(() => setCopiedMd(false), 2000);
   }
 
-  return (
-    <div className="flex-1 overflow-y-auto">
-      <div className="max-w-3xl mx-auto p-6 space-y-8 pb-16">
-        {/* Header */}
-        <div className="space-y-4">
-          <div className="flex items-start justify-between gap-4">
-            <div className="space-y-2">
-              <h1 className="text-2xl font-bold text-text-primary">{guide.appName}</h1>
-              {guide.appDomain && (
-                <a
-                  href={`https://${guide.appDomain}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1 text-sm text-text-muted hover:text-accent-teal transition-colors"
-                >
-                  {guide.appDomain}
-                  <ExternalLink className="w-3 h-3" />
-                </a>
-              )}
-            </div>
-            <div className="flex items-center gap-2 flex-shrink-0">
-              <button
-                onClick={copyAsMarkdown}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-bg-border hover:bg-bg-secondary text-text-secondary hover:text-text-primary text-xs font-medium transition-colors"
-              >
-                <Copy className="w-3.5 h-3.5" />
-                {copiedMd ? 'Copied!' : 'Copy MD'}
-              </button>
-              <button
-                onClick={copyShareUrl}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-bg-border hover:bg-bg-secondary text-text-secondary hover:text-text-primary text-xs font-medium transition-colors"
-              >
-                <Share2 className="w-3.5 h-3.5" />
-                {copied ? 'Copied!' : 'Share'}
-              </button>
-            </div>
-          </div>
+  function copyShareLink() {
+    navigator.clipboard.writeText(shareUrl);
+    setCopiedLink(true);
+    setTimeout(() => setCopiedLink(false), 2000);
+  }
 
-          {/* Badges */}
-          <div className="flex flex-wrap items-center gap-2">
-            <span
-              className={clsx(
-                'px-3 py-1 rounded-full text-xs font-semibold border',
-                guide.recommendedPath === 'managed'
-                  ? 'text-accent-teal bg-accent-teal/10 border-accent-teal/30'
-                  : 'text-accent-amber bg-accent-amber/10 border-accent-amber/30'
-              )}
-            >
-              {guide.recommendedPath === 'managed' ? '✓ Managed OAuth' : '⚡ Custom OAuth'}
+  // Sample Composio SDK quickstart snippet for this guide
+  const sampleInstallCommand =
+    packageTab === 'npm'
+      ? `npm install @composio/core @composio/vercel ai`
+      : packageTab === 'pnpm'
+      ? `pnpm add @composio/core @composio/vercel ai`
+      : packageTab === 'yarn'
+      ? `yarn add @composio/core @composio/vercel ai`
+      : `bun add @composio/core @composio/vercel ai`;
+
+  const sampleAgentCode = `import { Composio } from "@composio/core";
+import { VercelProvider } from "@composio/vercel";
+import { streamText } from "ai";
+
+const composio = new Composio({
+  apiKey: process.env.COMPOSIO_API_KEY,
+});
+
+// Connect to ${guide.appName} (${guide.recommendedPath === 'managed' ? 'Managed OAuth' : 'Custom App'})
+const tools = await composio.getTools({
+  tools: ["${guide.slug.toUpperCase().replace('-', '_')}_*"],
+  entityId: "default_user",
+});`;
+
+  return (
+    <div className="flex-1 flex flex-col h-screen overflow-hidden bg-[#0f0f0f]">
+      {/* 1. Workspace Header Bar matching Composio screenshot */}
+      <div className="h-12 px-6 flex items-center justify-between border-b border-[#2c2c2c] bg-[#0f0f0f] flex-shrink-0">
+        <div className="flex items-center gap-3 min-w-0">
+          <span className="text-sm font-semibold text-white tracking-tight truncate">
+            {guide.appName}
+          </span>
+          <span
+            className={clsx(
+              'text-[10px] font-mono px-2 py-0.5 rounded border uppercase tracking-wider',
+              guide.recommendedPath === 'managed'
+                ? 'bg-[#0d2636] border-[#1a5676] text-[#51a2ff]'
+                : 'bg-[#291d06] border-[#664708] text-[#f59e0b]'
+            )}
+          >
+            {guide.recommendedPath === 'managed' ? 'Managed OAuth' : 'Custom OAuth'}
+          </span>
+          {guide.composioManaged && (
+            <span className="hidden sm:inline-flex text-[10px] font-mono text-[#737373]">
+              Toolkit Supported
             </span>
-            <span className={clsx('px-3 py-1 rounded-full text-xs font-semibold border', DIFFICULTY_COLORS[guide.difficulty])}>
-              {guide.difficulty === 'very-hard' ? 'Very Hard' : guide.difficulty.charAt(0).toUpperCase() + guide.difficulty.slice(1)}
-            </span>
-            {guide.composioManaged && (
-              <span className="px-3 py-1 rounded-full text-xs font-semibold text-text-secondary bg-bg-border border border-bg-border">
-                Composio Managed Available
+          )}
+        </div>
+
+        {/* Action Buttons matching Composio screenshot */}
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <button
+            onClick={copyMarkdown}
+            className="h-8 px-3 rounded-md bg-[#1a1a1a] border border-[#2c2c2c] hover:border-[#383838] text-white text-xs font-medium flex items-center gap-1.5 transition-colors"
+          >
+            {copiedMd ? (
+              <Check className="w-3.5 h-3.5 text-[#10b981]" />
+            ) : (
+              <Copy className="w-3.5 h-3.5 text-[#a0a0a0]" />
+            )}
+            <span>Copy as Markdown</span>
+          </button>
+
+          <button
+            onClick={copyShareLink}
+            className="h-8 px-3 rounded-md bg-[#1a1a1a] border border-[#2c2c2c] hover:border-[#383838] text-[#a0a0a0] hover:text-white text-xs font-medium flex items-center gap-1.5 transition-colors"
+            title="Copy shareable guide link"
+          >
+            {copiedLink ? (
+              <Check className="w-3.5 h-3.5 text-[#10b981]" />
+            ) : (
+              <Share2 className="w-3.5 h-3.5" />
+            )}
+            <span className="hidden sm:inline">Share</span>
+          </button>
+        </div>
+      </div>
+
+      {/* 2. Scrollable Guide Body */}
+      <div className="flex-1 overflow-y-auto px-6 sm:px-10 py-6 space-y-7 max-w-4xl">
+        {/* Recommendation & Overview Card */}
+        <div className="p-4 rounded-md bg-[#141414] border border-[#2c2c2c] space-y-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#51a2ff]" />
+              <span className="text-xs font-mono font-semibold uppercase tracking-wider text-[#51a2ff]">
+                Recommended Architecture: {guide.recommendedPath.toUpperCase()}
               </span>
+            </div>
+            {guide.appDomain && (
+              <a
+                href={`https://${guide.appDomain}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[11px] font-mono text-[#737373] hover:text-[#51a2ff] flex items-center gap-1 transition-colors"
+              >
+                <span>{guide.appDomain}</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
             )}
           </div>
-        </div>
-
-        {/* Path recommendation */}
-        <div
-          className={clsx(
-            'p-4 rounded-xl border',
-            guide.recommendedPath === 'managed'
-              ? 'bg-accent-teal/5 border-accent-teal/20'
-              : 'bg-accent-amber/5 border-accent-amber/20'
-          )}
-        >
-          <div className="flex items-start gap-3">
-            <Zap className={clsx('w-5 h-5 flex-shrink-0 mt-0.5', guide.recommendedPath === 'managed' ? 'text-accent-teal' : 'text-accent-amber')} />
-            <div>
-              <div className={clsx('text-sm font-semibold mb-1', guide.recommendedPath === 'managed' ? 'text-accent-teal' : 'text-accent-amber')}>
-                Recommendation: {guide.recommendedPath === 'managed' ? 'Start with Managed OAuth' : 'Use Custom OAuth'}
-              </div>
-              <p className="text-sm text-text-secondary leading-relaxed">{guide.pathJustification}</p>
-            </div>
+          <p className="text-xs text-[#a0a0a0] leading-relaxed">
+            {guide.pathJustification}
+          </p>
+          <div className="pt-2 text-xs text-white leading-relaxed border-t border-[#222222]">
+            {guide.summary}
           </div>
         </div>
 
-        {/* Summary */}
-        <p className="text-sm text-text-secondary leading-relaxed">{guide.summary}</p>
-
-        {/* Time estimates */}
-        <Section title="Time Estimates" icon={<Clock className="w-4 h-4" />}>
-          <div className="grid grid-cols-3 gap-3">
-            <div className="p-4 rounded-xl bg-bg-secondary border border-bg-border">
-              <div className="text-xs text-text-muted mb-1">Hands-on Work</div>
-              <div className="text-lg font-bold text-text-primary">
-                {guide.handsOnHours.min}–{guide.handsOnHours.max}h
-              </div>
-              <div className="text-xs text-text-muted mt-1">Active setup time</div>
+        {/* 3-Metric Stats (Hands-on, Elapsed, Approval wait) */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono">
+          <div className="p-3.5 rounded-md bg-[#141414] border border-[#2c2c2c]">
+            <div className="text-[10px] text-[#737373] uppercase tracking-wider mb-1 flex items-center gap-1.5">
+              <Clock className="w-3 h-3 text-[#51a2ff]" />
+              <span>Hands-on Effort</span>
             </div>
-            <div className="p-4 rounded-xl bg-bg-secondary border border-bg-border">
-              <div className="text-xs text-text-muted mb-1">Total Elapsed</div>
-              <div className="text-lg font-bold text-text-primary">
-                {guide.elapsedDays.min}–{guide.elapsedDays.max}d
-              </div>
-              <div className="text-xs text-text-muted mt-1">Calendar days</div>
+            <div className="text-lg font-bold text-white">
+              {guide.handsOnHours.min}–{guide.handsOnHours.max}h
             </div>
-            <div className="p-4 rounded-xl bg-bg-secondary border border-bg-border">
-              <div className="text-xs text-text-muted mb-1">Approval Wait</div>
-              <div className="text-lg font-bold text-text-primary">
-                {guide.approvalDays ? `${guide.approvalDays.min}–${guide.approvalDays.max}d` : 'None'}
-              </div>
-              <div className="text-xs text-text-muted mt-1">External review</div>
-            </div>
+            <div className="text-[10px] text-[#737373] mt-0.5">Active engineering setup</div>
           </div>
-        </Section>
 
-        {/* Setup Checklist */}
+          <div className="p-3.5 rounded-md bg-[#141414] border border-[#2c2c2c]">
+            <div className="text-[10px] text-[#737373] uppercase tracking-wider mb-1 flex items-center gap-1.5">
+              <Calendar className="w-3 h-3 text-[#f59e0b]" />
+              <span>Total Elapsed</span>
+            </div>
+            <div className="text-lg font-bold text-white">
+              {guide.elapsedDays.min}–{guide.elapsedDays.max}d
+            </div>
+            <div className="text-[10px] text-[#737373] mt-0.5">Start to production readiness</div>
+          </div>
+
+          <div className="p-3.5 rounded-md bg-[#141414] border border-[#2c2c2c]">
+            <div className="text-[10px] text-[#737373] uppercase tracking-wider mb-1 flex items-center gap-1.5">
+              <ShieldCheck className="w-3 h-3 text-[#10b981]" />
+              <span>Approval Wait</span>
+            </div>
+            <div className="text-lg font-bold text-white">
+              {guide.approvalDays ? `${guide.approvalDays.min}–${guide.approvalDays.max}d` : 'None'}
+            </div>
+            <div className="text-[10px] text-[#737373] mt-0.5">External provider audit</div>
+          </div>
+        </div>
+
+        {/* Code Snippets matching Composio screenshot */}
+        <CodeSnippetCard
+          title="Install Composio toolkits"
+          tabs={['npm', 'pnpm', 'yarn', 'bun']}
+          activeTab={packageTab}
+          onTabChange={setPackageTab}
+          code={sampleInstallCommand}
+        />
+
+        <CodeSnippetCard
+          title="Connect agent with Composio"
+          tabs={['agent.ts']}
+          code={sampleAgentCode}
+          language="typescript"
+        />
+
+        {/* Setup Checklist matching screenshot's step numbers */}
         {guide.setupChecklist.length > 0 && (
-          <Section title="Setup Checklist" icon={<Shield className="w-4 h-4" />}>
-            <div className="space-y-3">
-              {guide.setupChecklist.map((item) => (
-                <div key={item.id} className="p-4 rounded-xl bg-bg-secondary border border-bg-border">
-                  <div className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-bg-border flex items-center justify-center text-xs font-bold text-text-muted mt-0.5">
-                      {item.step}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap mb-1">
-                        <span className="text-sm font-semibold text-text-primary">{item.title}</span>
-                        <span className={clsx('text-[10px] px-1.5 py-0.5 rounded font-medium', STEP_TYPE_COLORS[item.type])}>
-                          {STEP_TYPE_LABELS[item.type]}
-                        </span>
-                        {item.estimatedTime && (
-                          <span className="text-[10px] text-text-muted flex items-center gap-1">
-                            <Clock className="w-3 h-3" />
-                            {item.estimatedTime}
-                          </span>
-                        )}
+          <div className="space-y-3">
+            <div className="text-xs font-semibold text-white tracking-tight uppercase tracking-wider font-mono">
+              Setup Checklist
+            </div>
+
+            <div className="space-y-2.5">
+              {guide.setupChecklist.map((step) => {
+                const badge = STEP_TYPE_BADGES[step.type];
+
+                return (
+                  <div
+                    key={step.id}
+                    className="p-3.5 rounded-md bg-[#141414] border border-[#2c2c2c] hover:border-[#383838] transition-colors"
+                  >
+                    <div className="flex items-start gap-3">
+                      {/* Dark square step number badge matching screenshot step 4 */}
+                      <div className="w-6 h-6 rounded bg-[#1e1e1e] border border-[#2c2c2c] text-white font-mono font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">
+                        {step.step}
                       </div>
-                      <p className="text-sm text-text-secondary leading-relaxed mb-2">{item.description}</p>
-                      <div className="flex items-center justify-between gap-4">
-                        <div className="flex items-center gap-1.5">
-                          {item.agentCanDo ? (
-                            <span className="flex items-center gap-1 text-xs text-accent-teal">
-                              <CheckCircle className="w-3 h-3" /> Agent can do this
-                            </span>
-                          ) : (
-                            <span className="flex items-center gap-1 text-xs text-text-muted">
-                              <XCircle className="w-3 h-3" /> You must do this
+
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap mb-1">
+                          <span className="text-xs font-semibold text-white">
+                            {step.title}
+                          </span>
+                          <span
+                            className="text-[9px] font-mono px-1.5 py-0.2 rounded border uppercase tracking-wider"
+                            style={{
+                              color: badge.text,
+                              backgroundColor: badge.bg,
+                              borderColor: badge.border,
+                            }}
+                          >
+                            {STEP_TYPE_LABELS[step.type]}
+                          </span>
+                          {step.estimatedTime && (
+                            <span className="text-[10px] text-[#737373] font-mono">
+                              ({step.estimatedTime})
                             </span>
                           )}
                         </div>
-                        {item.officialLink && (
-                          <a
-                            href={item.officialLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-1 text-xs text-accent-teal hover:underline"
-                          >
-                            Docs <ExternalLink className="w-3 h-3" />
-                          </a>
-                        )}
+
+                        <p className="text-xs text-[#a0a0a0] leading-relaxed mb-2">
+                          {step.description}
+                        </p>
+
+                        <div className="flex items-center justify-between text-[11px] pt-2 border-t border-[#1e1e1e]">
+                          <div>
+                            {step.agentCanDo ? (
+                              <span className="text-[#10b981] flex items-center gap-1 font-mono text-[10px]">
+                                <CheckCircle2 className="w-3 h-3" /> Agent can prepare
+                              </span>
+                            ) : (
+                              <span className="text-[#737373] flex items-center gap-1 font-mono text-[10px]">
+                                <XCircle className="w-3 h-3" /> Manual developer action
+                              </span>
+                            )}
+                          </div>
+
+                          {step.officialLink && (
+                            <a
+                              href={step.officialLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[#51a2ff] hover:underline flex items-center gap-1 font-mono text-[10px]"
+                            >
+                              <span>Official Docs</span>
+                              <ExternalLink className="w-2.5 h-2.5" />
+                            </a>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
-          </Section>
+          </div>
         )}
 
-        {/* Scopes */}
+        {/* OAuth Scopes Table */}
         {guide.scopes.length > 0 && (
-          <Section title="OAuth Scopes" icon={<Shield className="w-4 h-4" />}>
-            <div className="overflow-hidden rounded-xl border border-bg-border">
-              <table className="w-full text-sm">
+          <div className="space-y-3 font-mono">
+            <div className="text-xs font-semibold text-white tracking-tight uppercase tracking-wider">
+              Scopes &amp; Sensitivity Tiers
+            </div>
+
+            <div className="rounded-md border border-[#2c2c2c] overflow-hidden bg-[#141414]">
+              <table className="w-full text-left text-xs">
                 <thead>
-                  <tr className="bg-bg-secondary border-b border-bg-border">
-                    <th className="text-left px-4 py-2.5 text-xs font-semibold text-text-muted uppercase tracking-wider">Scope</th>
-                    <th className="text-left px-4 py-2.5 text-xs font-semibold text-text-muted uppercase tracking-wider">Description</th>
-                    <th className="text-left px-4 py-2.5 text-xs font-semibold text-text-muted uppercase tracking-wider">Sensitivity</th>
+                  <tr className="border-b border-[#2c2c2c] bg-[#1a1a1a] text-[#737373] text-[10px] uppercase">
+                    <th className="py-2 px-3 font-semibold">Scope Identifier</th>
+                    <th className="py-2 px-3 font-semibold">Purpose</th>
+                    <th className="py-2 px-3 font-semibold">Tier</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-bg-border">
-                  {guide.scopes.map((scope, i) => (
-                    <tr key={i} className="bg-bg-primary hover:bg-bg-secondary/50 transition-colors">
-                      <td className="px-4 py-3 font-mono text-xs text-accent-teal whitespace-nowrap max-w-48">
-                        <span className="truncate block">{scope.scope}</span>
+                <tbody className="divide-y divide-[#222222]">
+                  {guide.scopes.map((s, idx) => (
+                    <tr key={idx} className="hover:bg-[#1a1a1a]/50 transition-colors">
+                      <td className="py-2.5 px-3 font-mono text-[#51a2ff] text-[11px]">
+                        <code>{s.scope}</code>
                       </td>
-                      <td className="px-4 py-3 text-xs text-text-secondary">{scope.description}</td>
-                      <td className="px-4 py-3">
-                        <span className={clsx('text-[10px] px-2 py-1 rounded font-medium', SENSITIVITY_COLORS[scope.sensitivity])}>
-                          {scope.sensitivity}
+                      <td className="py-2.5 px-3 text-[#a0a0a0] text-xs font-sans">
+                        {s.description}
+                      </td>
+                      <td className="py-2.5 px-3">
+                        <span
+                          className={clsx(
+                            'text-[9px] px-1.5 py-0.5 rounded border uppercase',
+                            s.sensitivity === 'basic' &&
+                              'text-[#10b981] bg-[#0b291e] border-[#135e45]',
+                            s.sensitivity === 'sensitive' &&
+                              'text-[#f59e0b] bg-[#291d06] border-[#664708]',
+                            s.sensitivity === 'restricted' &&
+                              'text-[#ef4444] bg-[#290d0d] border-[#5e1919]'
+                          )}
+                        >
+                          {s.sensitivity}
                         </span>
                       </td>
                     </tr>
@@ -285,187 +420,146 @@ export function GuideView({ guide }: GuideViewProps) {
                 </tbody>
               </table>
             </div>
-          </Section>
+          </div>
         )}
 
-        {/* Approval Requirements */}
-        {guide.approvalRequirements.length > 0 && (
-          <Section title="Approval Requirements" icon={<Calendar className="w-4 h-4" />}>
-            <div className="space-y-3">
-              {guide.approvalRequirements.map((req, i) => (
-                <div key={i} className="p-4 rounded-xl bg-bg-secondary border border-bg-border">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-sm font-semibold text-text-primary">{req.name}</span>
-                        <span className={clsx('text-[10px] px-1.5 py-0.5 rounded font-medium', req.required ? 'text-accent-red bg-accent-red/10' : 'text-text-muted bg-bg-border')}>
-                          {req.required ? 'Required' : 'Optional'}
+        {/* Common Blockers Accordion */}
+        {guide.commonBlockers.length > 0 && (
+          <div className="space-y-3 font-mono">
+            <div className="text-xs font-semibold text-white tracking-tight uppercase tracking-wider">
+              Common Blockers &amp; Mitigations
+            </div>
+
+            <div className="space-y-2">
+              {guide.commonBlockers.map((b, idx) => {
+                const isOpen = expandedBlocker === idx;
+
+                return (
+                  <div
+                    key={idx}
+                    className="rounded-md bg-[#141414] border border-[#2c2c2c] overflow-hidden"
+                  >
+                    <button
+                      onClick={() => setExpandedBlocker(isOpen ? null : idx)}
+                      className="w-full p-3 flex items-center justify-between text-left hover:bg-[#1a1a1a] transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        <AlertTriangle
+                          className={clsx(
+                            'w-3.5 h-3.5 flex-shrink-0',
+                            b.severity === 'high'
+                              ? 'text-[#ef4444]'
+                              : b.severity === 'medium'
+                              ? 'text-[#f59e0b]'
+                              : 'text-[#51a2ff]'
+                          )}
+                        />
+                        <span className="text-xs font-medium text-white font-sans">
+                          {b.title}
                         </span>
                       </div>
-                      <p className="text-xs text-text-secondary">{req.description}</p>
-                    </div>
-                    {req.estimatedTime && (
-                      <div className="text-right flex-shrink-0">
-                        <div className="text-xs text-text-muted">Wait time</div>
-                        <div className="text-sm font-semibold text-accent-amber">{req.estimatedTime}</div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[9px] uppercase text-[#737373]">
+                          {b.severity}
+                        </span>
+                        {isOpen ? (
+                          <ChevronUp className="w-3.5 h-3.5 text-[#737373]" />
+                        ) : (
+                          <ChevronDown className="w-3.5 h-3.5 text-[#737373]" />
+                        )}
+                      </div>
+                    </button>
+
+                    {isOpen && (
+                      <div className="p-3 pt-0 border-t border-[#1e1e1e] space-y-2 text-xs font-sans">
+                        <p className="text-[#a0a0a0] leading-relaxed">{b.description}</p>
+                        <div className="p-2.5 rounded bg-[#1e1e1e] border border-[#2c2c2c]">
+                          <div className="text-[10px] font-mono text-[#51a2ff] uppercase mb-0.5">
+                            Resolution
+                          </div>
+                          <div className="text-white text-xs leading-relaxed">
+                            {b.resolution}
+                          </div>
+                        </div>
                       </div>
                     )}
                   </div>
-                  {req.link && (
-                    <a href={req.link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-accent-teal hover:underline mt-2">
-                      View Requirements <ExternalLink className="w-3 h-3" />
-                    </a>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
-          </Section>
+          </div>
         )}
 
-        {/* Common Blockers */}
-        {guide.commonBlockers.length > 0 && (
-          <Section title="Common Blockers" icon={<AlertTriangle className="w-4 h-4" />}>
-            <div className="space-y-2">
-              {guide.commonBlockers.map((blocker, i) => (
-                <div key={i} className={clsx('rounded-xl bg-bg-secondary border border-bg-border border-l-4 overflow-hidden', SEVERITY_COLORS[blocker.severity])}>
-                  <button
-                    className="w-full flex items-center justify-between p-4 text-left"
-                    onClick={() => setExpandedBlocker(expandedBlocker === i ? null : i)}
-                  >
-                    <div className="flex items-center gap-2">
-                      <AlertTriangle className={clsx('w-4 h-4 flex-shrink-0', {
-                        'text-blue-400': blocker.severity === 'low',
-                        'text-accent-amber': blocker.severity === 'medium',
-                        'text-accent-red': blocker.severity === 'high',
-                      })} />
-                      <span className="text-sm font-medium text-text-primary">{blocker.title}</span>
-                    </div>
-                    {expandedBlocker === i ? <ChevronUp className="w-4 h-4 text-text-muted" /> : <ChevronDown className="w-4 h-4 text-text-muted" />}
-                  </button>
-                  {expandedBlocker === i && (
-                    <div className="px-4 pb-4 space-y-2">
-                      <p className="text-xs text-text-secondary">{blocker.description}</p>
-                      <div className="p-3 rounded-lg bg-bg-border/50">
-                        <div className="text-xs font-medium text-text-secondary mb-1">Resolution</div>
-                        <p className="text-xs text-text-muted">{blocker.resolution}</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </Section>
-        )}
-
-        {/* Agent Capabilities */}
+        {/* Agent Capabilities Matrix */}
         {guide.agentCapabilities.length > 0 && (
-          <Section title="Agent Capabilities" icon={<Zap className="w-4 h-4" />}>
-            <div className="overflow-hidden rounded-xl border border-bg-border">
-              <table className="w-full text-sm">
+          <div className="space-y-3 font-mono">
+            <div className="text-xs font-semibold text-white tracking-tight uppercase tracking-wider">
+              Agent Automation Matrix
+            </div>
+
+            <div className="rounded-md border border-[#2c2c2c] overflow-hidden bg-[#141414]">
+              <table className="w-full text-left text-xs">
                 <thead>
-                  <tr className="bg-bg-secondary border-b border-bg-border">
-                    <th className="text-left px-4 py-2.5 text-xs font-semibold text-text-muted uppercase tracking-wider">Action</th>
-                    <th className="text-left px-4 py-2.5 text-xs font-semibold text-text-muted uppercase tracking-wider">Status</th>
-                    <th className="text-left px-4 py-2.5 text-xs font-semibold text-text-muted uppercase tracking-wider">Notes</th>
+                  <tr className="border-b border-[#2c2c2c] bg-[#1a1a1a] text-[#737373] text-[10px] uppercase">
+                    <th className="py-2 px-3 font-semibold">Action</th>
+                    <th className="py-2 px-3 font-semibold">Autonomous</th>
+                    <th className="py-2 px-3 font-semibold">Operational Notes</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-bg-border">
-                  {guide.agentCapabilities.map((cap, i) => (
-                    <tr key={i} className="bg-bg-primary hover:bg-bg-secondary/50 transition-colors">
-                      <td className="px-4 py-3 text-xs text-text-primary">{cap.action}</td>
-                      <td className="px-4 py-3">
+                <tbody className="divide-y divide-[#222222]">
+                  {guide.agentCapabilities.map((cap, idx) => (
+                    <tr key={idx} className="hover:bg-[#1a1a1a]/50 transition-colors">
+                      <td className="py-2.5 px-3 text-white font-sans text-xs">
+                        {cap.action}
+                      </td>
+                      <td className="py-2.5 px-3">
                         {cap.canDo ? (
-                          <span className="flex items-center gap-1 text-xs text-accent-teal">
-                            <CheckCircle className="w-3 h-3" /> Yes
+                          <span className="text-[#10b981] flex items-center gap-1 text-[11px]">
+                            <Check className="w-3 h-3" /> Yes
                           </span>
                         ) : (
-                          <span className="flex items-center gap-1 text-xs text-text-muted">
-                            <XCircle className="w-3 h-3" /> No
-                          </span>
+                          <span className="text-[#737373] text-[11px]">No</span>
                         )}
                       </td>
-                      <td className="px-4 py-3 text-xs text-text-muted">{cap.notes}</td>
+                      <td className="py-2.5 px-3 text-[#737373] text-xs font-sans">
+                        {cap.notes || '—'}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-          </Section>
+          </div>
         )}
 
-        {/* Sources */}
-        {guide.sources.length > 0 && (
-          <Section title="Sources" icon={<ExternalLink className="w-4 h-4" />}>
-            <div className="space-y-2">
-              {guide.sources.map((source, i) => (
-                <a
-                  key={i}
-                  href={source.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-between p-3 rounded-lg bg-bg-secondary border border-bg-border hover:border-accent-teal/30 transition-colors group"
-                >
-                  <div className="flex items-center gap-2 min-w-0">
-                    <span className={clsx('text-[10px] px-1.5 py-0.5 rounded flex-shrink-0', {
-                      'text-blue-400 bg-blue-400/10': source.type === 'official-docs',
-                      'text-orange-400 bg-orange-400/10': source.type === 'provider-policy',
-                      'text-accent-teal bg-accent-teal/10': source.type === 'composio-docs',
-                      'text-text-muted bg-bg-border': source.type === 'community',
-                    })}>
-                      {source.type.replace('-', ' ')}
-                    </span>
-                    <span className="text-sm text-text-secondary group-hover:text-text-primary truncate transition-colors">{source.title}</span>
-                  </div>
-                  <div className="flex items-center gap-2 flex-shrink-0 ml-2">
-                    <span className="text-xs text-text-muted">{source.accessedAt}</span>
-                    <ExternalLink className="w-3 h-3 text-text-muted group-hover:text-accent-teal transition-colors" />
-                  </div>
-                </a>
-              ))}
-            </div>
-          </Section>
-        )}
-
-        {/* Assumptions & Unverified Claims */}
+        {/* Caveats: Assumptions & Unverified Claims */}
         {(guide.assumptions.length > 0 || guide.unverifiedClaims.length > 0) && (
-          <div className="p-4 rounded-xl bg-accent-amber/5 border border-accent-amber/20 space-y-3">
-            <div className="flex items-center gap-2">
-              <Info className="w-4 h-4 text-accent-amber" />
-              <span className="text-sm font-semibold text-accent-amber">Caveats</span>
+          <div className="p-3.5 rounded-md bg-[#141414] border border-[#2c2c2c] space-y-2 text-xs font-mono">
+            <div className="text-[#f59e0b] font-semibold flex items-center gap-1.5 text-xs">
+              <AlertTriangle className="w-3.5 h-3.5" />
+              <span>Assumptions &amp; Unverified Claims</span>
             </div>
             {guide.assumptions.length > 0 && (
-              <div>
-                <div className="text-xs font-medium text-text-secondary mb-1">Assumptions</div>
-                <ul className="space-y-1">
-                  {guide.assumptions.map((a, i) => (
-                    <li key={i} className="text-xs text-text-muted flex items-start gap-1.5">
-                      <span className="text-text-muted mt-0.5">•</span>
-                      {a}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <ul className="list-disc list-inside space-y-1 text-[#a0a0a0] font-sans">
+                {guide.assumptions.map((a, i) => (
+                  <li key={i}>{a}</li>
+                ))}
+              </ul>
             )}
             {guide.unverifiedClaims.length > 0 && (
-              <div>
-                <div className="text-xs font-medium text-accent-amber mb-1">Unverified Claims</div>
-                <ul className="space-y-1">
-                  {guide.unverifiedClaims.map((c, i) => (
-                    <li key={i} className="text-xs text-text-muted flex items-start gap-1.5">
-                      <AlertTriangle className="w-3 h-3 text-accent-amber flex-shrink-0 mt-0.5" />
-                      {c}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <ul className="list-disc list-inside space-y-1 text-[#ef4444] font-sans">
+                {guide.unverifiedClaims.map((c, i) => (
+                  <li key={i}>{c}</li>
+                ))}
+              </ul>
             )}
           </div>
         )}
 
-        {/* Footer */}
-        <div className="pt-4 border-t border-bg-border flex items-center justify-between text-xs text-text-muted">
-          <span>Research date: {guide.researchDate}</span>
-          <span>Guide ID: <code className="text-text-muted">{guide.id}</code></span>
+        {/* Footer Audit Info */}
+        <div className="pt-4 border-t border-[#2c2c2c] flex items-center justify-between text-[11px] font-mono text-[#737373]">
+          <div>Research date: {guide.researchDate}</div>
+          <div>Slug: {guide.slug}</div>
         </div>
       </div>
     </div>
@@ -474,63 +568,50 @@ export function GuideView({ guide }: GuideViewProps) {
 
 function guideToMarkdown(guide: Guide): string {
   const lines: string[] = [
-    `# ${guide.appName} — OAuth Integration Guide`,
+    `# ${guide.appName} — OAuth Integration Guide for Composio`,
     '',
-    `> **Recommended Path:** ${guide.recommendedPath === 'managed' ? 'Managed OAuth (Composio)' : 'Custom OAuth'}`,
-    `> **Difficulty:** ${guide.difficulty} | **Hands-on:** ${guide.handsOnHours.min}–${guide.handsOnHours.max}h | **Elapsed:** ${guide.elapsedDays.min}–${guide.elapsedDays.max} days`,
+    `> **Recommended Path:** ${guide.recommendedPath.toUpperCase()}`,
+    `> **Effort:** ${guide.handsOnHours.min}–${guide.handsOnHours.max}h hands-on | **Total Calendar:** ${guide.elapsedDays.min}–${guide.elapsedDays.max} days | **Approval Wait:** ${guide.approvalDays ? `${guide.approvalDays.min}–${guide.approvalDays.max} days` : 'None'}`,
     '',
-    '## Summary',
-    '',
+    '## Overview',
     guide.summary,
     '',
-    '## Path Recommendation',
-    '',
+    '## Architecture Recommendation',
     guide.pathJustification,
     '',
   ];
 
   if (guide.setupChecklist.length > 0) {
     lines.push('## Setup Checklist', '');
-    guide.setupChecklist.forEach((item) => {
-      lines.push(`### Step ${item.step}: ${item.title}`);
-      lines.push('');
-      lines.push(`**Type:** ${STEP_TYPE_LABELS[item.type]} | **Time:** ${item.estimatedTime || 'N/A'} | **Agent:** ${item.agentCanDo ? 'Can do' : 'Manual'}`);
-      lines.push('');
-      lines.push(item.description);
-      if (item.officialLink) lines.push('', `📎 [Official Docs](${item.officialLink})`);
+    guide.setupChecklist.forEach((step) => {
+      lines.push(`### Step ${step.step}: ${step.title}`);
+      lines.push(`- **Type:** ${STEP_TYPE_LABELS[step.type]}`);
+      lines.push(`- **Estimated Time:** ${step.estimatedTime || 'N/A'}`);
+      lines.push(`- **Automation:** ${step.agentCanDo ? 'Agent can prepare' : 'Manual developer action'}`);
+      lines.push(`- **Details:** ${step.description}`);
+      if (step.officialLink) lines.push(`- **Docs:** ${step.officialLink}`);
       lines.push('');
     });
   }
 
   if (guide.scopes.length > 0) {
-    lines.push('## OAuth Scopes', '');
-    lines.push('| Scope | Description | Sensitivity |');
-    lines.push('|-------|-------------|-------------|');
-    guide.scopes.forEach((s) => lines.push(`| \`${s.scope}\` | ${s.description} | ${s.sensitivity} |`));
+    lines.push('## Scopes', '');
+    lines.push('| Scope | Purpose | Sensitivity |');
+    lines.push('|---|---|---|');
+    guide.scopes.forEach((s) => {
+      lines.push(`| \`${s.scope}\` | ${s.description} | ${s.sensitivity} |`);
+    });
     lines.push('');
   }
 
   if (guide.commonBlockers.length > 0) {
     lines.push('## Common Blockers', '');
     guide.commonBlockers.forEach((b) => {
-      lines.push(`### ⚠️ ${b.title}`);
-      lines.push('');
+      lines.push(`### ⚠️ ${b.title} (${b.severity.toUpperCase()})`);
       lines.push(b.description);
-      lines.push('');
       lines.push(`**Resolution:** ${b.resolution}`);
       lines.push('');
     });
-  }
-
-  if (guide.unverifiedClaims.length > 0) {
-    lines.push('## Unverified Claims', '');
-    guide.unverifiedClaims.forEach((c) => lines.push(`- ⚠️ ${c}`));
-    lines.push('');
-  }
-
-  if (guide.sources.length > 0) {
-    lines.push('## Sources', '');
-    guide.sources.forEach((s) => lines.push(`- [${s.title}](${s.url}) — ${s.type} (accessed ${s.accessedAt})`));
   }
 
   return lines.join('\n');
