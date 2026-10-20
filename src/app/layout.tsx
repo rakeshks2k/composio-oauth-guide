@@ -15,8 +15,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Composio - OAuth Guides',
-  description: 'Production OAuth integration guides for connecting apps to Composio. Managed vs. custom OAuth, scopes, verification, and agent capabilities.',
+  title: 'Composio - OAuth Guide',
+  description: 'Production OAuth integration guide for connecting apps to Composio. Managed vs. custom OAuth, scopes, verification, and agent capabilities.',
   icons: {
     icon: '/icon.png',
     shortcut: '/favicon.ico',

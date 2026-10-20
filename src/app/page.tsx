@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { Guide, ResearchEvent } from '@/lib/types';
+import { getGuideResearchEvents } from '@/lib/research-events';
 import { Sidebar } from '@/components/Sidebar';
 import { GuideView } from '@/components/GuideView';
 import { GenerateForm } from '@/components/GenerateForm';
@@ -32,6 +33,7 @@ export default function HomePage() {
       setGuides(loadedGuides);
       if (autoSelectFirst && loadedGuides.length > 0) {
         setSelectedGuide(loadedGuides[0]);
+        setResearchEvents(getGuideResearchEvents(loadedGuides[0]));
         setView('guide');
       }
     } catch (err) {
@@ -46,6 +48,7 @@ export default function HomePage() {
 
   function handleSelectGuide(guide: Guide) {
     setSelectedGuide(guide);
+    setResearchEvents(getGuideResearchEvents(guide));
     setView('guide');
     setMobileSidebarOpen(false);
   }
@@ -77,6 +80,7 @@ export default function HomePage() {
       const newGuide = updatedGuides.find((g) => g.id === guideId);
       if (newGuide) {
         setSelectedGuide(newGuide);
+        setResearchEvents(getGuideResearchEvents(newGuide));
         setView('guide');
       }
     } catch (err) {
