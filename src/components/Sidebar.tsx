@@ -145,7 +145,7 @@ export function Sidebar({
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search guides..."
+            placeholder="Search by app, scope, or difficulty..."
             className="w-full h-9 bg-[#181818] border border-[#262626] rounded-md pl-9 pr-12 text-[12.5px] text-white placeholder:text-[#666666] focus:outline-none focus:border-[#51a2ff] transition-colors"
           />
           {searchQuery ? (
@@ -168,7 +168,7 @@ export function Sidebar({
             [
               { id: 'all', label: 'All' },
               { id: 'instant', label: 'Instant (0d)' },
-              { id: 'approval', label: 'Review' },
+              { id: 'approval', label: 'Needs Review' },
               { id: 'managed', label: 'Managed' },
             ] as const
           ).map((chip) => (
@@ -192,7 +192,7 @@ export function Sidebar({
       <div className="flex-1 overflow-y-auto px-2.5 py-3 space-y-1">
         {/* Section: Researched Guide Library */}
         <div className="pt-2 pb-1.5 px-2.5 flex items-center justify-between text-[11px] font-medium uppercase tracking-wider text-[#737373]">
-          <span>Guide Library</span>
+          <span>Curated Archetypes</span>
           <span className="text-[10px] font-mono text-[#555555]">{presetGuides.length}</span>
         </div>
 
@@ -238,7 +238,7 @@ export function Sidebar({
         {recentGuides.length > 0 && (
           <>
             <div className="pt-6 pb-1.5 px-2.5 flex items-center justify-between text-[11px] font-medium uppercase tracking-wider text-[#737373]">
-              <span>Recent Research</span>
+              <span>Custom Generated</span>
               <span className="text-[10px] font-mono text-[#555555]">{recentGuides.length}</span>
             </div>
             {recentGuides.map((guide) => {
@@ -298,7 +298,7 @@ export function Sidebar({
         {/* Search empty state */}
         {filteredGuides.length === 0 && (
           <div className="py-6 px-3 text-center space-y-2.5">
-            <div className="text-xs text-[#737373]">No guides for &quot;{searchQuery}&quot;</div>
+            <div className="text-xs text-[#737373]">No guides found for &quot;{searchQuery}&quot;</div>
             <button
               onClick={() => {
                 onGenerateClick(searchQuery.trim());
@@ -306,7 +306,7 @@ export function Sidebar({
               }}
               className="w-full py-2 px-2.5 rounded-md bg-[#1e1e1e] border border-[#2c2c2c] hover:border-[#3a3a3a] text-white text-xs font-medium"
             >
-              Generate {searchQuery}
+              Generate guide for &quot;{searchQuery}&quot; →
             </button>
           </div>
         )}

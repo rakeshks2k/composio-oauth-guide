@@ -24,12 +24,12 @@ It evaluates whether to use **Composio-Managed OAuth** vs. **Custom OAuth**, est
 ## Visual Design & Layout
 
 Inspired by the Composio dashboard:
-- **Palette:** Dark charcoal background (`#0f1117`), secondary surfaces (`#141824`), subtle borders (`#1e2130`), and restrained teal accents (`#14b8a6`).
+- **Palette:** Dark charcoal background (`#0f0f0f`), secondary surfaces (`#141414`), subtle borders (`#262626`), and blue accents (`#51a2ff`).
 - **Typography:** Clean sans-serif paired with monospace font families for code symbols, scopes, and IDs.
 - **Three-Part Developer Workspace:**
-  1. **Left Sidebar:** Searchable Guide Library with instant filtering, quick keyboard shortcut (`/`), difficulty badges, Composio Managed indicators, New Guide CTA, and Recent Guides.
-  2. **Main Workspace:** Actionable guide view (recommendation justification, 3-metric time cards, ordered checklist categorized by step type, scopes table, blockers accordion, agent capabilities matrix, sources, and caveats) or the interactive generation form with quick suggestion pills.
-  3. **Right Research Panel:** Real-time event stream showing genuine pipeline progress, documentation discoveries, policy evaluations, and clickable source citations.
+  1. **Left Sidebar:** Searchable Guide Library with instant filtering (`All`, `Instant (0d)`, `Needs Review`, `Managed`), quick keyboard shortcut (`/` or `Ctrl+K`), difficulty badges, Composio Managed indicators, New Guide CTA, and Custom Generated Guides.
+  2. **Main Workspace:** Actionable guide view (recommendation justification, 3-metric time cards, step-by-step checklist with persistent progress tracking, scopes sensitivity table, blockers accordion, agent capabilities matrix, sources, and caveats) or the interactive generation form with quick suggestion pills.
+  3. **Right Research Panel:** Real-time event stream showing pipeline progress, documentation discoveries, policy evaluations, and clickable source citations.
 
 ---
 

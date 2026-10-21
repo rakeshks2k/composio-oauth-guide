@@ -135,12 +135,12 @@ export function GenerateForm({
       <div className="flex-1 overflow-y-auto px-6 sm:px-10 lg:px-12 pt-5 pb-12 space-y-6 max-w-4xl mx-auto w-full">
         <div className="space-y-2">
           <h2 className="text-base sm:text-lg font-medium text-white tracking-tight">
-            Research Third-Party Application
+            Generate an OAuth Integration Guide
           </h2>
           <p className="text-[13.5px] text-[#a0a0a0] leading-[1.75]">
-            Enter any third-party SaaS service or platform name to initiate an autonomous OAuth analysis.
-            The agent evaluates Composio managed OAuth availability, audits scope sensitivity, and
-            quantifies developer hands-on hours vs. external vendor approval waiting periods.
+            Enter any third-party SaaS app or platform name to initiate an autonomous OAuth analysis.
+            The agent checks Composio managed OAuth availability, audits scope sensitivity, and
+            quantifies active engineering hours against external vendor approval waiting periods.
           </p>
         </div>
 
@@ -155,14 +155,14 @@ export function GenerateForm({
               type="text"
               value={appName}
               onChange={(e) => setAppName(e.target.value)}
-              placeholder="e.g. Linear, Notion, Zoom, Salesforce, Spotify, Stripe"
+              placeholder="e.g. Linear, Figma, Notion, Zoom, Salesforce, Spotify, Stripe"
               disabled={isLoading}
               className="w-full h-10 px-3.5 rounded-md bg-[#181818] border border-[#262626] focus:border-[#51a2ff] text-[13px] text-white placeholder:text-[#555555] outline-none transition-colors font-mono"
             />
 
             {/* Quick Suggestions Chips with Brand Icons */}
             <div className="space-y-1.5 pt-1">
-              <span className="text-[11px] text-[#737373] font-mono">Suggested integrations:</span>
+              <span className="text-[11px] text-[#737373] font-mono">Try a popular integration:</span>
               <div className="flex items-center gap-2 flex-wrap">
                 {QUICK_SUGGESTIONS.map((item) => (
                   <motion.button
@@ -186,7 +186,7 @@ export function GenerateForm({
 
           <div className="space-y-2.5">
             <label htmlFor="appWebsite" className="block text-[11.5px] font-mono uppercase tracking-wider text-[#a0a0a0]">
-              Developer Documentation or Website <span className="text-[#666666] font-normal normal-case">(optional)</span>
+              Documentation or Website URL <span className="text-[#666666] font-normal normal-case">(optional — focuses agent crawl)</span>
             </label>
             <div className="relative">
               <Globe className="w-4 h-4 text-[#737373] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -224,7 +224,7 @@ export function GenerateForm({
               {isLoading ? (
                 <>
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  <span>Researching {appName}...</span>
+                  <span>Investigating {appName}...</span>
                 </>
               ) : (
                 <>
@@ -240,7 +240,7 @@ export function GenerateForm({
         {/* Structured Pipeline Architecture & Evaluation Pillars */}
         <div className="space-y-4">
           <div className="text-[11.5px] font-mono uppercase tracking-wider text-[#737373] px-1">
-            Autonomous Pipeline Specification
+            What the agent investigates in real time
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -254,8 +254,8 @@ export function GenerateForm({
                 <span>Managed vs. Custom Path</span>
               </div>
               <p className="text-xs text-[#8c8c8c] leading-[1.65]">
-                Cross-references provider protocols with Composio&apos;s managed authentication network.
-                Recommends zero-maintenance managed OAuth for rapid integrations or dedicated custom client IDs for enterprise white-labeling.
+                Cross-references provider authentication requirements with Composio&apos;s managed catalog.
+                Recommends instant zero-maintenance managed OAuth for rapid shipping or dedicated custom client IDs for enterprise white-labeling.
               </p>
             </motion.div>
 
@@ -270,7 +270,7 @@ export function GenerateForm({
               </div>
               <p className="text-xs text-[#8c8c8c] leading-[1.65]">
                 Tiers requested permissions into basic, sensitive, and restricted classifications.
-                Flags mandatory security audits (e.g. Google CASA Tier 2/3) and organizational consent barriers.
+                Identifies required security assessments (e.g. Google CASA Tier 2) and organizational admin consent barriers.
               </p>
             </motion.div>
 
@@ -284,7 +284,7 @@ export function GenerateForm({
                 <span>Approval vs. Effort Timeline</span>
               </div>
               <p className="text-xs text-[#8c8c8c] leading-[1.65]">
-                Explicitly distinguishes actual developer coding time (0.5h to 6h) from third-party vendor review delays (e.g., Slack directory review or HubSpot 60-install thresholds).
+                Distinguishes actual developer coding time (0.5h to 6h) from third-party vendor review delays (e.g. Slack app directory review or HubSpot 60-install thresholds).
               </p>
             </motion.div>
 

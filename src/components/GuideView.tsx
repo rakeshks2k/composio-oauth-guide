@@ -204,7 +204,7 @@ await composio.authConfigs.create({
         <div className="flex flex-wrap items-center justify-between gap-2.5 p-3 rounded-lg bg-[#141414] border border-[#262626]">
           <div className="flex items-center gap-2 flex-wrap text-xs">
             <span className="text-[#737373] font-mono text-[11px] uppercase tracking-wider">
-              Composio Callback:
+              Composio Redirect URI:
             </span>
             <code className="px-2 py-0.5 rounded bg-[#181818] border border-[#2a2a2a] text-[#51a2ff] font-mono text-[11.5px]">
               {COMPOSIO_REDIRECT_URI}
@@ -235,7 +235,7 @@ await composio.authConfigs.create({
                 rel="noopener noreferrer"
                 className="h-6 px-2.5 rounded bg-[#1e1e1e] border border-[#2c2c2c] hover:border-[#383838] text-[#a0a0a0] hover:text-white text-[11px] font-mono flex items-center gap-1.5 transition-colors"
               >
-                <span>Provider Console</span>
+                <span>Open Dev Console</span>
                 <ExternalLink className="w-2.5 h-2.5" />
               </a>
             )}
@@ -270,7 +270,7 @@ await composio.authConfigs.create({
                   Integration Path Comparison: {guide.appName}
                 </span>
                 <span className="text-[11px] font-mono text-[#51a2ff]">
-                  Recommended: {guide.recommendedPath === 'managed' ? 'Composio Managed OAuth' : 'Custom OAuth'}
+                  Recommended: {guide.recommendedPath === 'managed' ? 'Composio Managed OAuth' : 'Custom OAuth Application'}
                 </span>
               </div>
               <div className="overflow-x-auto">
@@ -284,29 +284,29 @@ await composio.authConfigs.create({
                   </thead>
                   <tbody className="divide-y divide-[#1f1f1f] text-[12px] font-mono text-[#a1a1a1]">
                     <tr>
-                      <td className="py-2.5 px-4 text-[#737373]">Setup Overhead</td>
+                      <td className="py-2.5 px-4 text-[#737373]">Hands-on Setup</td>
                       <td className="py-2.5 px-4 text-white">~2 minutes (`composio add {guide.slug}`)</td>
-                      <td className="py-2.5 px-4">{guide.handsOnHours.min}–{guide.handsOnHours.max} hours developer portal setup</td>
+                      <td className="py-2.5 px-4">{guide.handsOnHours.min}–{guide.handsOnHours.max} hours dev portal configuration</td>
                     </tr>
                     <tr>
-                      <td className="py-2.5 px-4 text-[#737373]">Approval Wait</td>
-                      <td className="py-2.5 px-4 text-white">Zero wait (Immediate launch)</td>
-                      <td className="py-2.5 px-4">{guide.approvalDays ? `${guide.approvalDays.min}–${guide.approvalDays.max} days` : '0 days (instant)'}</td>
+                      <td className="py-2.5 px-4 text-[#737373]">Vendor Approval Wait</td>
+                      <td className="py-2.5 px-4 text-white">Zero wait (Pre-approved catalog integration)</td>
+                      <td className="py-2.5 px-4">{guide.approvalDays ? `${guide.approvalDays.min}–${guide.approvalDays.max} days review queue` : '0 days (instant self-service)'}</td>
                     </tr>
                     <tr>
-                      <td className="py-2.5 px-4 text-[#737373]">Consent Screen Branding</td>
-                      <td className="py-2.5 px-4">Shows &quot;Composio&quot; identity</td>
-                      <td className="py-2.5 px-4 text-white">White-labeled (Your company name &amp; logo)</td>
+                      <td className="py-2.5 px-4 text-[#737373]">Consent Screen Identity</td>
+                      <td className="py-2.5 px-4">Displays &quot;Composio&quot; identity</td>
+                      <td className="py-2.5 px-4 text-white">Fully white-labeled (Your company name &amp; logo)</td>
                     </tr>
                     <tr>
-                      <td className="py-2.5 px-4 text-[#737373]">Credentials Storage</td>
-                      <td className="py-2.5 px-4">Managed securely by Composio</td>
-                      <td className="py-2.5 px-4">Saved in your secure env vars / KMS</td>
+                      <td className="py-2.5 px-4 text-[#737373]">Secret &amp; Token Storage</td>
+                      <td className="py-2.5 px-4">Encrypted and rotated by Composio</td>
+                      <td className="py-2.5 px-4">Stored in your secure environment variables / KMS</td>
                     </tr>
                     <tr>
-                      <td className="py-2.5 px-4 text-[#737373]">Best Suited For</td>
+                      <td className="py-2.5 px-4 text-[#737373]">Ideal Use Case</td>
                       <td className="py-2.5 px-4 text-white">AI Agent MVPs, testing, internal automations</td>
-                      <td className="py-2.5 px-4 text-white">Marketplace listings, enterprise security audits</td>
+                      <td className="py-2.5 px-4 text-white">Marketplace listings, enterprise security reviews</td>
                     </tr>
                   </tbody>
                 </table>
@@ -319,7 +319,7 @@ await composio.authConfigs.create({
         <div className="p-5 sm:p-6 rounded-lg bg-[#141414] border border-[#262626] space-y-3.5">
           <div className="flex items-center justify-between flex-wrap gap-2">
             <div className="text-[11px] font-medium text-white uppercase tracking-wider flex items-center gap-2">
-              <span className="text-[#51a2ff] font-mono">PATH:</span>
+              <span className="text-[#51a2ff] font-mono">RECOMMENDED ARCHITECTURE:</span>
               <span className="font-medium">{guide.recommendedPath === 'managed' ? 'Composio Managed OAuth' : 'Custom OAuth App'}</span>
             </div>
             <div className="text-[11px] font-mono text-[#8c8c8c] bg-[#1a1a1a] border border-[#262626] px-2 py-0.5 rounded capitalize">
@@ -352,7 +352,7 @@ await composio.authConfigs.create({
               {guide.handsOnHours.min}–{guide.handsOnHours.max} hours
             </div>
             <div className="text-[#666666] text-[11.5px] mt-0.5">
-              Direct engineering setup
+              Active engineering setup
             </div>
           </motion.div>
 
@@ -384,7 +384,7 @@ await composio.authConfigs.create({
               {guide.approvalDays ? `${guide.approvalDays.min}–${guide.approvalDays.max} days` : 'Immediate (0d)'}
             </div>
             <div className="text-[#666666] text-[11.5px] mt-0.5">
-              {guide.approvalDays ? 'Provider review queue' : 'No review required'}
+              {guide.approvalDays ? 'Third-party review queue' : 'Immediate — no review required'}
             </div>
           </motion.div>
         </div>
@@ -395,7 +395,7 @@ await composio.authConfigs.create({
             <ShieldCheck className="w-4 h-4 text-[#51a2ff] flex-shrink-0" />
             <div>
               <div className="text-white font-medium text-[12px]">Composio Verified</div>
-              <div className="text-[#666666] text-[11px] font-mono">SDK flow &amp; token rotation</div>
+              <div className="text-[#666666] text-[11px] font-mono">Tested with SDK &amp; token refresh</div>
             </div>
           </div>
 
@@ -412,10 +412,10 @@ await composio.authConfigs.create({
             <div>
               <div className="text-white font-medium text-[12px]">
                 {guide.assumptions.length + guide.unverifiedClaims.length > 0
-                  ? `${guide.assumptions.length + guide.unverifiedClaims.length} Caveats Noted`
+                  ? `${guide.assumptions.length + guide.unverifiedClaims.length} Policy Caveats`
                   : 'Zero Unverified Claims'}
               </div>
-              <div className="text-[#666666] text-[11px] font-mono">Policy nuances flagged</div>
+              <div className="text-[#666666] text-[11px] font-mono">Nuances &amp; boundaries flagged</div>
             </div>
           </div>
         </div>
@@ -441,7 +441,7 @@ await composio.authConfigs.create({
           <div className="space-y-3.5">
             <div className="flex items-center justify-between">
               <h2 className="text-[11.5px] font-medium uppercase tracking-wider text-[#737373]">
-                Ordered Setup Checklist
+                Step-by-Step Implementation Checklist
               </h2>
               <span className="text-[11px] font-mono text-[#555555]">
                 {guide.setupChecklist.length} steps
@@ -557,7 +557,7 @@ await composio.authConfigs.create({
                           </span>
 
                           <span className="text-[#8c8c8c]">
-                            {step.agentCanDo ? 'Agent can prepare' : 'Developer action'}
+                            {step.agentCanDo ? '🤖 Agent can prepare' : '👤 Developer action required'}
                           </span>
 
                           {step.officialLink && (
@@ -586,7 +586,7 @@ await composio.authConfigs.create({
           <div className="space-y-3.5">
             <div className="flex items-center justify-between">
               <h2 className="text-[11.5px] font-medium uppercase tracking-wider text-[#737373]">
-                OAuth Scopes &amp; Permissions
+                OAuth Scopes &amp; Sensitivity Classification
               </h2>
               <span className="text-[11px] font-mono text-[#555555]">
                 {guide.scopes.length} scopes
@@ -598,8 +598,8 @@ await composio.authConfigs.create({
                 <thead>
                   <tr className="border-b border-[#262626] bg-[#161616] text-[#737373] font-mono text-[11px] uppercase tracking-wider">
                     <th className="py-3 px-5 font-normal">Scope</th>
-                    <th className="py-3 px-5 font-normal">Description</th>
-                    <th className="py-3 px-5 font-normal">Access Tier</th>
+                    <th className="py-3 px-5 font-normal">Description &amp; Purpose</th>
+                    <th className="py-3 px-5 font-normal">Sensitivity Tier</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#1f1f1f]">
@@ -638,7 +638,7 @@ await composio.authConfigs.create({
           <div className="space-y-3.5">
             <div className="flex items-center justify-between">
               <h2 className="text-[11.5px] font-medium uppercase tracking-wider text-[#737373]">
-                Approval Requirements
+                Vendor Verification &amp; Review Requirements
               </h2>
               <span className="text-[11px] font-mono text-[#555555]">
                 {guide.approvalRequirements.length} {guide.approvalRequirements.length === 1 ? 'requirement' : 'requirements'}
@@ -659,7 +659,7 @@ await composio.authConfigs.create({
                             : 'text-[#737373] bg-transparent border-[#2a2a2a]'
                         )}
                       >
-                        {req.required ? 'Required' : 'Optional'}
+                        {req.required ? 'Mandatory' : 'Optional / Conditional'}
                       </span>
                     </div>
                     {req.estimatedTime && (
@@ -692,7 +692,7 @@ await composio.authConfigs.create({
           <div className="space-y-3.5">
             <div className="flex items-center justify-between">
               <h2 className="text-[11.5px] font-medium uppercase tracking-wider text-[#737373]">
-                Potential Blockers &amp; Resolutions
+                Known Blockers &amp; Pre-emptions
               </h2>
               <span className="text-[11px] font-mono text-[#555555]">
                 {guide.commonBlockers.length} identified
@@ -738,7 +738,7 @@ await composio.authConfigs.create({
                             <p>{b.description}</p>
                             <div className="p-3.5 rounded bg-[#181818] border border-[#262626] text-white">
                               <span className="text-[#737373] font-mono text-[11px] uppercase tracking-wider block mb-1">
-                                Resolution:
+                                How to resolve:
                               </span>
                               <span className="text-[#e0e0e0] leading-[1.65]">
                                 {b.resolution}
@@ -760,7 +760,7 @@ await composio.authConfigs.create({
           <div className="space-y-3.5">
             <div className="flex items-center justify-between">
               <h2 className="text-[11.5px] font-medium uppercase tracking-wider text-[#737373]">
-                Agent Automation vs. Developer Responsibilities
+                What an Agent Can Do vs. Where You Must Take Over
               </h2>
             </div>
 
@@ -768,9 +768,9 @@ await composio.authConfigs.create({
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr className="border-b border-[#262626] bg-[#161616] text-[#737373] font-mono text-[11px] uppercase tracking-wider">
-                    <th className="py-3 px-5 font-normal">Action</th>
-                    <th className="py-3 px-5 font-normal">Automation Tier</th>
-                    <th className="py-3 px-5 font-normal">Implementation Notes</th>
+                    <th className="py-3 px-5 font-normal">Integration Task</th>
+                    <th className="py-3 px-5 font-normal">Responsibility</th>
+                    <th className="py-3 px-5 font-normal">Hand-off Details &amp; Nuances</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#1f1f1f]">
@@ -781,12 +781,12 @@ await composio.authConfigs.create({
                       </td>
                       <td className="py-3.5 px-5 font-mono text-xs whitespace-nowrap">
                         {cap.canDo ? (
-                          <span className="text-white">Autonomous</span>
+                          <span className="text-[#51a2ff] font-medium">🤖 Agent autonomous</span>
                         ) : (
-                          <span className="text-[#737373]">Manual</span>
+                          <span className="text-[#a1a1a1]">👤 Developer action</span>
                         )}
                       </td>
-                      <td className="py-3.5 px-5 text-[#737373] text-[13px] leading-[1.65]">
+                      <td className="py-3.5 px-5 text-[#8c8c8c] text-[13px] leading-[1.65]">
                         {cap.notes || '—'}
                       </td>
                     </tr>
@@ -802,7 +802,7 @@ await composio.authConfigs.create({
           <div className="space-y-3.5">
             <div className="flex items-center justify-between">
               <h2 className="text-[11.5px] font-medium uppercase tracking-wider text-[#737373]">
-                Official Documentation &amp; Policies
+                Official Documentation &amp; Citations
               </h2>
               <span className="text-[11px] font-mono text-[#555555]">
                 {guide.sources.length} sources
@@ -835,13 +835,13 @@ await composio.authConfigs.create({
         {(guide.assumptions.length > 0 || guide.unverifiedClaims.length > 0) && (
           <div className="p-5 rounded-md bg-[#141414] border border-[#262626] text-xs text-[#737373] space-y-2">
             <div className="font-mono text-white text-[11px] uppercase tracking-wider mb-2">
-              Audit Notes &amp; Assumptions
+              Audit Notes, Assumptions &amp; Limitations
             </div>
             {guide.assumptions.map((a, i) => (
               <div key={i} className="leading-[1.7]">• {a}</div>
             ))}
             {guide.unverifiedClaims.map((c, i) => (
-              <div key={i} className="text-[#a1a1a1] leading-[1.7]">• {c}</div>
+              <div key={i} className="text-[#a1a1a1] leading-[1.7]">• ⚠️ Unverified: {c}</div>
             ))}
           </div>
         )}
@@ -918,13 +918,13 @@ function guideToMarkdown(guide: Guide): string {
 
   // Setup checklist
   if (guide.setupChecklist.length > 0) {
-    lines.push('## Setup Checklist', '');
+    lines.push('## Step-by-Step Implementation Checklist', '');
     guide.setupChecklist.forEach((step) => {
       lines.push(`### Step ${step.step}: ${step.title}`);
       lines.push('');
       lines.push(`**Type:** ${STEP_TYPE_LABELS[step.type]}  `);
       lines.push(`**Estimated Time:** ${step.estimatedTime || 'N/A'}  `);
-      lines.push(`**Automation:** ${step.agentCanDo ? '🤖 Agent can prepare' : '👤 Developer action required'}  `);
+      lines.push(`**Responsibility:** ${step.agentCanDo ? '🤖 Agent can prepare' : '👤 Developer action required'}  `);
       lines.push('');
       lines.push(step.description);
       if (step.completionCriteria) {
@@ -941,8 +941,8 @@ function guideToMarkdown(guide: Guide): string {
 
   // Scopes table
   if (guide.scopes.length > 0) {
-    lines.push('## OAuth Scopes & Permissions', '');
-    lines.push('| Scope | Description | Access Tier |');
+    lines.push('## OAuth Scopes & Sensitivity Classification', '');
+    lines.push('| Scope | Description & Purpose | Sensitivity Tier |');
     lines.push('|---|---|---|');
     guide.scopes.forEach((s) => {
       lines.push(`| \`${s.scope}\` | ${s.description} | ${s.sensitivity} |`);
@@ -952,9 +952,9 @@ function guideToMarkdown(guide: Guide): string {
 
   // Approval requirements
   if (guide.approvalRequirements.length > 0) {
-    lines.push('## Approval Requirements', '');
+    lines.push('## Vendor Verification & Review Requirements', '');
     guide.approvalRequirements.forEach((req) => {
-      lines.push(`### ${req.required ? '🔴' : '🟡'} ${req.name} (${req.required ? 'Required' : 'Optional'})`);
+      lines.push(`### ${req.required ? '🔴' : '🟡'} ${req.name} (${req.required ? 'Mandatory' : 'Optional / Conditional'})`);
       lines.push('');
       if (req.estimatedTime) lines.push(`**Timeline:** ${req.estimatedTime}  `);
       lines.push('');
@@ -966,32 +966,32 @@ function guideToMarkdown(guide: Guide): string {
 
   // Blockers
   if (guide.commonBlockers.length > 0) {
-    lines.push('## Potential Blockers & Resolutions', '');
+    lines.push('## Known Blockers & Pre-emptions', '');
     guide.commonBlockers.forEach((b) => {
       const sev = b.severity === 'high' ? '🔴' : b.severity === 'medium' ? '🟡' : '🟢';
       lines.push(`### ${sev} ${b.title} (${b.severity} priority)`);
       lines.push('');
       lines.push(b.description);
       lines.push('');
-      lines.push(`**Resolution:** ${b.resolution}`);
+      lines.push(`**How to resolve:** ${b.resolution}`);
       lines.push('');
     });
   }
 
   // Agent capabilities matrix
   if (guide.agentCapabilities.length > 0) {
-    lines.push('## Agent Automation vs. Developer Responsibilities', '');
-    lines.push('| Action | Automation Tier | Notes |');
+    lines.push('## What an Agent Can Do vs. Where You Must Take Over', '');
+    lines.push('| Integration Task | Responsibility | Hand-off Details & Nuances |');
     lines.push('|---|---|---|');
     guide.agentCapabilities.forEach((cap) => {
-      lines.push(`| ${cap.action} | ${cap.canDo ? 'Autonomous' : 'Manual'} | ${cap.notes || '—'} |`);
+      lines.push(`| ${cap.action} | ${cap.canDo ? '🤖 Agent autonomous' : '👤 Developer action'} | ${cap.notes || '—'} |`);
     });
     lines.push('');
   }
 
   // Sources
   if (guide.sources.length > 0) {
-    lines.push('## Official Documentation & Sources', '');
+    lines.push('## Official Documentation & Citations', '');
     guide.sources.forEach((src) => {
       lines.push(`- [${src.title}](${src.url}) *(${src.type.replace(/-/g, ' ')} · ${src.accessedAt})*`);
     });
@@ -1001,7 +1001,7 @@ function guideToMarkdown(guide: Guide): string {
   // Audit notes
   const hasNotes = guide.assumptions.length > 0 || guide.unverifiedClaims.length > 0;
   if (hasNotes) {
-    lines.push('## Audit Notes & Assumptions', '');
+    lines.push('## Audit Notes, Assumptions & Limitations', '');
     guide.assumptions.forEach((a) => lines.push(`- ${a}`));
     guide.unverifiedClaims.forEach((c) => lines.push(`- ⚠️ *Unverified:* ${c}`));
     lines.push('');

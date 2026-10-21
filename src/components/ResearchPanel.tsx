@@ -49,7 +49,7 @@ export function ResearchPanel({
             )}
           >
             <span className="text-[#51a2ff]">&gt;_</span>
-            <span>Research Activity</span>
+            <span>Agent Activity</span>
             {events.length > 0 && (
               <span className="text-[10px] text-[#737373] font-normal">({events.length})</span>
             )}
@@ -71,7 +71,7 @@ export function ResearchPanel({
                 : 'text-[#737373] hover:text-[#a3a3a3]'
             )}
           >
-            <span>Citations</span>
+            <span>Sources &amp; Citations</span>
             {sources.length > 0 && (
               <span className="text-[10px] text-[#737373] font-normal">({sources.length})</span>
             )}
@@ -100,11 +100,11 @@ export function ResearchPanel({
           <div className="pt-1.5 px-1 space-y-3 text-[#737373]">
             <div className="text-white font-medium text-[12.5px] flex items-center gap-2">
               <span className="text-[#51a2ff]">&gt;</span>
-              <span>oauth-research-agent ready</span>
+              <span>oauth-agent standby</span>
             </div>
             <div className="text-[12px] leading-[1.75] text-[#737373]">
-              Generate a guide to observe live provider documentation queries, scope sensitivity audits,
-              verification requirements, and architectural path recommendations.
+              Select any guide from the sidebar or submit a new app to stream live provider documentation queries,
+              scope sensitivity audits, verification requirements, and architectural path recommendations.
             </div>
           </div>
         )}
@@ -207,7 +207,7 @@ export function ResearchPanel({
               className="space-y-2"
             >
               {sources.length === 0 ? (
-                <div className="text-xs text-[#737373] py-4 text-center">No discovered citations yet.</div>
+                <div className="text-xs text-[#737373] py-4 text-center">No citations logged yet for this session.</div>
               ) : (
                 sources.map((src, idx) => (
                   <motion.a
@@ -242,7 +242,7 @@ export function ResearchPanel({
           {isGenerating ? (
             <span className="text-[#51a2ff] flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-[#51a2ff] animate-ping" />
-              <span>streaming execution...</span>
+              <span>streaming investigation events...</span>
             </span>
           ) : (
             <span className="text-[#666666] flex items-center gap-1.5">
