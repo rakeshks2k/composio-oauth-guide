@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Guide, ChecklistItem } from '@/lib/types';
 import { AppIcon } from '@/components/AppIcon';
 import {
@@ -11,7 +11,6 @@ import {
   ChevronDown,
   CircleCheck,
   Clock,
-  RotateCcw,
   ShieldCheck,
   FileCode,
 } from 'lucide-react';
@@ -34,39 +33,7 @@ export function GuideView({ guide }: GuideViewProps) {
   const [copiedMd, setCopiedMd] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
   const [copiedRedirectUri, setCopiedRedirectUri] = useState(false);
-  const [showPathComparison, setShowPathComparison] = useState(false);
   const [expandedBlocker, setExpandedBlocker] = useState<number | null>(0);
-  const [completedSteps, setCompletedSteps] = useState<string[]>([]);
-
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(`composio_oauth_progress_${guide.slug}`);
-      if (stored) {
-        setCompletedSteps(JSON.parse(stored));
-      } else {
-        setCompletedSteps([]);
-      }
-    } catch {
-      setCompletedSteps([]);
-    }
-  }, [guide.slug]);
-
-  function toggleStep(stepId: string) {
-    setCompletedSteps((prev) => {
-      const next = prev.includes(stepId) ? prev.filter((id) => id !== stepId) : [...prev, stepId];
-      try {
-        localStorage.setItem(`composio_oauth_progress_${guide.slug}`, JSON.stringify(next));
-      } catch {}
-      return next;
-    });
-  }
-
-  function resetProgress() {
-    setCompletedSteps([]);
-    try {
-      localStorage.removeItem(`composio_oauth_progress_${guide.slug}`);
-    } catch {}
-  }
 
   const COMPOSIO_REDIRECT_URI = 'https://backend.composio.dev/api/v1/auth-apps/add';
 
@@ -227,93 +194,18 @@ await composio.authConfigs.create({
             </button>
           </div>
 
-          <div className="flex items-center gap-2">
-            {(guide.setupChecklist[0]?.officialLink || guide.appDomain) && (
-              <a
-                href={guide.setupChecklist[0]?.officialLink || `https://${guide.appDomain}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="h-6 px-2.5 rounded bg-[#1e1e1e] border border-[#2c2c2c] hover:border-[#383838] text-[#a0a0a0] hover:text-white text-[11px] font-mono flex items-center gap-1.5 transition-colors"
-              >
-                <span>Open Dev Console</span>
-                <ExternalLink className="w-2.5 h-2.5" />
-              </a>
-            )}
-
-            <button
-              onClick={() => setShowPathComparison(!showPathComparison)}
+          {(guide.setupChecklist[0]?.officialLink || guide.appDomain) && (
+            <a
+              href={guide.setupChecklist[0]?.officialLink || `https://${guide.appDomain}`}
+              target="_blank"
+              rel="noopener noreferrer"
               className="h-6 px-2.5 rounded bg-[#1e1e1e] border border-[#2c2c2c] hover:border-[#383838] text-[#a0a0a0] hover:text-white text-[11px] font-mono flex items-center gap-1.5 transition-colors"
             >
-              <span>{showPathComparison ? 'Hide Path Matrix' : 'Compare Paths'}</span>
-              <ChevronDown
-                className={clsx(
-                  'w-3 h-3 transition-transform',
-                  showPathComparison && 'rotate-180'
-                )}
-              />
-            </button>
-          </div>
-        </div>
-
-        {/* Path Comparison Matrix (Expandable) */}
-        <AnimatePresence>
-          {showPathComparison && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="overflow-hidden rounded-lg bg-[#141414] border border-[#262626]"
-            >
-              <div className="p-4 border-b border-[#262626] flex items-center justify-between">
-                <span className="text-[11.5px] font-mono uppercase tracking-wider text-[#737373]">
-                  Integration Path Comparison: {guide.appName}
-                </span>
-                <span className="text-[11px] font-mono text-[#51a2ff]">
-                  Recommended: {guide.recommendedPath === 'managed' ? 'Composio Managed OAuth' : 'Custom OAuth Application'}
-                </span>
-              </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead>
-                    <tr className="border-b border-[#262626] bg-[#161616] text-[#737373] font-mono text-[10.5px] uppercase">
-                      <th className="py-2.5 px-4 font-normal">Dimension</th>
-                      <th className="py-2.5 px-4 font-normal text-[#51a2ff]">Composio Managed OAuth</th>
-                      <th className="py-2.5 px-4 font-normal text-[#e0e0e0]">Custom OAuth Application</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[#1f1f1f] text-[12px] font-mono text-[#a1a1a1]">
-                    <tr>
-                      <td className="py-2.5 px-4 text-[#737373]">Hands-on Setup</td>
-                      <td className="py-2.5 px-4 text-white">~2 minutes (`composio add {guide.slug}`)</td>
-                      <td className="py-2.5 px-4">{guide.handsOnHours.min}–{guide.handsOnHours.max} hours dev portal configuration</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2.5 px-4 text-[#737373]">Vendor Approval Wait</td>
-                      <td className="py-2.5 px-4 text-white">Zero wait (Pre-approved catalog integration)</td>
-                      <td className="py-2.5 px-4">{guide.approvalDays ? `${guide.approvalDays.min}–${guide.approvalDays.max} days review queue` : '0 days (instant self-service)'}</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2.5 px-4 text-[#737373]">Consent Screen Identity</td>
-                      <td className="py-2.5 px-4">Displays &quot;Composio&quot; identity</td>
-                      <td className="py-2.5 px-4 text-white">Fully white-labeled (Your company name &amp; logo)</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2.5 px-4 text-[#737373]">Secret &amp; Token Storage</td>
-                      <td className="py-2.5 px-4">Encrypted and rotated by Composio</td>
-                      <td className="py-2.5 px-4">Stored in your secure environment variables / KMS</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2.5 px-4 text-[#737373]">Ideal Use Case</td>
-                      <td className="py-2.5 px-4 text-white">AI Agent MVPs, testing, internal automations</td>
-                      <td className="py-2.5 px-4 text-white">Marketplace listings, enterprise security reviews</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </motion.div>
+              <span>Open Dev Console</span>
+              <ExternalLink className="w-2.5 h-2.5" />
+            </a>
           )}
-        </AnimatePresence>
+        </div>
 
         {/* Architecture Recommendation & Summary */}
         <div className="p-5 sm:p-6 rounded-lg bg-[#141414] border border-[#262626] space-y-3.5">
@@ -448,135 +340,73 @@ await composio.authConfigs.create({
               </span>
             </div>
 
-            {/* Interactive Progress Bar */}
-            <div className="p-3.5 sm:p-4 rounded-lg bg-[#141414] border border-[#262626] space-y-2.5">
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-[#a1a1a1] font-mono">
-                  Setup Progress: <strong className="text-white">{completedSteps.length} of {guide.setupChecklist.length}</strong> steps completed
-                </span>
-                <div className="flex items-center gap-3">
-                  <span className="font-mono text-[#51a2ff] font-medium">
-                    {Math.round((completedSteps.length / guide.setupChecklist.length) * 100)}%
-                  </span>
-                  {completedSteps.length > 0 && (
-                    <button
-                      onClick={resetProgress}
-                      className="text-[#666666] hover:text-white flex items-center gap-1 text-[10.5px] font-mono transition-colors"
-                      title="Reset progress"
-                    >
-                      <RotateCcw className="w-3 h-3" />
-                      <span>Reset</span>
-                    </button>
-                  )}
-                </div>
-              </div>
-              <div className="w-full h-1.5 bg-[#1f1f1f] rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-[#51a2ff] transition-all duration-300 rounded-full"
-                  style={{
-                    width: `${Math.round((completedSteps.length / guide.setupChecklist.length) * 100)}%`,
-                  }}
-                />
-              </div>
-            </div>
-
             <div className="rounded-md border border-[#262626] bg-[#141414] divide-y divide-[#1f1f1f] overflow-hidden">
-              {guide.setupChecklist.map((step) => {
-                const isCompleted = completedSteps.includes(step.id);
+              {guide.setupChecklist.map((step) => (
+                <div
+                  key={step.id}
+                  className="p-5 sm:p-6 space-y-3 bg-[#141414]"
+                >
+                  <div className="flex items-start gap-4">
+                    {/* Step Number Badge */}
+                    <div className="w-6 h-6 rounded bg-[#181818] border border-[#282828] text-[#a0a0a0] flex items-center justify-center flex-shrink-0 mt-0.5 font-mono text-[11px] font-medium">
+                      {step.step}
+                    </div>
 
-                return (
-                  <div
-                    key={step.id}
-                    className={clsx(
-                      'p-5 sm:p-6 space-y-3 transition-colors',
-                      isCompleted ? 'bg-[#101317]' : 'bg-[#141414]'
-                    )}
-                  >
-                    <div className="flex items-start gap-4">
-                      {/* Interactive Step Completion Button */}
-                      <button
-                        onClick={() => toggleStep(step.id)}
-                        title={isCompleted ? 'Mark as incomplete' : 'Mark as completed'}
-                        className={clsx(
-                          'w-6 h-6 rounded flex items-center justify-center flex-shrink-0 mt-0.5 font-mono text-[11px] transition-all cursor-pointer',
-                          isCompleted
-                            ? 'bg-[#51a2ff] text-black font-semibold'
-                            : 'bg-[#1a1a1a] border border-[#262626] text-[#737373] hover:border-[#51a2ff] hover:text-white'
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-baseline justify-between gap-2 flex-wrap">
+                        <h3 className="text-[14px] font-medium tracking-normal text-white">
+                          {step.title}
+                        </h3>
+                        {step.estimatedTime && (
+                          <span className="text-[11px] text-[#737373] font-mono flex-shrink-0">
+                            ~{step.estimatedTime}
+                          </span>
                         )}
-                      >
-                        {isCompleted ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : step.step}
-                      </button>
+                      </div>
 
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-baseline justify-between gap-2 flex-wrap">
-                          <h3
-                            className={clsx(
-                              'text-[14px] font-medium tracking-normal transition-colors cursor-pointer',
-                              isCompleted ? 'text-[#737373] line-through' : 'text-white'
-                            )}
-                            onClick={() => toggleStep(step.id)}
-                          >
-                            {step.title}
-                          </h3>
-                          {step.estimatedTime && (
-                            <span className="text-[11px] text-[#737373] font-mono flex-shrink-0">
-                              ~{step.estimatedTime}
-                            </span>
-                          )}
+                      <p className="text-[13.5px] text-[#a1a1a1] leading-[1.7] mt-2">
+                        {step.description}
+                      </p>
+
+                      {step.completionCriteria && (
+                        <div className="flex items-start gap-2 mt-3 p-3 rounded-md border border-[#1e1e1e] bg-[#181818]">
+                          <CircleCheck className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-[#737373]" />
+                          <span className="text-[12.5px] text-[#a1a1a1] leading-[1.6]">
+                            <span className="text-[#555555] font-mono text-[10.5px] uppercase tracking-wider mr-1.5">Done when:</span>
+                            {step.completionCriteria}
+                          </span>
                         </div>
+                      )}
 
-                        <p className="text-[13.5px] text-[#a1a1a1] leading-[1.7] mt-2">
-                          {step.description}
-                        </p>
-
-                        {step.completionCriteria && (
-                          <div
-                            className={clsx(
-                              'flex items-start gap-2 mt-3 p-3 rounded-md border transition-colors',
-                              isCompleted
-                                ? 'bg-[#0f1720] border-[#1c2e40]'
-                                : 'bg-[#181818] border-[#1e1e1e]'
-                            )}
-                          >
-                            <CircleCheck
-                              className={clsx(
-                                'w-3.5 h-3.5 flex-shrink-0 mt-0.5',
-                                isCompleted ? 'text-[#51a2ff]' : 'text-[#737373]'
-                              )}
-                            />
-                            <span className="text-[12.5px] text-[#a1a1a1] leading-[1.6]">
-                              <span className="text-[#555555] font-mono text-[10.5px] uppercase tracking-wider mr-1.5">Done when:</span>
-                              {step.completionCriteria}
-                            </span>
-                          </div>
-                        )}
-
-                        <div className="flex items-center flex-wrap gap-3 text-[11px] text-[#737373] pt-3 font-mono border-t border-[#1a1a1a] mt-3">
+                      <div className="flex items-center flex-wrap justify-between gap-3 text-[11px] pt-3 font-mono border-t border-[#1a1a1a] mt-3">
+                        <div className="flex items-center gap-2">
                           <span className="px-2 py-0.5 rounded bg-[#1a1a1a] border border-[#262626] text-[#8c8c8c]">
                             {STEP_TYPE_LABELS[step.type]}
                           </span>
 
-                          <span className="text-[#8c8c8c]">
-                            {step.agentCanDo ? 'Agent can prepare' : 'Developer action required'}
-                          </span>
-
-                          {step.officialLink && (
-                            <a
-                              href={step.officialLink}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-[#51a2ff] hover:underline inline-flex items-center gap-1 ml-auto"
-                            >
-                              <span>Official Docs</span>
-                              <ExternalLink className="w-2.5 h-2.5" />
-                            </a>
+                          {step.agentCanDo && (
+                            <span className="px-2 py-0.5 rounded bg-[#131b26] border border-[#1d3047] text-[#51a2ff]">
+                              Agent can prepare
+                            </span>
                           )}
                         </div>
+
+                        {step.officialLink && (
+                          <a
+                            href={step.officialLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[#51a2ff] hover:underline inline-flex items-center gap-1 ml-auto"
+                          >
+                            <span>Official Docs</span>
+                            <ExternalLink className="w-2.5 h-2.5" />
+                          </a>
+                        )}
                       </div>
                     </div>
                   </div>
-                );
-              })}
+                </div>
+              ))}
             </div>
           </div>
         )}
@@ -924,7 +754,9 @@ function guideToMarkdown(guide: Guide): string {
       lines.push('');
       lines.push(`**Type:** ${STEP_TYPE_LABELS[step.type]}  `);
       lines.push(`**Estimated Time:** ${step.estimatedTime || 'N/A'}  `);
-      lines.push(`**Responsibility:** ${step.agentCanDo ? 'Agent can prepare' : 'Developer action required'}  `);
+      if (step.agentCanDo) {
+        lines.push(`**Automation:** Agent can prepare  `);
+      }
       lines.push('');
       lines.push(step.description);
       if (step.completionCriteria) {
