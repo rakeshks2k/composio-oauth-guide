@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Guide, ChecklistItem } from '@/lib/types';
 import { AppIcon } from '@/components/AppIcon';
 import {
@@ -9,6 +9,11 @@ import {
   Share2,
   ExternalLink,
   ChevronDown,
+  CircleCheck,
+  Clock,
+  RotateCcw,
+  ShieldCheck,
+  FileCode,
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -28,7 +33,48 @@ const STEP_TYPE_LABELS: Record<ChecklistItem['type'], string> = {
 export function GuideView({ guide }: GuideViewProps) {
   const [copiedMd, setCopiedMd] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [copiedRedirectUri, setCopiedRedirectUri] = useState(false);
+  const [showPathComparison, setShowPathComparison] = useState(false);
   const [expandedBlocker, setExpandedBlocker] = useState<number | null>(0);
+  const [completedSteps, setCompletedSteps] = useState<string[]>([]);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(`composio_oauth_progress_${guide.slug}`);
+      if (stored) {
+        setCompletedSteps(JSON.parse(stored));
+      } else {
+        setCompletedSteps([]);
+      }
+    } catch {
+      setCompletedSteps([]);
+    }
+  }, [guide.slug]);
+
+  function toggleStep(stepId: string) {
+    setCompletedSteps((prev) => {
+      const next = prev.includes(stepId) ? prev.filter((id) => id !== stepId) : [...prev, stepId];
+      try {
+        localStorage.setItem(`composio_oauth_progress_${guide.slug}`, JSON.stringify(next));
+      } catch {}
+      return next;
+    });
+  }
+
+  function resetProgress() {
+    setCompletedSteps([]);
+    try {
+      localStorage.removeItem(`composio_oauth_progress_${guide.slug}`);
+    } catch {}
+  }
+
+  const COMPOSIO_REDIRECT_URI = 'https://backend.composio.dev/api/v1/auth-apps/add';
+
+  function copyRedirectUri() {
+    navigator.clipboard.writeText(COMPOSIO_REDIRECT_URI);
+    setCopiedRedirectUri(true);
+    setTimeout(() => setCopiedRedirectUri(false), 1800);
+  }
 
   const shareUrl =
     typeof window !== 'undefined'
@@ -154,6 +200,121 @@ await composio.authConfigs.create({
 
       {/* 2. Scrollable Guide Body */}
       <div className="flex-1 overflow-y-auto px-6 sm:px-10 lg:px-12 pt-5 pb-12 space-y-6 max-w-4xl mx-auto w-full">
+        {/* Quick Actions Strip: Callback URL & Developer Console */}
+        <div className="flex flex-wrap items-center justify-between gap-2.5 p-3 rounded-lg bg-[#141414] border border-[#262626]">
+          <div className="flex items-center gap-2 flex-wrap text-xs">
+            <span className="text-[#737373] font-mono text-[11px] uppercase tracking-wider">
+              Composio Callback:
+            </span>
+            <code className="px-2 py-0.5 rounded bg-[#181818] border border-[#2a2a2a] text-[#51a2ff] font-mono text-[11.5px]">
+              {COMPOSIO_REDIRECT_URI}
+            </code>
+            <button
+              onClick={copyRedirectUri}
+              className="h-6 px-2 rounded bg-[#1e1e1e] border border-[#2c2c2c] hover:border-[#383838] text-white text-[11px] font-mono flex items-center gap-1 transition-colors"
+            >
+              {copiedRedirectUri ? (
+                <>
+                  <Check className="w-3 h-3 text-[#51a2ff]" />
+                  <span>Copied URI</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3 h-3 text-[#737373]" />
+                  <span>Copy URI</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {(guide.setupChecklist[0]?.officialLink || guide.appDomain) && (
+              <a
+                href={guide.setupChecklist[0]?.officialLink || `https://${guide.appDomain}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="h-6 px-2.5 rounded bg-[#1e1e1e] border border-[#2c2c2c] hover:border-[#383838] text-[#a0a0a0] hover:text-white text-[11px] font-mono flex items-center gap-1.5 transition-colors"
+              >
+                <span>Provider Console</span>
+                <ExternalLink className="w-2.5 h-2.5" />
+              </a>
+            )}
+
+            <button
+              onClick={() => setShowPathComparison(!showPathComparison)}
+              className="h-6 px-2.5 rounded bg-[#1e1e1e] border border-[#2c2c2c] hover:border-[#383838] text-[#a0a0a0] hover:text-white text-[11px] font-mono flex items-center gap-1.5 transition-colors"
+            >
+              <span>{showPathComparison ? 'Hide Path Matrix' : 'Compare Paths'}</span>
+              <ChevronDown
+                className={clsx(
+                  'w-3 h-3 transition-transform',
+                  showPathComparison && 'rotate-180'
+                )}
+              />
+            </button>
+          </div>
+        </div>
+
+        {/* Path Comparison Matrix (Expandable) */}
+        <AnimatePresence>
+          {showPathComparison && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden rounded-lg bg-[#141414] border border-[#262626]"
+            >
+              <div className="p-4 border-b border-[#262626] flex items-center justify-between">
+                <span className="text-[11.5px] font-mono uppercase tracking-wider text-[#737373]">
+                  Integration Path Comparison: {guide.appName}
+                </span>
+                <span className="text-[11px] font-mono text-[#51a2ff]">
+                  Recommended: {guide.recommendedPath === 'managed' ? 'Composio Managed OAuth' : 'Custom OAuth'}
+                </span>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-[#262626] bg-[#161616] text-[#737373] font-mono text-[10.5px] uppercase">
+                      <th className="py-2.5 px-4 font-normal">Dimension</th>
+                      <th className="py-2.5 px-4 font-normal text-[#51a2ff]">Composio Managed OAuth</th>
+                      <th className="py-2.5 px-4 font-normal text-[#e0e0e0]">Custom OAuth Application</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#1f1f1f] text-[12px] font-mono text-[#a1a1a1]">
+                    <tr>
+                      <td className="py-2.5 px-4 text-[#737373]">Setup Overhead</td>
+                      <td className="py-2.5 px-4 text-white">~2 minutes (`composio add {guide.slug}`)</td>
+                      <td className="py-2.5 px-4">{guide.handsOnHours.min}–{guide.handsOnHours.max} hours developer portal setup</td>
+                    </tr>
+                    <tr>
+                      <td className="py-2.5 px-4 text-[#737373]">Approval Wait</td>
+                      <td className="py-2.5 px-4 text-white">Zero wait (Immediate launch)</td>
+                      <td className="py-2.5 px-4">{guide.approvalDays ? `${guide.approvalDays.min}–${guide.approvalDays.max} days` : '0 days (instant)'}</td>
+                    </tr>
+                    <tr>
+                      <td className="py-2.5 px-4 text-[#737373]">Consent Screen Branding</td>
+                      <td className="py-2.5 px-4">Shows &quot;Composio&quot; identity</td>
+                      <td className="py-2.5 px-4 text-white">White-labeled (Your company name &amp; logo)</td>
+                    </tr>
+                    <tr>
+                      <td className="py-2.5 px-4 text-[#737373]">Credentials Storage</td>
+                      <td className="py-2.5 px-4">Managed securely by Composio</td>
+                      <td className="py-2.5 px-4">Saved in your secure env vars / KMS</td>
+                    </tr>
+                    <tr>
+                      <td className="py-2.5 px-4 text-[#737373]">Best Suited For</td>
+                      <td className="py-2.5 px-4 text-white">AI Agent MVPs, testing, internal automations</td>
+                      <td className="py-2.5 px-4 text-white">Marketplace listings, enterprise security audits</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Architecture Recommendation & Summary */}
         <div className="p-5 sm:p-6 rounded-lg bg-[#141414] border border-[#262626] space-y-3.5">
           <div className="flex items-center justify-between flex-wrap gap-2">
@@ -228,6 +389,37 @@ await composio.authConfigs.create({
           </motion.div>
         </div>
 
+        {/* Evidence & Verification Status Strip */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          <div className="p-3 rounded-lg bg-[#141414] border border-[#262626] flex items-center gap-2.5">
+            <ShieldCheck className="w-4 h-4 text-[#51a2ff] flex-shrink-0" />
+            <div>
+              <div className="text-white font-medium text-[12px]">Composio Verified</div>
+              <div className="text-[#666666] text-[11px] font-mono">SDK flow &amp; token rotation</div>
+            </div>
+          </div>
+
+          <div className="p-3 rounded-lg bg-[#141414] border border-[#262626] flex items-center gap-2.5">
+            <FileCode className="w-4 h-4 text-[#51a2ff] flex-shrink-0" />
+            <div>
+              <div className="text-white font-medium text-[12px]">{guide.sources.length} Official Citations</div>
+              <div className="text-[#666666] text-[11px] font-mono">Verified provider documentation</div>
+            </div>
+          </div>
+
+          <div className="p-3 rounded-lg bg-[#141414] border border-[#262626] flex items-center gap-2.5">
+            <CircleCheck className="w-4 h-4 text-[#51a2ff] flex-shrink-0" />
+            <div>
+              <div className="text-white font-medium text-[12px]">
+                {guide.assumptions.length + guide.unverifiedClaims.length > 0
+                  ? `${guide.assumptions.length + guide.unverifiedClaims.length} Caveats Noted`
+                  : 'Zero Unverified Claims'}
+              </div>
+              <div className="text-[#666666] text-[11px] font-mono">Policy nuances flagged</div>
+            </div>
+          </div>
+        </div>
+
         {/* Composio Integration Code Snippet */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
@@ -256,55 +448,135 @@ await composio.authConfigs.create({
               </span>
             </div>
 
+            {/* Interactive Progress Bar */}
+            <div className="p-3.5 sm:p-4 rounded-lg bg-[#141414] border border-[#262626] space-y-2.5">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-[#a1a1a1] font-mono">
+                  Setup Progress: <strong className="text-white">{completedSteps.length} of {guide.setupChecklist.length}</strong> steps completed
+                </span>
+                <div className="flex items-center gap-3">
+                  <span className="font-mono text-[#51a2ff] font-medium">
+                    {Math.round((completedSteps.length / guide.setupChecklist.length) * 100)}%
+                  </span>
+                  {completedSteps.length > 0 && (
+                    <button
+                      onClick={resetProgress}
+                      className="text-[#666666] hover:text-white flex items-center gap-1 text-[10.5px] font-mono transition-colors"
+                      title="Reset progress"
+                    >
+                      <RotateCcw className="w-3 h-3" />
+                      <span>Reset</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+              <div className="w-full h-1.5 bg-[#1f1f1f] rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-[#51a2ff] transition-all duration-300 rounded-full"
+                  style={{
+                    width: `${Math.round((completedSteps.length / guide.setupChecklist.length) * 100)}%`,
+                  }}
+                />
+              </div>
+            </div>
+
             <div className="rounded-md border border-[#262626] bg-[#141414] divide-y divide-[#1f1f1f] overflow-hidden">
-              {guide.setupChecklist.map((step) => (
-                <div key={step.id} className="p-5 sm:p-6 space-y-3">
-                  <div className="flex items-start gap-4">
-                    <div className="w-6 h-6 rounded bg-[#1a1a1a] border border-[#262626] text-[#737373] font-mono text-[11px] flex items-center justify-center flex-shrink-0 mt-0.5">
-                      {step.step}
-                    </div>
+              {guide.setupChecklist.map((step) => {
+                const isCompleted = completedSteps.includes(step.id);
 
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-baseline justify-between gap-2 flex-wrap">
-                        <h3 className="text-[14px] font-medium text-white tracking-normal">
-                          {step.title}
-                        </h3>
-                        {step.estimatedTime && (
-                          <span className="text-[11px] text-[#737373] font-mono flex-shrink-0">
-                            ~{step.estimatedTime}
-                          </span>
+                return (
+                  <div
+                    key={step.id}
+                    className={clsx(
+                      'p-5 sm:p-6 space-y-3 transition-colors',
+                      isCompleted ? 'bg-[#101317]' : 'bg-[#141414]'
+                    )}
+                  >
+                    <div className="flex items-start gap-4">
+                      {/* Interactive Step Completion Button */}
+                      <button
+                        onClick={() => toggleStep(step.id)}
+                        title={isCompleted ? 'Mark as incomplete' : 'Mark as completed'}
+                        className={clsx(
+                          'w-6 h-6 rounded flex items-center justify-center flex-shrink-0 mt-0.5 font-mono text-[11px] transition-all cursor-pointer',
+                          isCompleted
+                            ? 'bg-[#51a2ff] text-black font-semibold'
+                            : 'bg-[#1a1a1a] border border-[#262626] text-[#737373] hover:border-[#51a2ff] hover:text-white'
                         )}
-                      </div>
+                      >
+                        {isCompleted ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : step.step}
+                      </button>
 
-                      <p className="text-[13.5px] text-[#a1a1a1] leading-[1.7] mt-2">
-                        {step.description}
-                      </p>
-
-                      <div className="flex items-center flex-wrap gap-3 text-[11px] text-[#737373] pt-3 font-mono border-t border-[#1a1a1a] mt-3">
-                        <span className="px-2 py-0.5 rounded bg-[#1a1a1a] border border-[#262626] text-[#8c8c8c]">
-                          {STEP_TYPE_LABELS[step.type]}
-                        </span>
-
-                        <span className="text-[#8c8c8c]">
-                          {step.agentCanDo ? 'Agent can prepare' : 'Developer action'}
-                        </span>
-
-                        {step.officialLink && (
-                          <a
-                            href={step.officialLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-[#51a2ff] hover:underline inline-flex items-center gap-1 ml-auto"
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-baseline justify-between gap-2 flex-wrap">
+                          <h3
+                            className={clsx(
+                              'text-[14px] font-medium tracking-normal transition-colors cursor-pointer',
+                              isCompleted ? 'text-[#737373] line-through' : 'text-white'
+                            )}
+                            onClick={() => toggleStep(step.id)}
                           >
-                            <span>Official Docs</span>
-                            <ExternalLink className="w-2.5 h-2.5" />
-                          </a>
+                            {step.title}
+                          </h3>
+                          {step.estimatedTime && (
+                            <span className="text-[11px] text-[#737373] font-mono flex-shrink-0">
+                              ~{step.estimatedTime}
+                            </span>
+                          )}
+                        </div>
+
+                        <p className="text-[13.5px] text-[#a1a1a1] leading-[1.7] mt-2">
+                          {step.description}
+                        </p>
+
+                        {step.completionCriteria && (
+                          <div
+                            className={clsx(
+                              'flex items-start gap-2 mt-3 p-3 rounded-md border transition-colors',
+                              isCompleted
+                                ? 'bg-[#0f1720] border-[#1c2e40]'
+                                : 'bg-[#181818] border-[#1e1e1e]'
+                            )}
+                          >
+                            <CircleCheck
+                              className={clsx(
+                                'w-3.5 h-3.5 flex-shrink-0 mt-0.5',
+                                isCompleted ? 'text-[#51a2ff]' : 'text-[#737373]'
+                              )}
+                            />
+                            <span className="text-[12.5px] text-[#a1a1a1] leading-[1.6]">
+                              <span className="text-[#555555] font-mono text-[10.5px] uppercase tracking-wider mr-1.5">Done when:</span>
+                              {step.completionCriteria}
+                            </span>
+                          </div>
                         )}
+
+                        <div className="flex items-center flex-wrap gap-3 text-[11px] text-[#737373] pt-3 font-mono border-t border-[#1a1a1a] mt-3">
+                          <span className="px-2 py-0.5 rounded bg-[#1a1a1a] border border-[#262626] text-[#8c8c8c]">
+                            {STEP_TYPE_LABELS[step.type]}
+                          </span>
+
+                          <span className="text-[#8c8c8c]">
+                            {step.agentCanDo ? 'Agent can prepare' : 'Developer action'}
+                          </span>
+
+                          {step.officialLink && (
+                            <a
+                              href={step.officialLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[#51a2ff] hover:underline inline-flex items-center gap-1 ml-auto"
+                            >
+                              <span>Official Docs</span>
+                              <ExternalLink className="w-2.5 h-2.5" />
+                            </a>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}
@@ -357,6 +629,60 @@ await composio.authConfigs.create({
                   ))}
                 </tbody>
               </table>
+            </div>
+          </div>
+        )}
+
+        {/* Approval Requirements */}
+        {guide.approvalRequirements.length > 0 && (
+          <div className="space-y-3.5">
+            <div className="flex items-center justify-between">
+              <h2 className="text-[11.5px] font-medium uppercase tracking-wider text-[#737373]">
+                Approval Requirements
+              </h2>
+              <span className="text-[11px] font-mono text-[#555555]">
+                {guide.approvalRequirements.length} {guide.approvalRequirements.length === 1 ? 'requirement' : 'requirements'}
+              </span>
+            </div>
+
+            <div className="rounded-md border border-[#262626] bg-[#141414] divide-y divide-[#1f1f1f] overflow-hidden">
+              {guide.approvalRequirements.map((req, idx) => (
+                <div key={idx} className="p-5 sm:p-6 space-y-3">
+                  <div className="flex items-start justify-between gap-3 flex-wrap">
+                    <div className="flex items-center gap-2.5 flex-wrap">
+                      <span className="text-[14px] font-medium text-white leading-tight">{req.name}</span>
+                      <span
+                        className={clsx(
+                          'text-[10.5px] font-mono px-1.5 py-0.5 rounded border flex-shrink-0',
+                          req.required
+                            ? 'text-white bg-[#1c1c1c] border-[#2c2c2c]'
+                            : 'text-[#737373] bg-transparent border-[#2a2a2a]'
+                        )}
+                      >
+                        {req.required ? 'Required' : 'Optional'}
+                      </span>
+                    </div>
+                    {req.estimatedTime && (
+                      <span className="flex items-center gap-1.5 text-[11px] font-mono text-[#737373] flex-shrink-0">
+                        <Clock className="w-3 h-3" />
+                        {req.estimatedTime}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[13.5px] text-[#a1a1a1] leading-[1.7]">{req.description}</p>
+                  {req.link && (
+                    <a
+                      href={req.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[11px] text-[#51a2ff] hover:underline inline-flex items-center gap-1 font-mono"
+                    >
+                      <span>Official Requirements</span>
+                      <ExternalLink className="w-2.5 h-2.5" />
+                    </a>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         )}
@@ -534,32 +860,88 @@ function guideToMarkdown(guide: Guide): string {
   const lines: string[] = [
     `# ${guide.appName} — OAuth Integration Guide for Composio`,
     '',
-    `> **Recommended Path:** ${guide.recommendedPath.toUpperCase()}`,
-    `> **Effort:** ${guide.handsOnHours.min}–${guide.handsOnHours.max}h hands-on | **Total Calendar:** ${guide.elapsedDays.min}–${guide.elapsedDays.max} days | **Approval Wait:** ${guide.approvalDays ? `${guide.approvalDays.min}–${guide.approvalDays.max} days` : 'None required'}`,
+    `> **Recommended Path:** ${guide.recommendedPath === 'managed' ? 'Composio Managed OAuth' : 'Custom OAuth App'}  `,
+    `> **Difficulty:** ${guide.difficulty.replace('-', ' ')}  `,
+    `> **Hands-on Effort:** ${guide.handsOnHours.min}–${guide.handsOnHours.max}h  `,
+    `> **Total Calendar:** ${guide.elapsedDays.min}–${guide.elapsedDays.max} days  `,
+    `> **Approval Wait:** ${guide.approvalDays ? `${guide.approvalDays.min}–${guide.approvalDays.max} days` : 'None required'}  `,
+    `> **Researched:** ${guide.researchDate}`,
     '',
     '## Overview',
+    '',
     guide.summary,
     '',
     '## Architecture Recommendation',
+    '',
     guide.pathJustification,
     '',
   ];
 
+  // Composio integration code
+  const slug = guide.slug;
+  const envSlug = slug.toUpperCase().replace(/-/g, '_');
+  lines.push('## Composio Integration Code', '');
+  if (guide.recommendedPath === 'managed') {
+    lines.push('```bash');
+    lines.push(`# Connect with Composio Managed OAuth`);
+    lines.push(`composio add ${slug}`);
+    lines.push('```', '');
+    lines.push('```typescript');
+    lines.push(`import { Composio } from "@composio/core";`);
+    lines.push(`const composio = new Composio({ apiKey: process.env.COMPOSIO_API_KEY });`);
+    lines.push(`const connection = await composio.connectedAccounts.initiate({`);
+    lines.push(`  appName: "${slug}",`);
+    lines.push(`  redirectUrl: "https://your-domain.com/api/oauth/callback",`);
+    lines.push(`});`);
+    lines.push(`console.log("Redirect user to:", connection.redirectUrl);`);
+    lines.push('```', '');
+  } else {
+    lines.push('```bash');
+    lines.push(`# Register custom OAuth credentials`);
+    lines.push(`composio auth add-config ${slug} \\`);
+    lines.push(`  --client-id "<YOUR_CLIENT_ID>" \\`);
+    lines.push(`  --client-secret "<YOUR_CLIENT_SECRET>"`);
+    lines.push('```', '');
+    lines.push('```typescript');
+    lines.push(`import { Composio } from "@composio/core";`);
+    lines.push(`const composio = new Composio({ apiKey: process.env.COMPOSIO_API_KEY });`);
+    lines.push(`await composio.authConfigs.create({`);
+    lines.push(`  appName: "${slug}",`);
+    lines.push(`  authScheme: "OAUTH2",`);
+    lines.push(`  credentials: {`);
+    lines.push(`    clientId: process.env.${envSlug}_CLIENT_ID,`);
+    lines.push(`    clientSecret: process.env.${envSlug}_CLIENT_SECRET,`);
+    lines.push(`  },`);
+    lines.push(`});`);
+    lines.push('```', '');
+  }
+
+  // Setup checklist
   if (guide.setupChecklist.length > 0) {
     lines.push('## Setup Checklist', '');
     guide.setupChecklist.forEach((step) => {
       lines.push(`### Step ${step.step}: ${step.title}`);
-      lines.push(`- Type: ${STEP_TYPE_LABELS[step.type]}`);
-      lines.push(`- Estimated Time: ${step.estimatedTime || 'N/A'}`);
-      lines.push(`- Automation: ${step.agentCanDo ? 'Agent can prepare' : 'Developer action'}`);
-      lines.push(`- Details: ${step.description}`);
-      if (step.officialLink) lines.push(`- Official Docs: ${step.officialLink}`);
+      lines.push('');
+      lines.push(`**Type:** ${STEP_TYPE_LABELS[step.type]}  `);
+      lines.push(`**Estimated Time:** ${step.estimatedTime || 'N/A'}  `);
+      lines.push(`**Automation:** ${step.agentCanDo ? '🤖 Agent can prepare' : '👤 Developer action required'}  `);
+      lines.push('');
+      lines.push(step.description);
+      if (step.completionCriteria) {
+        lines.push('');
+        lines.push(`> ✅ **Done when:** ${step.completionCriteria}`);
+      }
+      if (step.officialLink) {
+        lines.push('');
+        lines.push(`📎 [Official Docs](${step.officialLink})`);
+      }
       lines.push('');
     });
   }
 
+  // Scopes table
   if (guide.scopes.length > 0) {
-    lines.push('## Scopes', '');
+    lines.push('## OAuth Scopes & Permissions', '');
     lines.push('| Scope | Description | Access Tier |');
     lines.push('|---|---|---|');
     guide.scopes.forEach((s) => {
@@ -568,15 +950,65 @@ function guideToMarkdown(guide: Guide): string {
     lines.push('');
   }
 
+  // Approval requirements
+  if (guide.approvalRequirements.length > 0) {
+    lines.push('## Approval Requirements', '');
+    guide.approvalRequirements.forEach((req) => {
+      lines.push(`### ${req.required ? '🔴' : '🟡'} ${req.name} (${req.required ? 'Required' : 'Optional'})`);
+      lines.push('');
+      if (req.estimatedTime) lines.push(`**Timeline:** ${req.estimatedTime}  `);
+      lines.push('');
+      lines.push(req.description);
+      if (req.link) lines.push(`\n📎 [Official Requirements](${req.link})`);
+      lines.push('');
+    });
+  }
+
+  // Blockers
   if (guide.commonBlockers.length > 0) {
-    lines.push('## Potential Blockers', '');
+    lines.push('## Potential Blockers & Resolutions', '');
     guide.commonBlockers.forEach((b) => {
-      lines.push(`### ⚠️ ${b.title} (${b.severity.toUpperCase()})`);
+      const sev = b.severity === 'high' ? '🔴' : b.severity === 'medium' ? '🟡' : '🟢';
+      lines.push(`### ${sev} ${b.title} (${b.severity} priority)`);
+      lines.push('');
       lines.push(b.description);
+      lines.push('');
       lines.push(`**Resolution:** ${b.resolution}`);
       lines.push('');
     });
   }
+
+  // Agent capabilities matrix
+  if (guide.agentCapabilities.length > 0) {
+    lines.push('## Agent Automation vs. Developer Responsibilities', '');
+    lines.push('| Action | Automation Tier | Notes |');
+    lines.push('|---|---|---|');
+    guide.agentCapabilities.forEach((cap) => {
+      lines.push(`| ${cap.action} | ${cap.canDo ? 'Autonomous' : 'Manual'} | ${cap.notes || '—'} |`);
+    });
+    lines.push('');
+  }
+
+  // Sources
+  if (guide.sources.length > 0) {
+    lines.push('## Official Documentation & Sources', '');
+    guide.sources.forEach((src) => {
+      lines.push(`- [${src.title}](${src.url}) *(${src.type.replace(/-/g, ' ')} · ${src.accessedAt})*`);
+    });
+    lines.push('');
+  }
+
+  // Audit notes
+  const hasNotes = guide.assumptions.length > 0 || guide.unverifiedClaims.length > 0;
+  if (hasNotes) {
+    lines.push('## Audit Notes & Assumptions', '');
+    guide.assumptions.forEach((a) => lines.push(`- ${a}`));
+    guide.unverifiedClaims.forEach((c) => lines.push(`- ⚠️ *Unverified:* ${c}`));
+    lines.push('');
+  }
+
+  lines.push(`---`);
+  lines.push(`*Generated by Composio OAuth Guide Generator · ${guide.researchDate}*`);
 
   return lines.join('\n');
 }

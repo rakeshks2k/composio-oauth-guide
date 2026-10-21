@@ -81,7 +81,7 @@ export default function HomePage() {
       const newGuide = updatedGuides.find((g) => g.id === guideId);
       if (newGuide) {
         setSelectedGuide(newGuide);
-        setResearchEvents(getGuideResearchEvents(newGuide));
+        // Keep the real streaming events from the pipeline — don't replace with synthetic ones
         setView('guide');
       }
     } catch (err) {
@@ -91,6 +91,21 @@ export default function HomePage() {
 
   function handleGenerateError() {
     setIsGenerating(false);
+  }
+
+  async function handleDeleteGuide(guide: Guide) {
+    if (guide.isPreset) return;
+    try {
+      await fetch(`/api/guides/${guide.id}`, { method: 'DELETE' });
+      setGuides((prev) => prev.filter((g) => g.id !== guide.id));
+      if (selectedGuide?.id === guide.id) {
+        setSelectedGuide(null);
+        setResearchEvents([]);
+        setView('generate');
+      }
+    } catch (err) {
+      console.error('Failed to delete guide:', err);
+    }
   }
 
   return (
@@ -141,6 +156,7 @@ export default function HomePage() {
           onGenerateClick={handleGenerateClick}
           isGenerating={isGenerating}
           onCloseMobile={() => setMobileSidebarOpen(false)}
+          onDeleteGuide={handleDeleteGuide}
         />
       </div>
 

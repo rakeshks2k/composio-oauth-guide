@@ -60,45 +60,42 @@ function initSqlite(): Database.Database | null {
       );
     `);
 
-    // Seed preset guides if not already there
-    const count = (_db.prepare('SELECT COUNT(*) as c FROM guides WHERE is_preset = 1').get() as { c: number }).c;
-    if (count === 0) {
-      const insert = _db.prepare(`
-        INSERT OR IGNORE INTO guides (
-          id, app_name, app_domain, slug, recommended_path, difficulty,
-          hands_on_hours_min, hands_on_hours_max,
-          elapsed_days_min, elapsed_days_max,
-          approval_days_min, approval_days_max,
-          composio_managed, guide_json, sources_json, is_preset
-        ) VALUES (
-          @id, @app_name, @app_domain, @slug, @recommended_path, @difficulty,
-          @hands_on_hours_min, @hands_on_hours_max,
-          @elapsed_days_min, @elapsed_days_max,
-          @approval_days_min, @approval_days_max,
-          @composio_managed, @guide_json, @sources_json, @is_preset
-        )
-      `);
+    // Seed or sync preset guides
+    const insert = _db.prepare(`
+      INSERT OR REPLACE INTO guides (
+        id, app_name, app_domain, slug, recommended_path, difficulty,
+        hands_on_hours_min, hands_on_hours_max,
+        elapsed_days_min, elapsed_days_max,
+        approval_days_min, approval_days_max,
+        composio_managed, guide_json, sources_json, is_preset
+      ) VALUES (
+        @id, @app_name, @app_domain, @slug, @recommended_path, @difficulty,
+        @hands_on_hours_min, @hands_on_hours_max,
+        @elapsed_days_min, @elapsed_days_max,
+        @approval_days_min, @approval_days_max,
+        @composio_managed, @guide_json, @sources_json, @is_preset
+      )
+    `);
 
-      for (const guide of presetGuides) {
-        insert.run({
-          id: guide.id,
-          app_name: guide.appName,
-          app_domain: guide.appDomain || null,
-          slug: guide.slug,
-          recommended_path: guide.recommendedPath,
-          difficulty: guide.difficulty,
-          hands_on_hours_min: guide.handsOnHours.min,
-          hands_on_hours_max: guide.handsOnHours.max,
-          elapsed_days_min: guide.elapsedDays.min,
-          elapsed_days_max: guide.elapsedDays.max,
-          approval_days_min: guide.approvalDays?.min ?? null,
-          approval_days_max: guide.approvalDays?.max ?? null,
-          composio_managed: guide.composioManaged ? 1 : 0,
-          guide_json: JSON.stringify(guide),
-          sources_json: JSON.stringify(guide.sources),
-          is_preset: 1,
-        });
-      }
+    for (const guide of presetGuides) {
+      insert.run({
+        id: guide.id,
+        app_name: guide.appName,
+        app_domain: guide.appDomain || null,
+        slug: guide.slug,
+        recommended_path: guide.recommendedPath,
+        difficulty: guide.difficulty,
+        hands_on_hours_min: guide.handsOnHours.min,
+        hands_on_hours_max: guide.handsOnHours.max,
+        elapsed_days_min: guide.elapsedDays.min,
+        elapsed_days_max: guide.elapsedDays.max,
+        approval_days_min: guide.approvalDays?.min ?? null,
+        approval_days_max: guide.approvalDays?.max ?? null,
+        composio_managed: guide.composioManaged ? 1 : 0,
+        guide_json: JSON.stringify(guide),
+        sources_json: JSON.stringify(guide.sources),
+        is_preset: 1,
+      });
     }
 
     _sqliteAvailable = true;
@@ -143,6 +140,21 @@ export function getGuideByIdOrSlug(idOrSlug: string): Guide | null {
     }
   }
   return memoryGuides.find((g) => g.id === idOrSlug || g.slug === idOrSlug) || null;
+}
+
+export function deleteGuide(id: string): void {
+  // Remove from memory (only non-presets)
+  const idx = memoryGuides.findIndex((g) => g.id === id && !g.isPreset);
+  if (idx >= 0) memoryGuides.splice(idx, 1);
+
+  const db = initSqlite();
+  if (db) {
+    try {
+      db.prepare('DELETE FROM guides WHERE id = ? AND is_preset = 0').run(id);
+    } catch {
+      // Silent fallback
+    }
+  }
 }
 
 export function saveGuide(guide: Guide): void {

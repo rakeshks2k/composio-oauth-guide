@@ -11,6 +11,7 @@ import {
   BookOpen,
   Sparkles,
   ExternalLink,
+  Trash2,
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { motion } from 'framer-motion';
@@ -22,6 +23,7 @@ interface SidebarProps {
   onGenerateClick: (prefillName?: string) => void;
   isGenerating: boolean;
   onCloseMobile?: () => void;
+  onDeleteGuide?: (guide: Guide) => void;
 }
 
 export function Sidebar({
@@ -31,8 +33,10 @@ export function Sidebar({
   onGenerateClick,
   isGenerating,
   onCloseMobile,
+  onDeleteGuide,
 }: SidebarProps) {
   const [searchQuery, setSearchQuery] = useState('');
+  const [filterTag, setFilterTag] = useState<'all' | 'instant' | 'approval' | 'managed'>('all');
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -51,9 +55,18 @@ export function Sidebar({
   }, []);
 
   const filteredGuides = useMemo(() => {
+    let list = guides;
+    if (filterTag === 'instant') {
+      list = list.filter((g) => !g.approvalDays || g.approvalDays.max === 0);
+    } else if (filterTag === 'approval') {
+      list = list.filter((g) => g.approvalDays && g.approvalDays.max > 0);
+    } else if (filterTag === 'managed') {
+      list = list.filter((g) => g.recommendedPath === 'managed');
+    }
+
     const q = searchQuery.trim().toLowerCase();
-    if (!q) return guides;
-    return guides.filter((g) => {
+    if (!q) return list;
+    return list.filter((g) => {
       return (
         g.appName.toLowerCase().includes(q) ||
         g.slug.toLowerCase().includes(q) ||
@@ -63,7 +76,7 @@ export function Sidebar({
         g.scopes.some((s) => s.scope.toLowerCase().includes(q))
       );
     });
-  }, [guides, searchQuery]);
+  }, [guides, searchQuery, filterTag]);
 
   const presetGuides = useMemo(() => filteredGuides.filter((g) => g.isPreset), [filteredGuides]);
   const recentGuides = useMemo(() => filteredGuides.filter((g) => !g.isPreset), [filteredGuides]);
@@ -148,6 +161,31 @@ export function Sidebar({
             </span>
           )}
         </div>
+
+        {/* Quick Filter Chips */}
+        <div className="flex items-center gap-1 pt-0.5">
+          {(
+            [
+              { id: 'all', label: 'All' },
+              { id: 'instant', label: 'Instant (0d)' },
+              { id: 'approval', label: 'Review' },
+              { id: 'managed', label: 'Managed' },
+            ] as const
+          ).map((chip) => (
+            <button
+              key={chip.id}
+              onClick={() => setFilterTag(chip.id)}
+              className={clsx(
+                'px-2 py-0.5 rounded text-[10.5px] font-mono whitespace-nowrap transition-colors flex-1 text-center',
+                filterTag === chip.id
+                  ? 'bg-[#222222] text-white border border-[#383838]'
+                  : 'text-[#666666] hover:text-[#999999] bg-transparent border border-transparent'
+              )}
+            >
+              {chip.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* 3. Navigation Links: Guide Library & Recent Guides */}
@@ -206,37 +244,52 @@ export function Sidebar({
             {recentGuides.map((guide) => {
               const isSelected = selectedGuide?.id === guide.id;
               return (
-                <motion.button
-                  key={guide.id}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => {
-                    onSelectGuide(guide);
-                    onCloseMobile?.();
-                  }}
-                  className={clsx(
-                    'relative w-full h-9 px-2.5 rounded-md flex items-center gap-2.5 transition-colors text-left group',
-                    isSelected
-                      ? 'text-white font-medium'
-                      : 'text-[#a3a3a3] hover:text-white hover:bg-[#181818]/60'
-                  )}
-                >
-                  {isSelected && (
-                    <motion.div
-                      layoutId="sidebar-active-indicator"
-                      className="absolute inset-0 rounded-md bg-[#1e1e1e] border border-[#303030]"
-                      transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-                    />
-                  )}
-                  <div className="relative z-10 flex items-center gap-2.5 w-full min-w-0">
-                    <div className="transition-transform duration-150 group-hover:scale-105 flex-shrink-0">
-                      <AppIcon name={guide.appName} size="sm" />
+                <div key={guide.id} className="relative group/row">
+                  <motion.button
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => {
+                      onSelectGuide(guide);
+                      onCloseMobile?.();
+                    }}
+                    className={clsx(
+                      'relative w-full h-9 px-2.5 rounded-md flex items-center gap-2.5 transition-colors text-left',
+                      isSelected
+                        ? 'text-white font-medium'
+                        : 'text-[#a3a3a3] hover:text-white hover:bg-[#181818]/60'
+                    )}
+                  >
+                    {isSelected && (
+                      <motion.div
+                        layoutId="sidebar-active-indicator"
+                        className="absolute inset-0 rounded-md bg-[#1e1e1e] border border-[#303030]"
+                        transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                      />
+                    )}
+                    <div className="relative z-10 flex items-center gap-2.5 w-full min-w-0 pr-6">
+                      <div className="transition-transform duration-150 group-hover:scale-105 flex-shrink-0">
+                        <AppIcon name={guide.appName} size="sm" />
+                      </div>
+                      <span className="truncate flex-1 tracking-tight text-[13px]">{guide.appName}</span>
+                      <span className="text-[10.5px] font-mono text-[#737373] capitalize px-1.5 py-0.5 rounded bg-[#181818] border border-[#242424] flex-shrink-0">
+                        {guide.difficulty}
+                      </span>
                     </div>
-                    <span className="truncate flex-1 tracking-tight text-[13px]">{guide.appName}</span>
-                    <span className="text-[10.5px] font-mono text-[#737373] capitalize px-1.5 py-0.5 rounded bg-[#181818] border border-[#242424] flex-shrink-0">
-                      {guide.difficulty}
-                    </span>
-                  </div>
-                </motion.button>
+                  </motion.button>
+
+                  {/* Delete button — only visible on hover, only for non-preset */}
+                  {onDeleteGuide && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDeleteGuide(guide);
+                      }}
+                      title="Delete guide"
+                      className="absolute right-1.5 top-1/2 -translate-y-1/2 z-20 opacity-0 group-hover/row:opacity-100 transition-opacity p-1 rounded text-[#555555] hover:text-[#ef4444] hover:bg-[#1c1010]"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  )}
+                </div>
               );
             })}
           </>

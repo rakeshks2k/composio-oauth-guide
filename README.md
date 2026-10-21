@@ -73,10 +73,11 @@ Inspired by the Composio dashboard:
 ## Key Features
 
 ### 1. Searchable Guide Library (Architected for 100+ Apps)
-- Pre-seeded with 4 rigorously researched provider guides representing distinct OAuth approval archetypes (Google Drive, Slack, GitHub, HubSpot).
+- Pre-seeded with 7 rigorously researched provider guides representing distinct OAuth approval archetypes (Google Drive, Slack, GitHub, HubSpot, Notion, Stripe, Zoom).
 - Instant real-time fuzzy search filtering by app name, slug, scopes, summary, or difficulty.
 - Keyboard shortcut: Press `/` anywhere to immediately focus the search bar.
 - Empty search state offers a 1-click shortcut to generate a guide for the searched term.
+- Management: Delete user-generated guides with 1 click; preset library guides remain protected.
 
 ### 2. Live Research Workflow
 - Real-time streaming using `ReadableStream` and newline-delimited JSON (`NDJSON`).
@@ -141,6 +142,36 @@ Inspired by the Composio dashboard:
   - [HubSpot OAuth Overview](https://developers.hubspot.com/docs/api/oauth/oauth-overview)
   - [HubSpot Marketplace Certification Checklist](https://developers.hubspot.com/docs/marketplace/certification-checklist)
   - [HubSpot Working with OAuth](https://developers.hubspot.com/docs/api/working-with-oauth)
+
+### 5. Notion (Archetype: Capability-Based Scopes & Multi-Workspace Review)
+- **Recommended Path:** **Managed OAuth** for single-workspace internal tools; **Custom OAuth** for public multi-workspace distribution.
+- **Difficulty:** `Medium` | **Hands-on:** 1–3h | **Elapsed:** 1–21 days | **Approval Wait:** 5–21 days.
+- **Key Scopes:** `read_content` (Read pages & databases shared with integration), `update_content`, `insert_content`, `read_user_information`.
+- **Blockers:** Explicit per-page/database sharing required (integrations cannot access workspace pages automatically until a member manually shares them); Internal vs. Public integration separation.
+- **Sources Verified:**
+  - [Notion API Authorization Guide](https://developers.notion.com/docs/authorization)
+  - [Notion Integration Capabilities Reference](https://developers.notion.com/reference/capabilities)
+  - [Notion Getting Started](https://developers.notion.com/docs/getting-started)
+
+### 6. Stripe (Archetype: Financial Platform Live Mode Activation)
+- **Recommended Path:** **Custom OAuth** (Stripe Connect platform account); **Managed OAuth** for single-account API calls.
+- **Difficulty:** `Medium` | **Hands-on:** 2–5h | **Elapsed:** 1–14 days | **Approval Wait:** 1–7 days.
+- **Key Scopes:** `read_only` (Read account balance, charges, customers), `read_write` (Full access to process payments and create invoices).
+- **Blockers:** Test mode works instantly but switching to Live mode requires platform verification and compliance activation (1–7 business days); choosing between Standard vs Express vs Custom accounts.
+- **Sources Verified:**
+  - [Stripe Connect OAuth Reference](https://docs.stripe.com/connect/oauth-reference)
+  - [Stripe Connect Platform Overview](https://docs.stripe.com/connect/overview)
+  - [Stripe Connect Account Types](https://docs.stripe.com/connect/accounts)
+
+### 7. Zoom (Archetype: Meeting & Media Permissions with Marketplace Review)
+- **Recommended Path:** **Managed OAuth** for standard meeting tools; **Custom OAuth** for Zoom App Marketplace distribution.
+- **Difficulty:** `Medium` | **Hands-on:** 2–4h | **Elapsed:** 14–45 days | **Approval Wait:** 7–30 days.
+- **Key Scopes:** `meeting:read`, `meeting:write`, `recording:read` (Sensitive, cloud recording downloads), `user:read`.
+- **Blockers:** 100-user installation cap on unpublished applications; mandatory security questionnaire and data handling audit before Marketplace submission; 90-day refresh token expiration.
+- **Sources Verified:**
+  - [Zoom OAuth Integration Guide](https://developers.zoom.us/docs/integrations/oauth/)
+  - [Zoom Marketplace Publishing Guidelines](https://developers.zoom.us/docs/distribute/publish/)
+  - [Zoom OAuth Scopes Reference](https://developers.zoom.us/docs/integrations/scopes/)
 
 ---
 
