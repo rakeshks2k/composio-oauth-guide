@@ -3,7 +3,14 @@ import path from 'path';
 import fs from 'fs';
 import type Database from 'better-sqlite3';
 import { Guide } from './types';
-import { presetGuides } from './guides-data';
+import { presetGuides, additionalBlueprints } from './guides-data';
+import { tailoredProfiles } from './tailored-profiles';
+
+export const allKnownGuides: Guide[] = [
+  ...presetGuides,
+  ...additionalBlueprints,
+  ...tailoredProfiles,
+];
 
 // In-memory store fallback (used on Vercel serverless or when better-sqlite3 native addon is unavailable)
 const memoryGuides: Guide[] = [...presetGuides];
@@ -130,12 +137,13 @@ export function getAllGuides(): Guide[] {
 }
 
 export function getGuideByIdOrSlug(idOrSlug: string): Guide | null {
+  const normalized = idOrSlug.toLowerCase().trim();
   const db = initSqlite();
   if (db) {
     try {
       const row = db
-        .prepare('SELECT guide_json FROM guides WHERE id = ? OR slug = ?')
-        .get(idOrSlug, idOrSlug) as { guide_json: string } | undefined;
+        .prepare('SELECT guide_json FROM guides WHERE id = ? OR lower(slug) = ?')
+        .get(idOrSlug, normalized) as { guide_json: string } | undefined;
       if (row) {
         return JSON.parse(row.guide_json) as Guide;
       }
@@ -143,7 +151,20 @@ export function getGuideByIdOrSlug(idOrSlug: string): Guide | null {
       // Fallback
     }
   }
-  return memoryGuides.find((g) => g.id === idOrSlug || g.slug === idOrSlug) || null;
+
+  // 1. Check in-memory guides created in this process
+  const inMemory = memoryGuides.find(
+    (g) => g.id === idOrSlug || g.slug.toLowerCase() === normalized
+  );
+  if (inMemory) return inMemory;
+
+  // 2. Check all known blueprints and tailored profiles (Spotify, Stripe, Linear, etc.)
+  const known = allKnownGuides.find(
+    (g) => g.id === idOrSlug || g.slug.toLowerCase() === normalized
+  );
+  if (known) return known;
+
+  return null;
 }
 
 export function deleteGuide(id: string): void {

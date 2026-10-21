@@ -1,74 +1,42 @@
 import { getGuideByIdOrSlug } from '@/lib/db';
-import { GuideView } from '@/components/GuideView';
-import { AppIcon } from '@/components/AppIcon';
-import { notFound } from 'next/navigation';
-import Link from 'next/link';
-import Image from 'next/image';
-import { ArrowLeft } from 'lucide-react';
+import { GuideClientShell } from './GuideClientShell';
+import { decodeGuide } from '@/lib/guide-codec';
 
 export const dynamic = 'force-dynamic';
 
 interface PageProps {
   params: { slug: string };
+  searchParams?: { data?: string };
 }
 
-export async function generateMetadata({ params }: PageProps) {
-  const guide = getGuideByIdOrSlug(params.slug);
-  if (!guide) return { title: 'Guide Not Found - Composio' };
+export async function generateMetadata({ params, searchParams }: PageProps) {
+  let guide = getGuideByIdOrSlug(params.slug);
+  if (!guide && searchParams?.data) {
+    guide = await decodeGuide(searchParams.data);
+  }
+
+  if (!guide) {
+    const formattedTitle = params.slug
+      .split('-')
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(' ');
+    return {
+      title: `${formattedTitle} - Composio OAuth Guide`,
+    };
+  }
+
   return {
     title: `${guide.appName} - Composio OAuth Guide`,
     description: guide.summary,
   };
 }
 
-export default function GuidePage({ params }: PageProps) {
-  const guide = getGuideByIdOrSlug(params.slug);
+export default async function GuidePage({ params, searchParams }: PageProps) {
+  let guide = getGuideByIdOrSlug(params.slug);
 
-  if (!guide) {
-    notFound();
+  if (!guide && searchParams?.data) {
+    guide = await decodeGuide(searchParams.data);
   }
 
-  return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white flex flex-col font-sans">
-      {/* Top Navigation Bar matching Composio Platform */}
-      <header className="h-12 bg-[#0f0f0f] border-b border-[#222222] px-3.5 sm:px-6 flex items-center justify-between flex-shrink-0 z-10 sticky top-0 gap-2">
-        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-          <Link
-            href="/"
-            className="flex items-center gap-1.5 text-xs text-[#888888] hover:text-white transition-colors p-1.5 rounded hover:bg-[#161616] flex-shrink-0"
-          >
-            <ArrowLeft className="w-3.5 h-3.5 text-[#666666]" />
-            <span className="hidden xs:inline sm:inline">Dashboard</span>
-          </Link>
-          <span className="text-[#333333] flex-shrink-0">/</span>
-          <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
-            <AppIcon name={guide.appName} size="sm" />
-            <span className="text-xs text-white font-medium truncate max-w-[100px] xs:max-w-[150px] sm:max-w-none">{guide.appName}</span>
-            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#161616] border border-[#242424] text-[#888888] uppercase flex-shrink-0">
-              {guide.recommendedPath}
-            </span>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2 sm:gap-2.5 flex-shrink-0">
-          <Image
-            src="/composio-logo-white.png"
-            alt="Composio"
-            width={84}
-            height={16}
-            priority
-            className="h-[15px] sm:h-[16px] w-auto object-contain"
-          />
-          <span className="text-[10px] font-mono font-medium px-1.5 py-0.5 rounded bg-[#161616] border border-[#242424] text-[#888888] tracking-wider">
-            OAUTH
-          </span>
-        </div>
-      </header>
-
-      {/* Guide View Content */}
-      <div className="flex-1 flex overflow-hidden">
-        <GuideView guide={guide} />
-      </div>
-    </div>
-  );
+  return <GuideClientShell initialGuide={guide} slug={params.slug} />;
 }

@@ -10,6 +10,7 @@ import { GenerateForm } from '@/components/GenerateForm';
 import { ResearchPanel } from '@/components/ResearchPanel';
 import { Menu, Terminal } from 'lucide-react';
 import { clsx } from 'clsx';
+import { getStoredGuides, saveStoredGuide, removeStoredGuide } from '@/lib/guide-codec';
 
 type AppView = 'guide' | 'generate';
 
@@ -29,21 +30,45 @@ export default function HomePage() {
     try {
       const res = await fetch('/api/guides');
       const data = await res.json();
-      const loadedGuides = (data.guides as Guide[]) || [];
-      setGuides(loadedGuides);
-      if (autoSelectFirst && loadedGuides.length > 0) {
-        setSelectedGuide(loadedGuides[0]);
-        setResearchEvents(getGuideResearchEvents(loadedGuides[0]));
+      const serverGuides = (data.guides as Guide[]) || [];
+      const storedGuides = getStoredGuides();
+
+      // Merge server guides with localStorage guides (avoiding duplicates by id & slug)
+      const guideMap = new Map<string, Guide>();
+      serverGuides.forEach((g) => guideMap.set(g.id, g));
+      storedGuides.forEach((g) => {
+        if (!guideMap.has(g.id) && !guideMap.has(g.slug)) {
+          guideMap.set(g.id, g);
+        }
+      });
+      const mergedGuides = Array.from(guideMap.values());
+      setGuides(mergedGuides);
+
+      if (autoSelectFirst && mergedGuides.length > 0) {
+        setSelectedGuide(mergedGuides[0]);
+        setResearchEvents(getGuideResearchEvents(mergedGuides[0]));
         setView('guide');
       }
     } catch (err) {
       console.error('Failed to load guides:', err);
+      const storedGuides = getStoredGuides();
+      if (storedGuides.length > 0) {
+        setGuides(storedGuides);
+      }
     }
   }, []);
 
-  // Load guides on mount — user lands on 'generate' guide page first
+  // Load guides on mount — user lands on 'generate' guide page first, or checks ?generate= prefill
   useEffect(() => {
     fetchGuides(false);
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const gen = params.get('generate');
+      if (gen) {
+        setPrefillAppName(gen);
+        setView('generate');
+      }
+    }
   }, [fetchGuides]);
 
   function handleSelectGuide(guide: Guide) {
@@ -74,7 +99,8 @@ export default function HomePage() {
   function handleGenerateComplete(newGuide: Guide) {
     setIsGenerating(false);
     setSelectedGuide(newGuide);
-    setGuides((prev) => [newGuide, ...prev.filter((g) => g.id !== newGuide.id)]);
+    saveStoredGuide(newGuide);
+    setGuides((prev) => [newGuide, ...prev.filter((g) => g.id !== newGuide.id && g.slug !== newGuide.slug)]);
     setView('guide');
   }
 
@@ -84,6 +110,7 @@ export default function HomePage() {
 
   async function handleDeleteGuide(guide: Guide) {
     if (guide.isPreset) return;
+    removeStoredGuide(guide.id);
     try {
       await fetch(`/api/guides/${guide.id}`, { method: 'DELETE' });
       setGuides((prev) => prev.filter((g) => g.id !== guide.id));

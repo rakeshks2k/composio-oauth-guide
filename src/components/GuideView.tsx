@@ -15,6 +15,7 @@ import {
 import { clsx } from 'clsx';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CodeEditorBlock } from './CodeEditorBlock';
+import { getShareUrl } from '@/lib/guide-codec';
 
 interface GuideViewProps {
   guide: Guide;
@@ -53,10 +54,17 @@ export function GuideView({ guide }: GuideViewProps) {
     setTimeout(() => setCopiedMd(false), 1800);
   }
 
-  function copyShareLink() {
-    navigator.clipboard.writeText(shareUrl);
-    setCopiedLink(true);
-    setTimeout(() => setCopiedLink(false), 1800);
+  async function copyShareLink() {
+    try {
+      const url = await getShareUrl(guide);
+      await navigator.clipboard.writeText(url);
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 1800);
+    } catch {
+      navigator.clipboard.writeText(shareUrl);
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 1800);
+    }
   }
 
   // Real, working Composio OAuth commands tailored to this specific guide
@@ -97,7 +105,7 @@ await composio.authConfigs.create({
 });`;
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-hidden bg-[#0a0a0a]">
+    <div className="flex-1 min-h-0 flex flex-col h-full overflow-hidden bg-[#0a0a0a]">
       {/* 1. Header Bar matching Composio Platform */}
       <div className="h-12 px-3.5 sm:px-6 lg:px-8 flex items-center justify-between border-b border-[#222222] bg-[#0f0f0f] flex-shrink-0 gap-2">
         <div className="flex items-center gap-2 sm:gap-3 min-w-0">
@@ -168,8 +176,9 @@ await composio.authConfigs.create({
       </div>
 
       {/* 2. Scrollable Guide Body */}
-      <div className="flex-1 overflow-y-auto px-3.5 sm:px-6 lg:px-10 pt-4 sm:pt-6 pb-16 space-y-5 sm:space-y-7 max-w-4xl mx-auto w-full">
-        {/* Quick Actions Strip: Callback URI & Console Link */}
+      <div className="flex-1 min-h-0 overflow-y-auto w-full">
+        <div className="px-3.5 sm:px-6 lg:px-10 pt-4 sm:pt-6 pb-16 space-y-5 sm:space-y-7 max-w-4xl mx-auto w-full">
+          {/* Quick Actions Strip: Callback URI & Console Link */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 p-3 rounded-md bg-[#121212] border border-[#222222]">
           <div className="flex items-center gap-2 flex-wrap text-xs min-w-0">
             <span className="text-[#737373] font-mono text-[11px] flex-shrink-0">
@@ -710,6 +719,7 @@ await composio.authConfigs.create({
         </div>
       </div>
     </div>
+  </div>
   );
 }
 
