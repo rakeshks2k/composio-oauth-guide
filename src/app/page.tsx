@@ -126,7 +126,7 @@ export default function HomePage() {
           onClick={() => setMobileLogsOpen(!mobileLogsOpen)}
           className="p-1.5 rounded-md hover:bg-[#1a1a1a] text-[#a0a0a0] hover:text-white flex items-center gap-1 text-[11px] font-mono"
         >
-          <Terminal className="w-3.5 h-3.5 text-[#51a2ff]" />
+          <Terminal className="w-3.5 h-3.5 text-[#888888]" />
           <span>Logs</span>
         </button>
       </div>

@@ -110,20 +110,20 @@ export function CodeEditorBlock({
   }
 
   return (
-    <div className="rounded-lg border border-[#262626] bg-[#111111] overflow-hidden">
+    <div className="rounded-lg border border-[#222222] bg-[#111111] overflow-hidden">
       {/* Editor Tab Bar */}
-      <div className="h-9 px-3 bg-[#161616] border-b border-[#262626] flex items-center justify-between select-none">
+      <div className="h-9 px-3 bg-[#141414] border-b border-[#222222] flex items-center justify-between select-none">
         <div className="flex items-center gap-1.5">
           <button
             onClick={() => setActiveTab('cli')}
             className={clsx(
               'h-6 px-2.5 rounded text-[11px] font-mono flex items-center gap-1.5 transition-colors border',
               activeTab === 'cli'
-                ? 'bg-[#1e1e1e] border-[#2c2c2c] text-white font-medium'
+                ? 'bg-[#1a1a1a] border-[#2c2c2c] text-white font-medium'
                 : 'text-[#737373] hover:text-[#a1a1a1] border-transparent'
             )}
           >
-            <Terminal className="w-3 h-3 text-[#737373]" />
+            <Terminal className="w-3 h-3 text-[#666666]" />
             <span>CLI ({appName})</span>
           </button>
 
@@ -132,11 +132,11 @@ export function CodeEditorBlock({
             className={clsx(
               'h-6 px-2.5 rounded text-[11px] font-mono flex items-center gap-1.5 transition-colors border',
               activeTab === 'typescript'
-                ? 'bg-[#1e1e1e] border-[#2c2c2c] text-white font-medium'
+                ? 'bg-[#1a1a1a] border-[#2c2c2c] text-white font-medium'
                 : 'text-[#737373] hover:text-[#a1a1a1] border-transparent'
             )}
           >
-            <Code2 className="w-3 h-3 text-[#737373]" />
+            <Code2 className="w-3 h-3 text-[#666666]" />
             <span>TypeScript SDK</span>
           </button>
         </div>
@@ -149,13 +149,13 @@ export function CodeEditorBlock({
 
           <button
             onClick={copyCode}
-            className="h-6 px-2 rounded text-[11px] font-sans flex items-center gap-1 text-[#737373] hover:text-white hover:bg-[#1a1a1a] transition-colors"
+            className="h-6 px-2 rounded text-[11px] font-sans flex items-center gap-1 text-[#737373] hover:text-white hover:bg-[#1a1a1a] transition-colors cursor-pointer"
             title="Copy code snippet"
           >
             {copied ? (
               <>
-                <Check className="w-3 h-3 text-[#51a2ff]" />
-                <span className="text-[#51a2ff]">Copied</span>
+                <Check className="w-3 h-3 text-white" />
+                <span className="text-white">Copied</span>
               </>
             ) : (
               <>

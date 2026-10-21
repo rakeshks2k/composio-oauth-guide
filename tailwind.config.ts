@@ -9,48 +9,27 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Composio Platform official design system tokens
+        // Composio Platform refined design tokens
         composio: {
-          bg: '#0f0f0f',
-          surface: '#141414',
-          raised: '#1a1a1a',
-          card: '#1e1e1e',
-          popover: '#2a2a2a',
-          border: '#2c2c2c',
-          borderLight: '#383838',
-          text: '#ffffff',
-          secondary: '#a0a0a0',
-          muted: '#737373',
-          accent: '#51a2ff',
-          accentDark: '#0e2439',
-          badgeBg: '#0d2636',
-          badgeBorder: '#1a5676',
-        },
-        // Keep existing token mappings for backwards compatibility
-        bg: {
-          primary: '#0f0f0f',
-          secondary: '#141414',
-          border: '#2c2c2c',
-          card: '#1e1e1e',
-          raised: '#1a1a1a',
-        },
-        accent: {
-          teal: '#51a2ff',
-          blue: '#51a2ff',
-          amber: '#f59e0b',
-          red: '#ef4444',
-          green: '#10b981',
-        },
-        text: {
-          primary: '#ffffff',
-          secondary: '#a0a0a0',
-          muted: '#737373',
+          canvas: '#0a0a0a',
+          surface: '#111111',
+          card: '#161616',
+          elevated: '#1a1a1a',
+          hover: '#1e1e1e',
+          border: '#242424',
+          borderSubtle: '#1c1c1c',
+          borderFocus: '#383838',
+          text: '#ededed',
+          textMuted: '#888888',
+          textDim: '#555555',
+          brand: '#51a2ff',
+          brandHover: '#3d8be6',
         },
       },
       fontFamily: {
         sans: [
-          '"abcDiatype"',
-          'var(--font-inter)',
+          'var(--font-geist-sans)',
+          '"Geist Sans"',
           '-apple-system',
           'BlinkMacSystemFont',
           '"Segoe UI"',

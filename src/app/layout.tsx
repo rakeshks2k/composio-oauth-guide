@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
-import { Inter, JetBrains_Mono } from 'next/font/google';
+import localFont from 'next/font/local';
+import { JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
+const geistSans = localFont({
+  src: '../../node_modules/geist/dist/fonts/geist-sans/Geist-Variable.woff2',
+  variable: '--font-geist-sans',
   display: 'swap',
 });
 
@@ -35,7 +36,7 @@ export default function RootLayout({
         <link rel="icon" href="/icon.png" type="image/png" sizes="128x128" />
         <link rel="shortcut icon" href="/favicon.ico" />
       </head>
-      <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans bg-[#0f0f0f] text-[#ffffff] min-h-screen antialiased selection:bg-[#51a2ff]/20 selection:text-[#51a2ff]`}>
+      <body className={`${geistSans.variable} ${jetbrainsMono.variable} font-sans bg-[#0a0a0a] text-[#ededed] min-h-screen antialiased selection:bg-[#51a2ff]/15 selection:text-[#ffffff]`}>
         {children}
       </body>
     </html>

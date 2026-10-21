@@ -1,29 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;450;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'abcDiatype';
-  src: local('abcDiatype'), local('Diatype'), local('ABC Diatype');
-  font-weight: 400 700;
-  font-display: swap;
-}
-
 :root {
-  --bg-primary: #0f0f0f;
-  --bg-secondary: #141414;
-  --bg-raised: #1a1a1a;
-  --bg-card: #1c1c1c;
-  --bg-popover: #262626;
-  --bg-border: #262626;
-  --bg-border-light: #333333;
+  --bg-canvas: #0a0a0a;
+  --bg-surface: #111111;
+  --bg-card: #161616;
+  --bg-elevated: #1a1a1a;
+  --bg-hover: #1e1e1e;
+  --border-subtle: #1c1c1c;
+  --border-default: #242424;
+  --border-focus: #383838;
+  --text-primary: #ededed;
+  --text-secondary: #888888;
+  --text-dim: #555555;
   --accent-brand: #51a2ff;
-  --accent-blue: #51a2ff;
-  --text-primary: #ffffff;
-  --text-secondary: #a1a1a1;
-  --text-muted: #737373;
 }
 
 * {
@@ -35,10 +26,10 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: #0f0f0f;
-  color: #ffffff;
+  background-color: #0a0a0a;
+  color: #ededed;
   overflow: hidden;
-  font-family: "abcDiatype", var(--font-inter), "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-geist-sans), "Geist Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -55,17 +46,17 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #262626;
+  background: #222222;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #333333;
+  background: #2e2e2e;
 }
 
-/* Focus styles matching Composio Developer Console */
+/* Restrained Focus States */
 :focus-visible {
-  outline: 1.5px solid #51a2ff;
+  outline: 1.5px solid #383838;
   outline-offset: 1px;
 }
 
@@ -77,48 +68,47 @@ code, pre, kbd {
 /* Inline code pills */
 code {
   font-size: 0.85em;
-  background: #181818;
-  border: 1px solid #262626;
+  background: #141414;
+  border: 1px solid #222222;
   padding: 0.12rem 0.35rem;
   border-radius: 4px;
-  color: #ffffff;
+  color: #ededed;
 }
 
-/* Restrained, Developer-Console Syntax Highlighting (Composio Brand Style) */
+/* Restrained, Developer-Console Syntax Highlighting */
 .syntax-comment {
-  color: #6e7681;
+  color: #555555;
   font-style: italic;
 }
 
 .syntax-keyword {
-  color: #51a2ff;
+  color: #ededed;
   font-weight: 500;
 }
 
 .syntax-string {
-  color: #e6edf3;
+  color: #a3a3a3;
 }
 
 .syntax-fn {
-  color: #ffffff;
-  font-weight: 500;
+  color: #ededed;
 }
 
 .syntax-type {
-  color: #51a2ff;
+  color: #cccccc;
 }
 
 .syntax-prop {
-  color: #a1a1a1;
+  color: #888888;
 }
 
 .syntax-punct {
-  color: #737373;
+  color: #555555;
 }
 
 .syntax-cli-cmd {
-  color: #51a2ff;
-  font-weight: 600;
+  color: #ededed;
+  font-weight: 500;
 }
 
 .syntax-cli-sub {
@@ -127,48 +117,22 @@ code {
 }
 
 .syntax-cli-flag {
-  color: #a1a1a1;
+  color: #888888;
 }
 
 .syntax-cli-val {
-  color: #e6edf3;
+  color: #cccccc;
 }
 
 .syntax-cli-placeholder {
-  color: #8c8c8c;
+  color: #666666;
   font-style: italic;
 }
 
 .syntax-line-num {
-  color: #484f58;
+  color: #383838;
   user-select: none;
   text-align: right;
   min-width: 1.5rem;
   padding-right: 1rem;
-}
-
-/* Animated subtle pulse for active agent states */
-@keyframes pulse-subtle {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-
-.animate-pulse-subtle {
-  animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* Slide in animation for console lines */
-@keyframes console-entry {
-  from {
-    opacity: 0;
-    transform: translateY(3px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-console-entry {
-  animation: console-entry 0.15s ease-out forwards;
 }
