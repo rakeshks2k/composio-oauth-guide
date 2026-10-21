@@ -134,7 +134,7 @@ export default function HomePage() {
       {/* 1. Left Sidebar (Fixed 272px on desktop, drawer on mobile) */}
       <div
         className={clsx(
-          'fixed lg:static inset-y-0 left-0 z-40 lg:z-auto transition-transform duration-200 w-[272px] flex-shrink-0 h-screen',
+          'fixed lg:static inset-y-0 left-0 z-40 lg:z-auto transition-transform duration-200 w-[280px] max-w-[85vw] lg:w-[272px] lg:max-w-none flex-shrink-0 h-screen',
           mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         )}
       >
@@ -153,12 +153,12 @@ export default function HomePage() {
       {mobileSidebarOpen && (
         <div
           onClick={() => setMobileSidebarOpen(false)}
-          className="lg:hidden fixed inset-0 bg-black/60 z-30"
+          className="lg:hidden fixed inset-0 bg-black/60 z-30 backdrop-blur-sm"
         />
       )}
 
       {/* 2. Main Workspace (Solid, Rock-Stable Center Pane with Zero Blank Flashes) */}
-      <main className="flex-1 flex flex-col h-screen overflow-hidden pt-12 lg:pt-0 min-w-0 relative">
+      <main className="flex-1 flex flex-col h-full lg:h-screen overflow-hidden pt-12 lg:pt-0 min-w-0 relative">
         <div className="flex-1 flex flex-col h-full overflow-hidden">
           {view === 'guide' && selectedGuide ? (
             <GuideView guide={selectedGuide} />
@@ -177,7 +177,7 @@ export default function HomePage() {
       {/* 3. Right Activity / Research Panel (Fixed 360px-380px on desktop, drawer on mobile) */}
       <div
         className={clsx(
-          'fixed lg:static inset-y-0 right-0 z-40 lg:z-auto transition-transform duration-200 w-[360px] xl:w-[380px] flex-shrink-0 h-screen',
+          'fixed lg:static inset-y-0 right-0 z-40 lg:z-auto transition-transform duration-200 w-full sm:w-[360px] xl:w-[380px] max-w-[90vw] sm:max-w-none flex-shrink-0 h-screen',
           mobileLogsOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'
         )}
       >
@@ -193,7 +193,7 @@ export default function HomePage() {
       {mobileLogsOpen && (
         <div
           onClick={() => setMobileLogsOpen(false)}
-          className="lg:hidden fixed inset-0 bg-black/60 z-30"
+          className="lg:hidden fixed inset-0 bg-black/60 z-30 backdrop-blur-sm"
         />
       )}
     </div>

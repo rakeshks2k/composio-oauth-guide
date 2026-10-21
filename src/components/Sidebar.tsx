@@ -92,15 +92,26 @@ export function Sidebar({
           </span>
         </a>
 
-        <a
-          href="https://docs.composio.dev"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-[#666666] hover:text-white transition-colors p-1"
-          title="Open Composio Documentation"
-        >
-          <ExternalLink className="w-3.5 h-3.5" />
-        </a>
+        <div className="flex items-center gap-1">
+          <a
+            href="https://docs.composio.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#666666] hover:text-white transition-colors p-1"
+            title="Open Composio Documentation"
+          >
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+          {onCloseMobile && (
+            <button
+              onClick={onCloseMobile}
+              className="lg:hidden text-[#666666] hover:text-white p-1 rounded hover:bg-[#1a1a1a]"
+              title="Close sidebar"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* 2. Top Action: Generate Guide Button + Search Bar */}

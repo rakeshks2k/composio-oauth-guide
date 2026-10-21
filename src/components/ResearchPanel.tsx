@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { ResearchEvent } from '@/lib/types';
-import { ExternalLink, Copy, Check, Trash2 } from 'lucide-react';
+import { ExternalLink, Copy, Check, Trash2, X } from 'lucide-react';
 import { clsx } from 'clsx';
 
 interface ResearchPanelProps {
@@ -16,6 +16,7 @@ export function ResearchPanel({
   events,
   isGenerating,
   onClearEvents,
+  onCloseMobile,
 }: ResearchPanelProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [activeTab, setActiveTab] = useState<'logs' | 'sources'>('logs');
@@ -72,19 +73,31 @@ export function ResearchPanel({
           </button>
         </div>
 
-        {/* Live indicator only during active research */}
-        {isGenerating && (
-          <div className="flex items-center gap-1.5 text-[11px] font-mono text-[#a1a1a1]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#51a2ff] animate-pulse" />
-            <span className="hidden sm:inline">active</span>
-          </div>
-        )}
+        <div className="flex items-center gap-2">
+          {/* Live indicator only during active research */}
+          {isGenerating && (
+            <div className="flex items-center gap-1.5 text-[11px] font-mono text-[#a1a1a1]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#51a2ff] animate-pulse" />
+              <span className="hidden sm:inline">active</span>
+            </div>
+          )}
+
+          {onCloseMobile && (
+            <button
+              onClick={onCloseMobile}
+              className="lg:hidden text-[#666666] hover:text-white p-1 rounded hover:bg-[#1a1a1a] transition-colors"
+              title="Close activity panel"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* 2. Main Console Output Area */}
       <div
         ref={scrollContainerRef}
-        className="flex-1 overflow-y-auto p-4 text-[12px] font-mono bg-[#0a0a0a] space-y-2.5 leading-[1.65]"
+        className="flex-1 overflow-y-auto p-3 sm:p-4 text-[11.5px] sm:text-[12px] font-mono bg-[#0a0a0a] space-y-2.5 leading-[1.65]"
       >
         {events.length === 0 && !isGenerating && (
           <div className="pt-2 px-1 space-y-2 text-[#737373]">

@@ -165,14 +165,14 @@ export function GenerateForm({
   }
 
   return (
-    <div className="flex-1 flex flex-col h-screen overflow-hidden bg-[#0a0a0a]">
+    <div className="flex-1 flex flex-col h-full overflow-hidden bg-[#0a0a0a]">
       {/* 1. Header Bar matching Composio Platform */}
-      <div className="h-12 px-6 sm:px-10 flex items-center justify-between border-b border-[#222222] bg-[#0f0f0f] flex-shrink-0">
-        <div className="flex items-center gap-3">
-          <h1 className="text-[14px] font-medium text-white tracking-[-0.01em]">
+      <div className="h-12 px-3.5 sm:px-8 lg:px-10 flex items-center justify-between border-b border-[#222222] bg-[#0f0f0f] flex-shrink-0">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <h1 className="text-[13.5px] sm:text-[14px] font-medium text-white tracking-[-0.01em] truncate">
             {isLoading ? `Investigating ${appName}` : 'Generate Guide'}
           </h1>
-          <span className="text-[11px] font-mono px-2 py-0.5 rounded border border-[#242424] bg-[#141414] text-[#888888] flex items-center gap-1.5">
+          <span className="text-[10.5px] sm:text-[11px] font-mono px-1.5 sm:px-2 py-0.5 rounded border border-[#242424] bg-[#141414] text-[#888888] flex items-center gap-1.5 flex-shrink-0">
             {isLoading ? (
               <>
                 <span className="w-1.5 h-1.5 rounded-full bg-[#51a2ff] animate-pulse" />
@@ -187,9 +187,9 @@ export function GenerateForm({
 
       {/* 2. Body: Seamless Loading State OR Form */}
       {isLoading ? (
-        <div className="flex-1 overflow-y-auto px-6 sm:px-10 lg:px-12 pt-6 pb-16 space-y-6 max-w-4xl mx-auto w-full">
+        <div className="flex-1 overflow-y-auto px-3.5 sm:px-8 lg:px-12 pt-4 sm:pt-6 pb-16 space-y-5 sm:space-y-6 max-w-4xl mx-auto w-full">
           {/* Header Progress Card */}
-          <div className="p-5 sm:p-6 rounded-lg bg-[#121212] border border-[#222222] space-y-4">
+          <div className="p-4 sm:p-6 rounded-lg bg-[#121212] border border-[#222222] space-y-4">
             <div className="flex items-start justify-between flex-wrap gap-4">
               <div className="flex items-center gap-3">
                 <AppIcon name={appName} size="lg" />
@@ -238,7 +238,7 @@ export function GenerateForm({
           </div>
 
           {/* Autonomous Investigation Stages Checklist */}
-          <div className="p-5 rounded-lg bg-[#121212] border border-[#222222] space-y-3">
+          <div className="p-3.5 sm:p-5 rounded-lg bg-[#121212] border border-[#222222] space-y-3">
             <div className="text-[11px] font-mono text-[#737373] uppercase tracking-wider">
               Investigation Pipeline
             </div>
@@ -298,18 +298,18 @@ export function GenerateForm({
         </div>
       ) : (
         /* The Standard Form */
-        <div className="flex-1 overflow-y-auto px-6 sm:px-10 lg:px-12 pt-6 pb-16 space-y-7 max-w-4xl mx-auto w-full">
+        <div className="flex-1 overflow-y-auto px-3.5 sm:px-8 lg:px-12 pt-4 sm:pt-6 pb-16 space-y-5 sm:space-y-7 max-w-4xl mx-auto w-full">
           <div className="space-y-1.5">
             <h2 className="text-[15px] font-medium text-white tracking-tight">
               OAuth Integration Guide Generator
             </h2>
-            <p className="text-[13px] text-[#888888] leading-[1.65]">
+            <p className="text-[12.5px] sm:text-[13px] text-[#888888] leading-[1.65]">
               Generate a verified OAuth 2.0 integration guide for any application. Analyzes Composio managed auth availability, scope permissions, and external provider approval wait times.
             </p>
           </div>
 
           {/* Primary Input Card */}
-          <form onSubmit={handleSubmit} className="p-5 sm:p-6 rounded-lg bg-[#121212] border border-[#222222] space-y-5">
+          <form onSubmit={handleSubmit} className="p-4 sm:p-6 rounded-lg bg-[#121212] border border-[#222222] space-y-4 sm:space-y-5">
             <div className="space-y-2.5">
               <label htmlFor="appName" className="block text-[11px] font-mono uppercase tracking-wider text-[#888888]">
                 Application Name

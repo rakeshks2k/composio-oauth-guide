@@ -112,44 +112,44 @@ export function CodeEditorBlock({
   return (
     <div className="rounded-lg border border-[#222222] bg-[#111111] overflow-hidden">
       {/* Editor Tab Bar */}
-      <div className="h-9 px-3 bg-[#141414] border-b border-[#222222] flex items-center justify-between select-none">
-        <div className="flex items-center gap-1.5">
+      <div className="h-9 px-2.5 sm:px-3 bg-[#141414] border-b border-[#222222] flex items-center justify-between select-none gap-2">
+        <div className="flex items-center gap-1 sm:gap-1.5 min-w-0">
           <button
             onClick={() => setActiveTab('cli')}
             className={clsx(
-              'h-6 px-2.5 rounded text-[11px] font-mono flex items-center gap-1.5 transition-colors border',
+              'h-6 px-2 sm:px-2.5 rounded text-[10.5px] sm:text-[11px] font-mono flex items-center gap-1 sm:gap-1.5 transition-colors border flex-shrink-0',
               activeTab === 'cli'
                 ? 'bg-[#1a1a1a] border-[#2c2c2c] text-white font-medium'
                 : 'text-[#737373] hover:text-[#a1a1a1] border-transparent'
             )}
           >
             <Terminal className="w-3 h-3 text-[#666666]" />
-            <span>CLI ({appName})</span>
+            <span>CLI<span className="hidden sm:inline"> ({appName})</span></span>
           </button>
 
           <button
             onClick={() => setActiveTab('typescript')}
             className={clsx(
-              'h-6 px-2.5 rounded text-[11px] font-mono flex items-center gap-1.5 transition-colors border',
+              'h-6 px-2 sm:px-2.5 rounded text-[10.5px] sm:text-[11px] font-mono flex items-center gap-1 sm:gap-1.5 transition-colors border flex-shrink-0',
               activeTab === 'typescript'
                 ? 'bg-[#1a1a1a] border-[#2c2c2c] text-white font-medium'
                 : 'text-[#737373] hover:text-[#a1a1a1] border-transparent'
             )}
           >
             <Code2 className="w-3 h-3 text-[#666666]" />
-            <span>TypeScript SDK</span>
+            <span>TypeScript<span className="hidden sm:inline"> SDK</span></span>
           </button>
         </div>
 
         {/* Right side: language tag & copy button */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
           <span className="text-[10px] font-mono uppercase tracking-wider text-[#666666]">
             {activeTab === 'cli' ? 'bash' : 'ts'}
           </span>
 
           <button
             onClick={copyCode}
-            className="h-6 px-2 rounded text-[11px] font-sans flex items-center gap-1 text-[#737373] hover:text-white hover:bg-[#1a1a1a] transition-colors cursor-pointer"
+            className="h-6 px-2 rounded text-[10.5px] sm:text-[11px] font-sans flex items-center gap-1 text-[#737373] hover:text-white hover:bg-[#1a1a1a] transition-colors cursor-pointer"
             title="Copy code snippet"
           >
             {copied ? (
@@ -168,7 +168,7 @@ export function CodeEditorBlock({
       </div>
 
       {/* Code Editor Body with Gutter */}
-      <div className="p-3.5 sm:p-4 overflow-x-auto text-[12px] leading-[1.65] bg-[#111111]">
+      <div className="p-3 sm:p-4 overflow-x-auto text-[11px] sm:text-[12px] leading-[1.65] bg-[#111111]">
         <table className="w-full border-collapse">
           <tbody>
             {lines.map((line, idx) => (

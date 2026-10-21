@@ -97,19 +97,20 @@ await composio.authConfigs.create({
 });`;
 
   return (
-    <div className="flex-1 flex flex-col h-screen overflow-hidden bg-[#0a0a0a]">
+    <div className="flex-1 flex flex-col h-full overflow-hidden bg-[#0a0a0a]">
       {/* 1. Header Bar matching Composio Platform */}
-      <div className="h-12 px-6 sm:px-10 flex items-center justify-between border-b border-[#222222] bg-[#0f0f0f] flex-shrink-0">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="flex items-center gap-2.5 min-w-0">
+      <div className="h-12 px-3.5 sm:px-6 lg:px-8 flex items-center justify-between border-b border-[#222222] bg-[#0f0f0f] flex-shrink-0 gap-2">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <div className="flex items-center gap-2 min-w-0">
             <AppIcon name={guide.appName} size="sm" />
-            <h1 className="text-[14px] font-medium text-white tracking-[-0.01em] truncate">
+            <h1 className="text-[13.5px] sm:text-[14px] font-medium text-white tracking-[-0.01em] truncate">
               {guide.appName}
             </h1>
           </div>
 
-          <span className="text-[11px] font-mono px-2 py-0.5 rounded border border-[#262626] bg-[#141414] text-[#a1a1a1]">
-            {guide.recommendedPath === 'managed' ? 'Managed OAuth' : 'Custom OAuth'}
+          <span className="text-[10.5px] sm:text-[11px] font-mono px-1.5 sm:px-2 py-0.5 rounded border border-[#262626] bg-[#141414] text-[#a1a1a1] flex-shrink-0">
+            {guide.recommendedPath === 'managed' ? 'Managed' : 'Custom'}
+            <span className="hidden sm:inline"> OAuth</span>
           </span>
 
           {guide.appDomain && (
@@ -117,7 +118,7 @@ await composio.authConfigs.create({
               href={`https://${guide.appDomain}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden sm:inline-flex items-center gap-1 text-xs text-[#737373] hover:text-[#ededed] font-mono transition-colors"
+              className="hidden md:inline-flex items-center gap-1 text-xs text-[#737373] hover:text-[#ededed] font-mono transition-colors"
             >
               <span>{guide.appDomain}</span>
               <ExternalLink className="w-2.5 h-2.5 text-[#555555]" />
@@ -126,10 +127,10 @@ await composio.authConfigs.create({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
           <button
             onClick={copyMarkdown}
-            className="h-7 px-2.5 rounded bg-[#141414] border border-[#242424] hover:border-[#383838] text-[#cccccc] hover:text-white text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
+            className="h-7 px-2 sm:px-2.5 rounded bg-[#141414] border border-[#242424] hover:border-[#383838] text-[#cccccc] hover:text-white text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
           >
             {copiedMd ? (
               <>
@@ -147,7 +148,7 @@ await composio.authConfigs.create({
 
           <button
             onClick={copyShareLink}
-            className="h-7 px-2.5 rounded bg-[#141414] border border-[#242424] hover:border-[#383838] text-[#cccccc] hover:text-white text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
+            className="h-7 px-2 sm:px-2.5 rounded bg-[#141414] border border-[#242424] hover:border-[#383838] text-[#cccccc] hover:text-white text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
             title="Copy permanent share link"
           >
             {copiedLink ? (
@@ -167,32 +168,34 @@ await composio.authConfigs.create({
       </div>
 
       {/* 2. Scrollable Guide Body */}
-      <div className="flex-1 overflow-y-auto px-6 sm:px-10 lg:px-12 pt-6 pb-16 space-y-7 max-w-4xl mx-auto w-full">
+      <div className="flex-1 overflow-y-auto px-3.5 sm:px-6 lg:px-10 pt-4 sm:pt-6 pb-16 space-y-5 sm:space-y-7 max-w-4xl mx-auto w-full">
         {/* Quick Actions Strip: Callback URI & Console Link */}
-        <div className="flex flex-wrap items-center justify-between gap-2.5 p-3 rounded-md bg-[#121212] border border-[#222222]">
-          <div className="flex items-center gap-2 flex-wrap text-xs">
-            <span className="text-[#737373] font-mono text-[11px]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 p-3 rounded-md bg-[#121212] border border-[#222222]">
+          <div className="flex items-center gap-2 flex-wrap text-xs min-w-0">
+            <span className="text-[#737373] font-mono text-[11px] flex-shrink-0">
               Composio Redirect URI:
             </span>
-            <code className="px-2 py-0.5 rounded bg-[#161616] border border-[#262626] text-[#ededed] font-mono text-[11.5px]">
-              {COMPOSIO_REDIRECT_URI}
-            </code>
-            <button
-              onClick={copyRedirectUri}
-              className="h-6 px-2 rounded bg-[#1a1a1a] border border-[#262626] hover:border-[#383838] text-[#ededed] text-[11px] font-mono flex items-center gap-1 transition-colors cursor-pointer"
-            >
-              {copiedRedirectUri ? (
-                <>
-                  <Check className="w-3 h-3 text-white" />
-                  <span>Copied</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="w-3 h-3 text-[#737373]" />
-                  <span>Copy</span>
-                </>
-              )}
-            </button>
+            <div className="flex items-center gap-1.5 min-w-0 max-w-full">
+              <code className="px-2 py-0.5 rounded bg-[#161616] border border-[#262626] text-[#ededed] font-mono text-[11px] truncate max-w-[190px] xs:max-w-[260px] sm:max-w-none">
+                {COMPOSIO_REDIRECT_URI}
+              </code>
+              <button
+                onClick={copyRedirectUri}
+                className="h-6 px-2 rounded bg-[#1a1a1a] border border-[#262626] hover:border-[#383838] text-[#ededed] text-[11px] font-mono flex items-center gap-1 transition-colors cursor-pointer flex-shrink-0"
+              >
+                {copiedRedirectUri ? (
+                  <>
+                    <Check className="w-3 h-3 text-white" />
+                    <span>Copied</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-3 h-3 text-[#737373]" />
+                    <span>Copy</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
 
           {(guide.setupChecklist[0]?.officialLink || guide.appDomain) && (
@@ -200,7 +203,7 @@ await composio.authConfigs.create({
               href={guide.setupChecklist[0]?.officialLink || `https://${guide.appDomain}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="h-6 px-2.5 rounded bg-[#1a1a1a] border border-[#262626] hover:border-[#383838] text-[#a0a0a0] hover:text-white text-[11px] font-mono flex items-center gap-1.5 transition-colors"
+              className="h-6 px-2.5 rounded bg-[#1a1a1a] border border-[#262626] hover:border-[#383838] text-[#a0a0a0] hover:text-white text-[11px] font-mono inline-flex items-center gap-1.5 transition-colors self-start sm:self-auto"
             >
               <span>Developer Console</span>
               <ExternalLink className="w-2.5 h-2.5 text-[#666666]" />
@@ -209,65 +212,65 @@ await composio.authConfigs.create({
         </div>
 
         {/* Architecture Recommendation & Summary */}
-        <div className="p-5 sm:p-6 rounded-lg bg-[#121212] border border-[#222222] space-y-4">
+        <div className="p-4 sm:p-6 rounded-lg bg-[#121212] border border-[#222222] space-y-3.5 sm:space-y-4">
           <div className="flex items-center justify-between flex-wrap gap-2">
-            <div className="flex items-center gap-2.5">
-              <span className="text-white font-medium text-[13.5px]">Recommended Architecture:</span>
-              <span className="text-[11px] font-mono text-[#a1a1a1] bg-[#1a1a1a] border border-[#282828] px-2 py-0.5 rounded">
+            <div className="flex items-center gap-2">
+              <span className="text-white font-medium text-[13px] sm:text-[13.5px]">Recommended:</span>
+              <span className="text-[10.5px] sm:text-[11px] font-mono text-[#a1a1a1] bg-[#1a1a1a] border border-[#282828] px-2 py-0.5 rounded">
                 {guide.recommendedPath === 'managed' ? 'Composio Managed OAuth' : 'Custom OAuth Application'}
               </span>
             </div>
-            <span className="text-[11px] font-mono text-[#737373] bg-[#161616] border border-[#242424] px-2 py-0.5 rounded capitalize">
+            <span className="text-[10.5px] sm:text-[11px] font-mono text-[#737373] bg-[#161616] border border-[#242424] px-2 py-0.5 rounded capitalize">
               Difficulty: {guide.difficulty.replace('-', ' ')}
             </span>
           </div>
 
-          <p className="text-[13.5px] text-[#a1a1a1] leading-[1.7]">
+          <p className="text-[12.5px] sm:text-[13.5px] text-[#a1a1a1] leading-[1.65]">
             {guide.pathJustification}
           </p>
 
-          <div className="pt-3.5 border-t border-[#1a1a1a]">
-            <p className="text-[13.5px] text-[#d4d4d4] leading-[1.7]">
+          <div className="pt-3 border-t border-[#1a1a1a]">
+            <p className="text-[12.5px] sm:text-[13.5px] text-[#d4d4d4] leading-[1.65]">
               {guide.summary}
             </p>
           </div>
         </div>
 
-        {/* Effort & Time Breakdown Strip */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="p-4 rounded-lg bg-[#121212] border border-[#222222]">
-            <div className="text-[#737373] text-[11px] font-mono uppercase tracking-wider mb-1">
-              Hands-on effort
+        {/* Effort & Time Breakdown Strip — Sleek 3-Card Grid on All Screens */}
+        <div className="grid grid-cols-3 gap-2 sm:gap-3">
+          <div className="p-2.5 sm:p-4 rounded-lg bg-[#121212] border border-[#222222] flex flex-col justify-between">
+            <div className="text-[#737373] text-[9.5px] sm:text-[11px] font-mono uppercase tracking-wider mb-0.5 truncate">
+              Hands-on
             </div>
-            <div className="text-white font-mono font-medium text-lg my-0.5">
-              {guide.handsOnHours.min}–{guide.handsOnHours.max} hours
+            <div className="text-white font-mono font-medium text-xs sm:text-lg my-0.5 truncate">
+              {guide.handsOnHours.min}–{guide.handsOnHours.max}h
             </div>
-            <div className="text-[#666666] text-[11.5px] mt-0.5">
-              Active engineering setup
-            </div>
-          </div>
-
-          <div className="p-4 rounded-lg bg-[#121212] border border-[#222222]">
-            <div className="text-[#737373] text-[11px] font-mono uppercase tracking-wider mb-1">
-              Calendar elapsed
-            </div>
-            <div className="text-white font-mono font-medium text-lg my-0.5">
-              {guide.elapsedDays.min}–{guide.elapsedDays.max} days
-            </div>
-            <div className="text-[#666666] text-[11.5px] mt-0.5">
-              Kickoff to production live
+            <div className="text-[#666666] text-[10px] sm:text-[11.5px] mt-0.5 hidden xs:block sm:block truncate">
+              Engineering
             </div>
           </div>
 
-          <div className="p-4 rounded-lg bg-[#121212] border border-[#222222]">
-            <div className="text-[#737373] text-[11px] font-mono uppercase tracking-wider mb-1">
-              External approval
+          <div className="p-2.5 sm:p-4 rounded-lg bg-[#121212] border border-[#222222] flex flex-col justify-between">
+            <div className="text-[#737373] text-[9.5px] sm:text-[11px] font-mono uppercase tracking-wider mb-0.5 truncate">
+              Calendar
             </div>
-            <div className="text-white font-mono font-medium text-lg my-0.5">
-              {guide.approvalDays ? `${guide.approvalDays.min}–${guide.approvalDays.max} days` : 'Immediate (0d)'}
+            <div className="text-white font-mono font-medium text-xs sm:text-lg my-0.5 truncate">
+              {guide.elapsedDays.min}–{guide.elapsedDays.max}d
             </div>
-            <div className="text-[#666666] text-[11.5px] mt-0.5">
-              {guide.approvalDays ? 'Third-party review queue' : 'Immediate — no review required'}
+            <div className="text-[#666666] text-[10px] sm:text-[11.5px] mt-0.5 hidden xs:block sm:block truncate">
+              Start to live
+            </div>
+          </div>
+
+          <div className="p-2.5 sm:p-4 rounded-lg bg-[#121212] border border-[#222222] flex flex-col justify-between">
+            <div className="text-[#737373] text-[9.5px] sm:text-[11px] font-mono uppercase tracking-wider mb-0.5 truncate">
+              Approval
+            </div>
+            <div className="text-white font-mono font-medium text-xs sm:text-lg my-0.5 truncate">
+              {guide.approvalDays ? `${guide.approvalDays.min}–${guide.approvalDays.max}d` : '0d'}
+            </div>
+            <div className="text-[#666666] text-[10px] sm:text-[11.5px] mt-0.5 hidden xs:block sm:block truncate">
+              {guide.approvalDays ? 'Review wait' : 'Immediate'}
             </div>
           </div>
         </div>
@@ -304,9 +307,9 @@ await composio.authConfigs.create({
               {guide.setupChecklist.map((step) => (
                 <div
                   key={step.id}
-                  className="p-5 sm:p-5.5 space-y-3 bg-[#121212]"
+                  className="p-4 sm:p-5.5 space-y-3 bg-[#121212]"
                 >
-                  <div className="flex items-start gap-3.5">
+                  <div className="flex items-start gap-3 sm:gap-3.5">
                     {/* Step Number Badge */}
                     <div className="w-5 h-5 rounded bg-[#181818] border border-[#262626] text-[#a0a0a0] flex items-center justify-center flex-shrink-0 mt-0.5 font-mono text-[10.5px]">
                       {step.step}
@@ -314,32 +317,32 @@ await composio.authConfigs.create({
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-baseline justify-between gap-2 flex-wrap">
-                        <h3 className="text-[13.5px] font-medium text-white">
+                        <h3 className="text-[13px] sm:text-[13.5px] font-medium text-white">
                           {step.title}
                         </h3>
                         {step.estimatedTime && (
-                          <span className="text-[11px] text-[#737373] font-mono flex-shrink-0">
+                          <span className="text-[10.5px] sm:text-[11px] text-[#737373] font-mono flex-shrink-0">
                             ~{step.estimatedTime}
                           </span>
                         )}
                       </div>
 
-                      <p className="text-[13px] text-[#a1a1a1] leading-[1.65] mt-1.5">
+                      <p className="text-[12.5px] sm:text-[13px] text-[#a1a1a1] leading-[1.65] mt-1.5">
                         {step.description}
                       </p>
 
                       {step.completionCriteria && (
-                        <div className="flex items-start gap-2 mt-2.5 p-2.5 rounded bg-[#161616] border border-[#202020]">
+                        <div className="flex items-start gap-2 mt-2.5 p-2 sm:p-2.5 rounded bg-[#161616] border border-[#202020]">
                           <CheckCircle2 className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-[#666666]" />
-                          <span className="text-[12px] text-[#a1a1a1] leading-[1.5]">
-                            <span className="text-[#666666] font-mono text-[10.5px] mr-1.5">Criteria:</span>
+                          <span className="text-[11.5px] sm:text-[12px] text-[#a1a1a1] leading-[1.5]">
+                            <span className="text-[#666666] font-mono text-[10px] sm:text-[10.5px] mr-1.5">Criteria:</span>
                             {step.completionCriteria}
                           </span>
                         </div>
                       )}
 
-                      <div className="flex items-center flex-wrap justify-between gap-3 text-[11px] pt-2.5 font-mono border-t border-[#1a1a1a] mt-3">
-                        <div className="flex items-center gap-2">
+                      <div className="flex items-center flex-wrap justify-between gap-2 text-[10.5px] sm:text-[11px] pt-2.5 font-mono border-t border-[#1a1a1a] mt-3">
+                        <div className="flex items-center gap-1.5 sm:gap-2">
                           <span className="px-2 py-0.5 rounded bg-[#181818] border border-[#242424] text-[#888888]">
                             {STEP_TYPE_LABELS[step.type]}
                           </span>
@@ -371,7 +374,7 @@ await composio.authConfigs.create({
           </div>
         )}
 
-        {/* OAuth Scopes Table */}
+        {/* OAuth Scopes & Sensitivity */}
         {guide.scopes.length > 0 && (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
@@ -384,43 +387,74 @@ await composio.authConfigs.create({
             </div>
 
             <div className="rounded-lg border border-[#222222] bg-[#121212] overflow-hidden">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="border-b border-[#222222] bg-[#141414] text-[#737373] font-mono text-[11px]">
-                    <th className="py-2.5 px-4 font-normal">Scope</th>
-                    <th className="py-2.5 px-4 font-normal">Description &amp; Purpose</th>
-                    <th className="py-2.5 px-4 font-normal">Tier</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#1c1c1c]">
-                  {guide.scopes.map((s, idx) => (
-                    <tr key={idx} className="hover:bg-[#161616] transition-colors">
-                      <td className="py-3 px-4 font-mono text-xs whitespace-nowrap">
-                        <code className="bg-[#181818] border border-[#242424] text-[#ededed] px-1.5 py-0.5 rounded text-[11.5px]">
-                          {s.scope}
-                        </code>
-                      </td>
-                      <td className="py-3 px-4 text-[#a1a1a1] text-[12.5px] leading-[1.6]">
-                        {s.description}
-                      </td>
-                      <td className="py-3 px-4 font-mono text-[11px] whitespace-nowrap">
-                        <span
-                          className={clsx(
-                            'capitalize px-1.5 py-0.5 rounded',
-                            s.sensitivity === 'restricted'
-                              ? 'text-[#f87171] bg-[#221515] border border-[#3b1c1c]'
-                              : s.sensitivity === 'sensitive'
-                              ? 'text-[#fbbf24] bg-[#221c12] border border-[#3d2e16]'
-                              : 'text-[#888888] bg-[#161616] border border-[#222222]'
-                          )}
-                        >
-                          {s.sensitivity}
-                        </span>
-                      </td>
+              {/* Desktop Table View */}
+              <div className="hidden md:block">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-[#222222] bg-[#141414] text-[#737373] font-mono text-[11px]">
+                      <th className="py-2.5 px-4 font-normal">Scope</th>
+                      <th className="py-2.5 px-4 font-normal">Description &amp; Purpose</th>
+                      <th className="py-2.5 px-4 font-normal">Tier</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-[#1c1c1c]">
+                    {guide.scopes.map((s, idx) => (
+                      <tr key={idx} className="hover:bg-[#161616] transition-colors">
+                        <td className="py-3 px-4 font-mono text-xs whitespace-nowrap">
+                          <code className="bg-[#181818] border border-[#242424] text-[#ededed] px-1.5 py-0.5 rounded text-[11.5px]">
+                            {s.scope}
+                          </code>
+                        </td>
+                        <td className="py-3 px-4 text-[#a1a1a1] text-[12.5px] leading-[1.6]">
+                          {s.description}
+                        </td>
+                        <td className="py-3 px-4 font-mono text-[11px] whitespace-nowrap">
+                          <span
+                            className={clsx(
+                              'capitalize px-1.5 py-0.5 rounded',
+                              s.sensitivity === 'restricted'
+                                ? 'text-[#f87171] bg-[#221515] border border-[#3b1c1c]'
+                                : s.sensitivity === 'sensitive'
+                                ? 'text-[#fbbf24] bg-[#221c12] border border-[#3d2e16]'
+                                : 'text-[#888888] bg-[#161616] border border-[#222222]'
+                            )}
+                          >
+                            {s.sensitivity}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile Card List View (Image 2 Fix) */}
+              <div className="md:hidden divide-y divide-[#1c1c1c]">
+                {guide.scopes.map((s, idx) => (
+                  <div key={idx} className="p-3.5 space-y-1.5 bg-[#121212]">
+                    <div className="flex items-center justify-between gap-2">
+                      <code className="bg-[#181818] border border-[#242424] text-[#ededed] px-1.5 py-0.5 rounded text-[11px] font-mono break-all">
+                        {s.scope}
+                      </code>
+                      <span
+                        className={clsx(
+                          'capitalize px-1.5 py-0.5 rounded font-mono text-[10px] flex-shrink-0',
+                          s.sensitivity === 'restricted'
+                            ? 'text-[#f87171] bg-[#221515] border border-[#3b1c1c]'
+                            : s.sensitivity === 'sensitive'
+                            ? 'text-[#fbbf24] bg-[#221c12] border border-[#3d2e16]'
+                            : 'text-[#888888] bg-[#161616] border border-[#222222]'
+                        )}
+                      >
+                        {s.sensitivity}
+                      </span>
+                    </div>
+                    <p className="text-[#a1a1a1] text-[12px] leading-[1.55]">
+                      {s.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         )}
@@ -439,10 +473,10 @@ await composio.authConfigs.create({
 
             <div className="rounded-lg border border-[#222222] bg-[#121212] divide-y divide-[#1c1c1c] overflow-hidden">
               {guide.approvalRequirements.map((req, idx) => (
-                <div key={idx} className="p-4 sm:p-5 space-y-2.5">
-                  <div className="flex items-start justify-between gap-3 flex-wrap">
+                <div key={idx} className="p-3.5 sm:p-5 space-y-2">
+                  <div className="flex items-start justify-between gap-2.5 flex-wrap">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-[13.5px] font-medium text-white leading-tight">{req.name}</span>
+                      <span className="text-[13px] sm:text-[13.5px] font-medium text-white leading-tight">{req.name}</span>
                       <span
                         className={clsx(
                           'text-[10px] font-mono px-1.5 py-0.5 rounded border flex-shrink-0',
@@ -455,19 +489,19 @@ await composio.authConfigs.create({
                       </span>
                     </div>
                     {req.estimatedTime && (
-                      <span className="flex items-center gap-1.5 text-[11px] font-mono text-[#737373] flex-shrink-0">
+                      <span className="flex items-center gap-1.5 text-[10.5px] sm:text-[11px] font-mono text-[#737373] flex-shrink-0">
                         <Clock className="w-3 h-3 text-[#555555]" />
                         {req.estimatedTime}
                       </span>
                     )}
                   </div>
-                  <p className="text-[13px] text-[#a1a1a1] leading-[1.65]">{req.description}</p>
+                  <p className="text-[12.5px] sm:text-[13px] text-[#a1a1a1] leading-[1.6]">{req.description}</p>
                   {req.link && (
                     <a
                       href={req.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[11px] text-[#a1a1a1] hover:text-white hover:underline inline-flex items-center gap-1 font-mono pt-1"
+                      className="text-[10.5px] sm:text-[11px] text-[#a1a1a1] hover:text-white hover:underline inline-flex items-center gap-1 font-mono pt-0.5"
                     >
                       <span>Official review requirements</span>
                       <ExternalLink className="w-2.5 h-2.5 text-[#666666]" />
@@ -499,13 +533,13 @@ await composio.authConfigs.create({
                   <div key={idx} className="text-xs">
                     <button
                       onClick={() => setExpandedBlocker(isOpen ? null : idx)}
-                      className="w-full p-4 flex items-center justify-between text-left hover:bg-[#161616] transition-colors cursor-pointer"
+                      className="w-full p-3.5 sm:p-4 flex items-center justify-between text-left hover:bg-[#161616] transition-colors cursor-pointer gap-2"
                     >
-                      <span className="font-medium text-white text-[13.5px] truncate pr-3">
+                      <span className="font-medium text-white text-[13px] sm:text-[13.5px] pr-2 leading-snug">
                         {b.title}
                       </span>
 
-                      <div className="flex items-center gap-3 text-[#737373] font-mono text-[11px] flex-shrink-0">
+                      <div className="flex items-center gap-2 sm:gap-3 text-[#737373] font-mono text-[10px] sm:text-[11px] flex-shrink-0">
                         <span className="capitalize">{b.severity} priority</span>
                         <ChevronDown
                           className={clsx(
@@ -526,13 +560,13 @@ await composio.authConfigs.create({
                           transition={{ duration: 0.15, ease: 'easeOut' }}
                           className="overflow-hidden"
                         >
-                          <div className="px-4 pb-4 pt-1 space-y-3 text-[#a1a1a1] leading-[1.65] text-[13px] border-t border-[#1a1a1a]">
+                          <div className="px-3.5 sm:px-4 pb-3.5 sm:pb-4 pt-1 space-y-2.5 sm:space-y-3 text-[#a1a1a1] leading-[1.65] text-[12.5px] sm:text-[13px] border-t border-[#1a1a1a]">
                             <p>{b.description}</p>
-                            <div className="p-3 rounded bg-[#161616] border border-[#222222] text-[#ededed]">
-                              <span className="text-[#737373] font-mono text-[10.5px] uppercase tracking-wider block mb-1">
+                            <div className="p-2.5 sm:p-3 rounded bg-[#161616] border border-[#222222] text-[#ededed]">
+                              <span className="text-[#737373] font-mono text-[10px] sm:text-[10.5px] uppercase tracking-wider block mb-1">
                                 Resolution
                               </span>
-                              <span className="text-[#cccccc] text-[12.5px] leading-[1.6]">
+                              <span className="text-[#cccccc] text-[12px] sm:text-[12.5px] leading-[1.6]">
                                 {b.resolution}
                               </span>
                             </div>
@@ -547,7 +581,7 @@ await composio.authConfigs.create({
           </div>
         )}
 
-        {/* Agent Automation Matrix */}
+        {/* Agent Automation Boundaries */}
         {guide.agentCapabilities.length > 0 && (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
@@ -557,34 +591,65 @@ await composio.authConfigs.create({
             </div>
 
             <div className="rounded-lg border border-[#222222] bg-[#121212] overflow-hidden">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="border-b border-[#222222] bg-[#141414] text-[#737373] font-mono text-[11px]">
-                    <th className="py-2.5 px-4 font-normal">Integration Task</th>
-                    <th className="py-2.5 px-4 font-normal">Responsibility</th>
-                    <th className="py-2.5 px-4 font-normal">Notes</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#1c1c1c]">
-                  {guide.agentCapabilities.map((cap, idx) => (
-                    <tr key={idx} className="hover:bg-[#161616] transition-colors">
-                      <td className="py-3 px-4 text-white text-[13px] font-medium">
-                        {cap.action}
-                      </td>
-                      <td className="py-3 px-4 font-mono text-xs whitespace-nowrap">
-                        {cap.canDo ? (
-                          <span className="text-white font-medium">Agent autonomous</span>
-                        ) : (
-                          <span className="text-[#888888]">Developer action</span>
-                        )}
-                      </td>
-                      <td className="py-3 px-4 text-[#888888] text-[12.5px] leading-[1.6]">
-                        {cap.notes || '—'}
-                      </td>
+              {/* Desktop Table View */}
+              <div className="hidden md:block">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-[#222222] bg-[#141414] text-[#737373] font-mono text-[11px]">
+                      <th className="py-2.5 px-4 font-normal">Integration Task</th>
+                      <th className="py-2.5 px-4 font-normal">Responsibility</th>
+                      <th className="py-2.5 px-4 font-normal">Notes</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-[#1c1c1c]">
+                    {guide.agentCapabilities.map((cap, idx) => (
+                      <tr key={idx} className="hover:bg-[#161616] transition-colors">
+                        <td className="py-3 px-4 text-white text-[13px] font-medium">
+                          {cap.action}
+                        </td>
+                        <td className="py-3 px-4 font-mono text-xs whitespace-nowrap">
+                          {cap.canDo ? (
+                            <span className="text-white font-medium">Agent autonomous</span>
+                          ) : (
+                            <span className="text-[#888888]">Developer action</span>
+                          )}
+                        </td>
+                        <td className="py-3 px-4 text-[#888888] text-[12.5px] leading-[1.6]">
+                          {cap.notes || '—'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile Card List View (Image 3 Fix) */}
+              <div className="md:hidden divide-y divide-[#1c1c1c]">
+                {guide.agentCapabilities.map((cap, idx) => (
+                  <div key={idx} className="p-3.5 space-y-1.5 bg-[#121212]">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-white text-[13px] font-medium leading-snug">
+                        {cap.action}
+                      </span>
+                      <span
+                        className={clsx(
+                          'font-mono text-[10px] px-1.5 py-0.5 rounded border flex-shrink-0',
+                          cap.canDo
+                            ? 'text-white bg-[#1a1a1a] border-[#2c2c2c]'
+                            : 'text-[#888888] bg-[#141414] border-[#222222]'
+                        )}
+                      >
+                        {cap.canDo ? 'Autonomous' : 'Developer'}
+                      </span>
+                    </div>
+                    {cap.notes && (
+                      <p className="text-[#888888] text-[12px] leading-[1.5]">
+                        {cap.notes}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         )}
