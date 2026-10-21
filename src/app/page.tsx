@@ -10,7 +10,6 @@ import { GenerateForm } from '@/components/GenerateForm';
 import { ResearchPanel } from '@/components/ResearchPanel';
 import { Menu, Terminal } from 'lucide-react';
 import { clsx } from 'clsx';
-import { motion, AnimatePresence } from 'framer-motion';
 
 type AppView = 'guide' | 'generate';
 
@@ -71,22 +70,12 @@ export default function HomePage() {
     setResearchEvents(events);
   }, []);
 
-  async function handleGenerateComplete(guideId: string) {
+  // Synchronous, seamless transition into newly generated guide with zero delay or flicker
+  function handleGenerateComplete(newGuide: Guide) {
     setIsGenerating(false);
-    try {
-      const res = await fetch('/api/guides');
-      const data = await res.json();
-      const updatedGuides = (data.guides as Guide[]) || [];
-      setGuides(updatedGuides);
-      const newGuide = updatedGuides.find((g) => g.id === guideId);
-      if (newGuide) {
-        setSelectedGuide(newGuide);
-        // Keep the real streaming events from the pipeline — don't replace with synthetic ones
-        setView('guide');
-      }
-    } catch (err) {
-      console.error('Failed to reload guides:', err);
-    }
+    setSelectedGuide(newGuide);
+    setGuides((prev) => [newGuide, ...prev.filter((g) => g.id !== newGuide.id)]);
+    setView('guide');
   }
 
   function handleGenerateError() {
@@ -168,30 +157,21 @@ export default function HomePage() {
         />
       )}
 
-      {/* 2. Main Workspace (Flexible Center Pane with smooth transitions) */}
+      {/* 2. Main Workspace (Solid, Rock-Stable Center Pane with Zero Blank Flashes) */}
       <main className="flex-1 flex flex-col h-screen overflow-hidden pt-12 lg:pt-0 min-w-0 relative">
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={view === 'guide' && selectedGuide ? selectedGuide.id : 'generate'}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-            className="flex-1 flex flex-col h-full overflow-hidden"
-          >
-            {view === 'guide' && selectedGuide ? (
-              <GuideView guide={selectedGuide} />
-            ) : (
-              <GenerateForm
-                initialAppName={prefillAppName}
-                onEventsUpdate={handleEventsUpdate}
-                onGenerateStart={handleGenerateStart}
-                onGenerateComplete={handleGenerateComplete}
-                onGenerateError={handleGenerateError}
-              />
-            )}
-          </motion.div>
-        </AnimatePresence>
+        <div className="flex-1 flex flex-col h-full overflow-hidden">
+          {view === 'guide' && selectedGuide ? (
+            <GuideView guide={selectedGuide} />
+          ) : (
+            <GenerateForm
+              initialAppName={prefillAppName}
+              onEventsUpdate={handleEventsUpdate}
+              onGenerateStart={handleGenerateStart}
+              onGenerateComplete={handleGenerateComplete}
+              onGenerateError={handleGenerateError}
+            />
+          )}
+        </div>
       </main>
 
       {/* 3. Right Activity / Research Panel (Fixed 360px-380px on desktop, drawer on mobile) */}

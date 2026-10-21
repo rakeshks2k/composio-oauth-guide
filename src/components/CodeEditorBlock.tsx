@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Check, Copy, Terminal, Code2 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { clsx } from 'clsx';
 
 interface CodeEditorBlockProps {
   cliCode: string;
@@ -78,81 +78,66 @@ function highlightTsLine(line: string): React.ReactNode {
           return <span key={i} className="text-white">{token}</span>;
         }
         if (/^(connectedAccounts|initiate|authConfigs|create|log)$/.test(token)) {
-          return <span key={i} className="syntax-fn">{token}</span>;
+          return <span key={i} className="syntax-property">{token}</span>;
         }
         if (/^(appName|redirectUrl|authScheme|credentials|clientId|clientSecret|apiKey)$/.test(token)) {
-          return <span key={i} className="syntax-prop">{token}</span>;
+          return <span key={i} className="syntax-property">{token}</span>;
         }
         if (token.startsWith('"') && token.endsWith('"')) {
           return <span key={i} className="syntax-string">{token}</span>;
         }
-        if (/^[{}();,:]$/.test(token)) {
-          return <span key={i} className="syntax-punct">{token}</span>;
-        }
-        return <span key={i} className="text-[#a1a1a1]">{token}</span>;
+        return token;
       })}
     </>
   );
 }
 
-export function CodeEditorBlock({ cliCode, tsCode, appName }: CodeEditorBlockProps) {
+export function CodeEditorBlock({
+  cliCode,
+  tsCode,
+  appName,
+}: CodeEditorBlockProps) {
   const [activeTab, setActiveTab] = useState<'cli' | 'typescript'>('cli');
   const [copied, setCopied] = useState(false);
 
-  const activeCode = activeTab === 'cli' ? cliCode : tsCode;
-  const lines = activeCode.split('\n');
+  const currentCode = activeTab === 'cli' ? cliCode : tsCode;
+  const lines = currentCode.split('\n');
 
   function copyCode() {
-    navigator.clipboard.writeText(activeCode);
+    navigator.clipboard.writeText(currentCode);
     setCopied(true);
     setTimeout(() => setCopied(false), 1800);
   }
 
   return (
-    <div className="rounded-md border border-[#262626] bg-[#121212] overflow-hidden font-mono text-[12.5px]">
-      {/* Code Editor Header Bar */}
-      <div className="h-9 px-3 flex items-center justify-between border-b border-[#262626] bg-[#141414] select-none">
+    <div className="rounded-lg border border-[#262626] bg-[#111111] overflow-hidden">
+      {/* Editor Tab Bar */}
+      <div className="h-9 px-3 bg-[#161616] border-b border-[#262626] flex items-center justify-between select-none">
         <div className="flex items-center gap-1.5">
           <button
             onClick={() => setActiveTab('cli')}
-            className={`relative h-6 px-2.5 rounded text-[11px] font-mono flex items-center gap-1.5 transition-colors ${
+            className={clsx(
+              'h-6 px-2.5 rounded text-[11px] font-mono flex items-center gap-1.5 transition-colors border',
               activeTab === 'cli'
-                ? 'text-white font-medium'
-                : 'text-[#737373] hover:text-[#a1a1a1]'
-            }`}
-          >
-            {activeTab === 'cli' && (
-              <motion.div
-                layoutId="code-tab-indicator"
-                className="absolute inset-0 rounded bg-[#1e1e1e] border border-[#2c2c2c]"
-                transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-              />
+                ? 'bg-[#1e1e1e] border-[#2c2c2c] text-white font-medium'
+                : 'text-[#737373] hover:text-[#a1a1a1] border-transparent'
             )}
-            <span className="relative z-10 flex items-center gap-1.5">
-              <Terminal className="w-3 h-3 text-[#737373]" />
-              <span>CLI ({appName})</span>
-            </span>
+          >
+            <Terminal className="w-3 h-3 text-[#737373]" />
+            <span>CLI ({appName})</span>
           </button>
 
           <button
             onClick={() => setActiveTab('typescript')}
-            className={`relative h-6 px-2.5 rounded text-[11px] font-mono flex items-center gap-1.5 transition-colors ${
+            className={clsx(
+              'h-6 px-2.5 rounded text-[11px] font-mono flex items-center gap-1.5 transition-colors border',
               activeTab === 'typescript'
-                ? 'text-white font-medium'
-                : 'text-[#737373] hover:text-[#a1a1a1]'
-            }`}
-          >
-            {activeTab === 'typescript' && (
-              <motion.div
-                layoutId="code-tab-indicator"
-                className="absolute inset-0 rounded bg-[#1e1e1e] border border-[#2c2c2c]"
-                transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-              />
+                ? 'bg-[#1e1e1e] border-[#2c2c2c] text-white font-medium'
+                : 'text-[#737373] hover:text-[#a1a1a1] border-transparent'
             )}
-            <span className="relative z-10 flex items-center gap-1.5">
-              <Code2 className="w-3 h-3 text-[#737373]" />
-              <span>TypeScript SDK</span>
-            </span>
+          >
+            <Code2 className="w-3 h-3 text-[#737373]" />
+            <span>TypeScript SDK</span>
           </button>
         </div>
 
@@ -162,16 +147,15 @@ export function CodeEditorBlock({ cliCode, tsCode, appName }: CodeEditorBlockPro
             {activeTab === 'cli' ? 'bash' : 'ts'}
           </span>
 
-          <motion.button
-            whileTap={{ scale: 0.94 }}
+          <button
             onClick={copyCode}
             className="h-6 px-2 rounded text-[11px] font-sans flex items-center gap-1 text-[#737373] hover:text-white hover:bg-[#1a1a1a] transition-colors"
             title="Copy code snippet"
           >
             {copied ? (
               <>
-                <Check className="w-3 h-3 text-white" />
-                <span className="text-white">Copied</span>
+                <Check className="w-3 h-3 text-[#51a2ff]" />
+                <span className="text-[#51a2ff]">Copied</span>
               </>
             ) : (
               <>
@@ -179,36 +163,26 @@ export function CodeEditorBlock({ cliCode, tsCode, appName }: CodeEditorBlockPro
                 <span>Copy</span>
               </>
             )}
-          </motion.button>
+          </button>
         </div>
       </div>
 
       {/* Code Editor Body with Gutter */}
       <div className="p-3.5 sm:p-4 overflow-x-auto text-[12px] leading-[1.65] bg-[#111111]">
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={activeTab}
-            initial={{ opacity: 0, y: 2 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -2 }}
-            transition={{ duration: 0.12 }}
-          >
-            <table className="w-full border-collapse">
-              <tbody>
-                {lines.map((line, idx) => (
-                  <tr key={idx} className="hover:bg-[#161616] transition-colors">
-                    <td className="syntax-line-num select-none align-top w-7">
-                      {idx + 1}
-                    </td>
-                    <td className="whitespace-pre pl-2 align-top font-mono">
-                      {activeTab === 'cli' ? highlightCliLine(line) : highlightTsLine(line)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </motion.div>
-        </AnimatePresence>
+        <table className="w-full border-collapse">
+          <tbody>
+            {lines.map((line, idx) => (
+              <tr key={idx} className="hover:bg-[#161616] transition-colors">
+                <td className="syntax-line-num select-none align-top w-7 text-right pr-3 text-[#444444] font-mono text-[11px]">
+                  {idx + 1}
+                </td>
+                <td className="whitespace-pre align-top font-mono">
+                  {activeTab === 'cli' ? highlightCliLine(line) : highlightTsLine(line)}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
