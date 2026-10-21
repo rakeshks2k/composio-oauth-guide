@@ -197,7 +197,7 @@ export function GenerateForm({
                 onChange={(e) => setAppWebsite(e.target.value)}
                 placeholder="e.g. linear.app or https://developers.notion.com"
                 disabled={isLoading}
-                className="w-full h-10 pl-9.5 pr-3.5 rounded-md bg-[#181818] border border-[#262626] focus:border-[#51a2ff] text-[13px] text-white placeholder:text-[#555555] outline-none transition-colors font-mono"
+                className="w-full h-10 pl-10 pr-3.5 rounded-md bg-[#181818] border border-[#262626] focus:border-[#51a2ff] text-[13px] text-white placeholder:text-[#555555] outline-none transition-colors font-mono"
               />
             </div>
           </div>

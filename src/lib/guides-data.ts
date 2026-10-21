@@ -450,10 +450,13 @@ export const presetGuides: Guide[] = [  // ─── Google Drive ────�
     isPreset: true,
     createdAt: '2025-01-15T00:00:00.000Z',
   },
+];
 
+// Additional high-fidelity blueprints for real-time live generation
+export const additionalBlueprints: Guide[] = [
   // ─── HubSpot ─────────────────────────────────────────────────────────────────
   {
-    id: 'preset-hubspot',
+    id: 'blueprint-hubspot',
     appName: 'HubSpot',
     appDomain: 'hubspot.com',
     slug: 'hubspot',

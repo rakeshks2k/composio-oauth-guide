@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useRef, useEffect } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import Image from 'next/image';
 import { Guide } from '@/lib/types';
 import { AppIcon } from '@/components/AppIcon';
@@ -36,37 +36,12 @@ export function Sidebar({
   onDeleteGuide,
 }: SidebarProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterTag, setFilterTag] = useState<'all' | 'instant' | 'approval' | 'managed'>('all');
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (
-        (e.key === '/' || ((e.metaKey || e.ctrlKey) && e.key === 'k')) &&
-        document.activeElement?.tagName !== 'INPUT' &&
-        document.activeElement?.tagName !== 'TEXTAREA'
-      ) {
-        e.preventDefault();
-        searchInputRef.current?.focus();
-      }
-    }
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
   const filteredGuides = useMemo(() => {
-    let list = guides;
-    if (filterTag === 'instant') {
-      list = list.filter((g) => !g.approvalDays || g.approvalDays.max === 0);
-    } else if (filterTag === 'approval') {
-      list = list.filter((g) => g.approvalDays && g.approvalDays.max > 0);
-    } else if (filterTag === 'managed') {
-      list = list.filter((g) => g.recommendedPath === 'managed');
-    }
-
     const q = searchQuery.trim().toLowerCase();
-    if (!q) return list;
-    return list.filter((g) => {
+    if (!q) return guides;
+    return guides.filter((g) => {
       return (
         g.appName.toLowerCase().includes(q) ||
         g.slug.toLowerCase().includes(q) ||
@@ -76,7 +51,7 @@ export function Sidebar({
         g.scopes.some((s) => s.scope.toLowerCase().includes(q))
       );
     });
-  }, [guides, searchQuery, filterTag]);
+  }, [guides, searchQuery]);
 
   const presetGuides = useMemo(() => filteredGuides.filter((g) => g.isPreset), [filteredGuides]);
   const recentGuides = useMemo(() => filteredGuides.filter((g) => !g.isPreset), [filteredGuides]);
@@ -145,46 +120,17 @@ export function Sidebar({
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by app, scope, or difficulty..."
-            className="w-full h-9 bg-[#181818] border border-[#262626] rounded-md pl-9 pr-12 text-[12.5px] text-white placeholder:text-[#666666] focus:outline-none focus:border-[#51a2ff] transition-colors"
+            placeholder="Search application"
+            className="w-full h-9 bg-[#181818] border border-[#262626] rounded-md pl-9 pr-8 text-[12.5px] text-white placeholder:text-[#666666] focus:outline-none focus:border-[#51a2ff] transition-colors"
           />
-          {searchQuery ? (
+          {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
               className="absolute right-2.5 text-[#737373] hover:text-white"
             >
               <X className="w-3 h-3" />
             </button>
-          ) : (
-            <span className="absolute right-2.5 pointer-events-none text-[9.5px] font-mono text-[#666666] bg-[#202020] border border-[#2a2a2a] px-1.5 py-0.5 rounded">
-              Ctrl+K
-            </span>
           )}
-        </div>
-
-        {/* Quick Filter Chips */}
-        <div className="flex items-center gap-1 pt-0.5">
-          {(
-            [
-              { id: 'all', label: 'All' },
-              { id: 'instant', label: 'Instant (0d)' },
-              { id: 'approval', label: 'Needs Review' },
-              { id: 'managed', label: 'Managed' },
-            ] as const
-          ).map((chip) => (
-            <button
-              key={chip.id}
-              onClick={() => setFilterTag(chip.id)}
-              className={clsx(
-                'px-2 py-0.5 rounded text-[10.5px] font-mono whitespace-nowrap transition-colors flex-1 text-center',
-                filterTag === chip.id
-                  ? 'bg-[#222222] text-white border border-[#383838]'
-                  : 'text-[#666666] hover:text-[#999999] bg-transparent border border-transparent'
-              )}
-            >
-              {chip.label}
-            </button>
-          ))}
         </div>
       </div>
 

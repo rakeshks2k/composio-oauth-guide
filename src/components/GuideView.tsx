@@ -557,7 +557,7 @@ await composio.authConfigs.create({
                           </span>
 
                           <span className="text-[#8c8c8c]">
-                            {step.agentCanDo ? '🤖 Agent can prepare' : '👤 Developer action required'}
+                            {step.agentCanDo ? 'Agent can prepare' : 'Developer action required'}
                           </span>
 
                           {step.officialLink && (
@@ -781,9 +781,9 @@ await composio.authConfigs.create({
                       </td>
                       <td className="py-3.5 px-5 font-mono text-xs whitespace-nowrap">
                         {cap.canDo ? (
-                          <span className="text-[#51a2ff] font-medium">🤖 Agent autonomous</span>
+                          <span className="text-[#51a2ff] font-medium">Agent autonomous</span>
                         ) : (
-                          <span className="text-[#a1a1a1]">👤 Developer action</span>
+                          <span className="text-[#a1a1a1]">Developer action</span>
                         )}
                       </td>
                       <td className="py-3.5 px-5 text-[#8c8c8c] text-[13px] leading-[1.65]">
@@ -841,7 +841,7 @@ await composio.authConfigs.create({
               <div key={i} className="leading-[1.7]">• {a}</div>
             ))}
             {guide.unverifiedClaims.map((c, i) => (
-              <div key={i} className="text-[#a1a1a1] leading-[1.7]">• ⚠️ Unverified: {c}</div>
+              <div key={i} className="text-[#a1a1a1] leading-[1.7]">• Unverified: {c}</div>
             ))}
           </div>
         )}
@@ -924,16 +924,16 @@ function guideToMarkdown(guide: Guide): string {
       lines.push('');
       lines.push(`**Type:** ${STEP_TYPE_LABELS[step.type]}  `);
       lines.push(`**Estimated Time:** ${step.estimatedTime || 'N/A'}  `);
-      lines.push(`**Responsibility:** ${step.agentCanDo ? '🤖 Agent can prepare' : '👤 Developer action required'}  `);
+      lines.push(`**Responsibility:** ${step.agentCanDo ? 'Agent can prepare' : 'Developer action required'}  `);
       lines.push('');
       lines.push(step.description);
       if (step.completionCriteria) {
         lines.push('');
-        lines.push(`> ✅ **Done when:** ${step.completionCriteria}`);
+        lines.push(`> **Done when:** ${step.completionCriteria}`);
       }
       if (step.officialLink) {
         lines.push('');
-        lines.push(`📎 [Official Docs](${step.officialLink})`);
+        lines.push(`[Official Docs](${step.officialLink})`);
       }
       lines.push('');
     });
@@ -954,12 +954,12 @@ function guideToMarkdown(guide: Guide): string {
   if (guide.approvalRequirements.length > 0) {
     lines.push('## Vendor Verification & Review Requirements', '');
     guide.approvalRequirements.forEach((req) => {
-      lines.push(`### ${req.required ? '🔴' : '🟡'} ${req.name} (${req.required ? 'Mandatory' : 'Optional / Conditional'})`);
+      lines.push(`### ${req.name} (${req.required ? 'Mandatory' : 'Optional / Conditional'})`);
       lines.push('');
       if (req.estimatedTime) lines.push(`**Timeline:** ${req.estimatedTime}  `);
       lines.push('');
       lines.push(req.description);
-      if (req.link) lines.push(`\n📎 [Official Requirements](${req.link})`);
+      if (req.link) lines.push(`\n[Official Requirements](${req.link})`);
       lines.push('');
     });
   }
@@ -968,8 +968,7 @@ function guideToMarkdown(guide: Guide): string {
   if (guide.commonBlockers.length > 0) {
     lines.push('## Known Blockers & Pre-emptions', '');
     guide.commonBlockers.forEach((b) => {
-      const sev = b.severity === 'high' ? '🔴' : b.severity === 'medium' ? '🟡' : '🟢';
-      lines.push(`### ${sev} ${b.title} (${b.severity} priority)`);
+      lines.push(`### ${b.title} (${b.severity} priority)`);
       lines.push('');
       lines.push(b.description);
       lines.push('');
@@ -984,7 +983,7 @@ function guideToMarkdown(guide: Guide): string {
     lines.push('| Integration Task | Responsibility | Hand-off Details & Nuances |');
     lines.push('|---|---|---|');
     guide.agentCapabilities.forEach((cap) => {
-      lines.push(`| ${cap.action} | ${cap.canDo ? '🤖 Agent autonomous' : '👤 Developer action'} | ${cap.notes || '—'} |`);
+      lines.push(`| ${cap.action} | ${cap.canDo ? 'Agent autonomous' : 'Developer action'} | ${cap.notes || '—'} |`);
     });
     lines.push('');
   }
@@ -1003,7 +1002,7 @@ function guideToMarkdown(guide: Guide): string {
   if (hasNotes) {
     lines.push('## Audit Notes, Assumptions & Limitations', '');
     guide.assumptions.forEach((a) => lines.push(`- ${a}`));
-    guide.unverifiedClaims.forEach((c) => lines.push(`- ⚠️ *Unverified:* ${c}`));
+    guide.unverifiedClaims.forEach((c) => lines.push(`- *Unverified:* ${c}`));
     lines.push('');
   }
 

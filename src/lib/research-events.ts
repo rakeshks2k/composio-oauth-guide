@@ -31,7 +31,7 @@ export function getGuideResearchEvents(guide: Guide): ResearchEvent[] {
     },
     {
       type: 'step',
-      message: `Composio managed auth: ${guide.composioManaged ? 'Supported ✓' : 'Not supported — custom credentials required'}`,
+      message: `Composio managed auth: ${guide.composioManaged ? 'Supported' : 'Not supported — custom credentials required'}`,
       detail: guide.composioManaged
         ? `Active managed OAuth toolkit with pre-configured client credentials available.`
         : `Custom OAuth developer application registration required.`,

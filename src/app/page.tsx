@@ -17,7 +17,7 @@ type AppView = 'guide' | 'generate';
 export default function HomePage() {
   const [guides, setGuides] = useState<Guide[]>([]);
   const [selectedGuide, setSelectedGuide] = useState<Guide | null>(null);
-  const [view, setView] = useState<AppView>('guide');
+  const [view, setView] = useState<AppView>('generate');
   const [researchEvents, setResearchEvents] = useState<ResearchEvent[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [prefillAppName, setPrefillAppName] = useState('');
@@ -42,9 +42,9 @@ export default function HomePage() {
     }
   }, []);
 
-  // Load guides on mount
+  // Load guides on mount — user lands on 'generate' guide page first
   useEffect(() => {
-    fetchGuides(true);
+    fetchGuides(false);
   }, [fetchGuides]);
 
   function handleSelectGuide(guide: Guide) {

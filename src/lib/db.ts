@@ -98,6 +98,10 @@ function initSqlite(): Database.Database | null {
       });
     }
 
+    // Clean up any former presets no longer in presetGuides
+    const presetIds = presetGuides.map((p) => p.id);
+    _db.prepare(`DELETE FROM guides WHERE is_preset = 1 AND id NOT IN (${presetIds.map(() => '?').join(',')})`).run(...presetIds);
+
     _sqliteAvailable = true;
     return _db;
   } catch (err) {

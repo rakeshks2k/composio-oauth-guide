@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import { saveGuide } from '@/lib/db';
 import { Guide, ResearchEvent, ChecklistItem, ScopeInfo, Blocker, ApprovalRequirement, AgentCapability, Source } from '@/lib/types';
-import { presetGuides } from '@/lib/guides-data';
+import { presetGuides, additionalBlueprints } from '@/lib/guides-data';
 import OpenAI from 'openai';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -116,8 +116,9 @@ function buildDemoGuide(appName: string, appWebsite?: string): Guide {
   const slug = slugify(appName);
   const normalized = appName.trim().toLowerCase();
 
-  // Check if this matches any of our verified presets
-  const matchedPreset = presetGuides.find(
+  // Check if this matches any of our verified presets or blueprints
+  const allVerified = [...presetGuides, ...additionalBlueprints];
+  const matchedPreset = allVerified.find(
     (p) =>
       p.appName.toLowerCase() === normalized ||
       p.slug === slug ||
