@@ -27,7 +27,7 @@ Inspired by the Composio dashboard:
 - **Palette:** Dark charcoal background (`#0f0f0f`), secondary surfaces (`#141414`), subtle borders (`#262626`), and blue accents (`#51a2ff`).
 - **Typography:** Clean sans-serif paired with monospace font families for code symbols, scopes, and IDs.
 - **Three-Part Developer Workspace:**
-  1. **Left Sidebar:** Searchable Guide Library with instant filtering (`All`, `Instant (0d)`, `Needs Review`, `Managed`), quick keyboard shortcut (`/` or `Ctrl+K`), difficulty badges, Composio Managed indicators, New Guide CTA, and Custom Generated Guides.
+  1. **Left Sidebar:** Searchable Guide Library with real-time fuzzy filtering, quick keyboard shortcut (`/` or `Ctrl+K`), path badges (`managed` vs `custom`), 1-click "Generate Guide" CTA, Curated Archetypes, Custom Generated Guides with delete controls, and quick documentation links.
   2. **Main Workspace:** Actionable guide view (recommendation justification, 3-metric time cards, step-by-step checklist with persistent progress tracking, scopes sensitivity table, blockers accordion, agent capabilities matrix, sources, and caveats) or the interactive generation form with quick suggestion pills.
   3. **Right Research Panel:** Real-time event stream showing pipeline progress, documentation discoveries, policy evaluations, and clickable source citations.
 
@@ -73,7 +73,7 @@ Inspired by the Composio dashboard:
 ## Key Features
 
 ### 1. Searchable Guide Library (Architected for 100+ Apps)
-- Pre-seeded with 7 rigorously researched provider guides representing distinct OAuth approval archetypes (Google Drive, Slack, GitHub, HubSpot, Notion, Stripe, Zoom).
+- Seeded with core OAuth archetypes out of the box (Google Drive for CASA/restricted, Slack for multi-workspace review, GitHub for instant self-service) plus deep-researched reference blueprints (HubSpot, Notion, Stripe, Zoom) in the generation catalog.
 - Instant real-time fuzzy search filtering by app name, slug, scopes, summary, or difficulty.
 - Keyboard shortcut: Press `/` anywhere to immediately focus the search bar.
 - Empty search state offers a 1-click shortcut to generate a guide for the searched term.

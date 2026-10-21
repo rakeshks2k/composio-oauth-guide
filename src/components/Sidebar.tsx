@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useRef } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { Guide } from '@/lib/types';
 import { AppIcon } from '@/components/AppIcon';
@@ -35,6 +35,22 @@ export function Sidebar({
 }: SidebarProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Keyboard shortcut: '/' or Ctrl/Cmd+K to focus search
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (
+        (e.key === '/' || ((e.metaKey || e.ctrlKey) && e.key === 'k')) &&
+        document.activeElement?.tagName !== 'INPUT' &&
+        document.activeElement?.tagName !== 'TEXTAREA'
+      ) {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const filteredGuides = useMemo(() => {
     let result = guides;
@@ -125,13 +141,17 @@ export function Sidebar({
             placeholder="Search application"
             className="w-full h-8 bg-[#141414] border border-[#222222] rounded-md pl-8 pr-7 text-xs text-white placeholder:text-[#555555] focus:outline-none focus:border-[#333333] transition-colors font-sans"
           />
-          {searchQuery && (
+          {searchQuery ? (
             <button
               onClick={() => setSearchQuery('')}
               className="absolute right-2 text-[#666666] hover:text-white"
             >
               <X className="w-3 h-3" />
             </button>
+          ) : (
+            <span className="absolute right-2 text-[10px] font-mono text-[#555555] px-1 rounded bg-[#181818] border border-[#262626] pointer-events-none">
+              /
+            </span>
           )}
         </div>
       </div>
@@ -229,8 +249,18 @@ export function Sidebar({
 
         {/* Empty state for search */}
         {filteredGuides.length === 0 && (
-          <div className="p-3 text-center text-xs text-[#666666]">
-            No applications match &quot;{searchQuery}&quot;
+          <div className="p-3 text-center text-xs text-[#666666] space-y-2">
+            <div>No applications match &quot;{searchQuery}&quot;</div>
+            <button
+              onClick={() => {
+                onGenerateClick(searchQuery);
+                onCloseMobile?.();
+              }}
+              className="text-xs text-white hover:underline font-mono inline-flex items-center gap-1 cursor-pointer"
+            >
+              <span>Generate for &quot;{searchQuery}&quot;</span>
+              <Sparkles className="w-3 h-3 text-[#51a2ff]" />
+            </button>
           </div>
         )}
       </div>
