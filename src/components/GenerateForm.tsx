@@ -14,6 +14,7 @@ import {
   Code2,
 } from 'lucide-react';
 import { clsx } from 'clsx';
+import { motion } from 'framer-motion';
 
 interface GenerateFormProps {
   initialAppName?: string;
@@ -164,18 +165,20 @@ export function GenerateForm({
               <span className="text-[11px] text-[#737373] font-mono">Suggested integrations:</span>
               <div className="flex items-center gap-2 flex-wrap">
                 {QUICK_SUGGESTIONS.map((item) => (
-                  <button
+                  <motion.button
                     key={item.name}
                     type="button"
+                    whileHover={{ scale: 1.03, y: -1 }}
+                    whileTap={{ scale: 0.97 }}
                     onClick={() => {
                       setAppName(item.name);
                       setAppWebsite(item.website);
                     }}
-                    className="h-8 px-2.5 rounded-md bg-[#181818] border border-[#282828] hover:border-[#3a3a3a] hover:bg-[#202020] text-[#a0a0a0] hover:text-white transition-all flex items-center gap-2 text-xs font-medium"
+                    className="h-8 px-2.5 rounded-md bg-[#181818] border border-[#282828] hover:border-[#3a3a3a] hover:bg-[#202020] text-[#a0a0a0] hover:text-white transition-all flex items-center gap-2 text-xs font-medium cursor-pointer"
                   >
                     <AppIcon name={item.name} size="sm" />
                     <span>{item.name}</span>
-                  </button>
+                  </motion.button>
                 ))}
               </div>
             </div>
@@ -206,14 +209,16 @@ export function GenerateForm({
           )}
 
           <div className="pt-2">
-            <button
+            <motion.button
               type="submit"
               disabled={!appName.trim() || isLoading}
+              whileHover={!appName.trim() || isLoading ? {} : { scale: 1.01 }}
+              whileTap={!appName.trim() || isLoading ? {} : { scale: 0.98 }}
               className={clsx(
-                'h-10 px-5 rounded-md font-medium text-[13px] flex items-center justify-center gap-2 transition-all',
+                'h-10 px-5 rounded-md font-medium text-[13px] flex items-center justify-center gap-2 transition-all cursor-pointer',
                 !appName.trim() || isLoading
                   ? 'bg-[#1e1e1e] border border-[#2a2a2a] text-[#666666] cursor-not-allowed'
-                  : 'bg-white hover:bg-[#eaeaea] text-black active:scale-[0.99] shadow-sm'
+                  : 'bg-white hover:bg-[#eaeaea] text-black shadow-sm'
               )}
             >
               {isLoading ? (
@@ -228,7 +233,7 @@ export function GenerateForm({
                   <ArrowRight className="w-3.5 h-3.5 ml-0.5" />
                 </>
               )}
-            </button>
+            </motion.button>
           </div>
         </form>
 
@@ -239,7 +244,11 @@ export function GenerateForm({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="p-5 rounded-lg bg-[#141414] border border-[#262626] space-y-3">
+            <motion.div
+              whileHover={{ y: -2, borderColor: '#383838' }}
+              transition={{ duration: 0.15 }}
+              className="p-5 rounded-lg bg-[#141414] border border-[#262626] space-y-3 cursor-default"
+            >
               <div className="flex items-center gap-2 text-white text-[13px] font-medium">
                 <Layers className="w-4 h-4 text-[#51a2ff]" />
                 <span>Managed vs. Custom Path</span>
@@ -248,9 +257,13 @@ export function GenerateForm({
                 Cross-references provider protocols with Composio&apos;s managed authentication network.
                 Recommends zero-maintenance managed OAuth for rapid integrations or dedicated custom client IDs for enterprise white-labeling.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="p-5 rounded-lg bg-[#141414] border border-[#262626] space-y-3">
+            <motion.div
+              whileHover={{ y: -2, borderColor: '#383838' }}
+              transition={{ duration: 0.15 }}
+              className="p-5 rounded-lg bg-[#141414] border border-[#262626] space-y-3 cursor-default"
+            >
               <div className="flex items-center gap-2 text-white text-[13px] font-medium">
                 <ShieldCheck className="w-4 h-4 text-[#51a2ff]" />
                 <span>Security &amp; Scope Audit</span>
@@ -259,9 +272,13 @@ export function GenerateForm({
                 Tiers requested permissions into basic, sensitive, and restricted classifications.
                 Flags mandatory security audits (e.g. Google CASA Tier 2/3) and organizational consent barriers.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="p-5 rounded-lg bg-[#141414] border border-[#262626] space-y-3">
+            <motion.div
+              whileHover={{ y: -2, borderColor: '#383838' }}
+              transition={{ duration: 0.15 }}
+              className="p-5 rounded-lg bg-[#141414] border border-[#262626] space-y-3 cursor-default"
+            >
               <div className="flex items-center gap-2 text-white text-[13px] font-medium">
                 <Clock className="w-4 h-4 text-[#51a2ff]" />
                 <span>Approval vs. Effort Timeline</span>
@@ -269,9 +286,13 @@ export function GenerateForm({
               <p className="text-xs text-[#8c8c8c] leading-[1.65]">
                 Explicitly distinguishes actual developer coding time (0.5h to 6h) from third-party vendor review delays (e.g., Slack directory review or HubSpot 60-install thresholds).
               </p>
-            </div>
+            </motion.div>
 
-            <div className="p-5 rounded-lg bg-[#141414] border border-[#262626] space-y-3">
+            <motion.div
+              whileHover={{ y: -2, borderColor: '#383838' }}
+              transition={{ duration: 0.15 }}
+              className="p-5 rounded-lg bg-[#141414] border border-[#262626] space-y-3 cursor-default"
+            >
               <div className="flex items-center gap-2 text-white text-[13px] font-medium">
                 <Code2 className="w-4 h-4 text-[#51a2ff]" />
                 <span>TypeScript SDK Scaffold</span>
@@ -279,7 +300,7 @@ export function GenerateForm({
               <p className="text-xs text-[#8c8c8c] leading-[1.65]">
                 Provides ready-to-run Composio SDK connection code, redirect URI validation configurations, and required environment variable manifests for your engineering team.
               </p>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>

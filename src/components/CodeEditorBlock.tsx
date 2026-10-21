@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Check, Copy, Terminal, Code2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface CodeEditorBlockProps {
   cliCode: string;
@@ -114,26 +115,44 @@ export function CodeEditorBlock({ cliCode, tsCode, appName }: CodeEditorBlockPro
         <div className="flex items-center gap-1.5">
           <button
             onClick={() => setActiveTab('cli')}
-            className={`h-6 px-2.5 rounded text-[11px] font-mono flex items-center gap-1.5 transition-colors ${
+            className={`relative h-6 px-2.5 rounded text-[11px] font-mono flex items-center gap-1.5 transition-colors ${
               activeTab === 'cli'
-                ? 'bg-[#1e1e1e] text-white border border-[#2c2c2c] font-medium'
+                ? 'text-white font-medium'
                 : 'text-[#737373] hover:text-[#a1a1a1]'
             }`}
           >
-            <Terminal className="w-3 h-3 text-[#737373]" />
-            <span>CLI ({appName})</span>
+            {activeTab === 'cli' && (
+              <motion.div
+                layoutId="code-tab-indicator"
+                className="absolute inset-0 rounded bg-[#1e1e1e] border border-[#2c2c2c]"
+                transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+              />
+            )}
+            <span className="relative z-10 flex items-center gap-1.5">
+              <Terminal className="w-3 h-3 text-[#737373]" />
+              <span>CLI ({appName})</span>
+            </span>
           </button>
 
           <button
             onClick={() => setActiveTab('typescript')}
-            className={`h-6 px-2.5 rounded text-[11px] font-mono flex items-center gap-1.5 transition-colors ${
+            className={`relative h-6 px-2.5 rounded text-[11px] font-mono flex items-center gap-1.5 transition-colors ${
               activeTab === 'typescript'
-                ? 'bg-[#1e1e1e] text-white border border-[#2c2c2c] font-medium'
+                ? 'text-white font-medium'
                 : 'text-[#737373] hover:text-[#a1a1a1]'
             }`}
           >
-            <Code2 className="w-3 h-3 text-[#737373]" />
-            <span>TypeScript SDK</span>
+            {activeTab === 'typescript' && (
+              <motion.div
+                layoutId="code-tab-indicator"
+                className="absolute inset-0 rounded bg-[#1e1e1e] border border-[#2c2c2c]"
+                transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+              />
+            )}
+            <span className="relative z-10 flex items-center gap-1.5">
+              <Code2 className="w-3 h-3 text-[#737373]" />
+              <span>TypeScript SDK</span>
+            </span>
           </button>
         </div>
 
@@ -143,7 +162,8 @@ export function CodeEditorBlock({ cliCode, tsCode, appName }: CodeEditorBlockPro
             {activeTab === 'cli' ? 'bash' : 'ts'}
           </span>
 
-          <button
+          <motion.button
+            whileTap={{ scale: 0.94 }}
             onClick={copyCode}
             className="h-6 px-2 rounded text-[11px] font-sans flex items-center gap-1 text-[#737373] hover:text-white hover:bg-[#1a1a1a] transition-colors"
             title="Copy code snippet"
@@ -159,26 +179,36 @@ export function CodeEditorBlock({ cliCode, tsCode, appName }: CodeEditorBlockPro
                 <span>Copy</span>
               </>
             )}
-          </button>
+          </motion.button>
         </div>
       </div>
 
       {/* Code Editor Body with Gutter */}
       <div className="p-3.5 sm:p-4 overflow-x-auto text-[12px] leading-[1.65] bg-[#111111]">
-        <table className="w-full border-collapse">
-          <tbody>
-            {lines.map((line, idx) => (
-              <tr key={idx} className="hover:bg-[#161616] transition-colors">
-                <td className="syntax-line-num select-none align-top w-7">
-                  {idx + 1}
-                </td>
-                <td className="whitespace-pre pl-2 align-top font-mono">
-                  {activeTab === 'cli' ? highlightCliLine(line) : highlightTsLine(line)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 2 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -2 }}
+            transition={{ duration: 0.12 }}
+          >
+            <table className="w-full border-collapse">
+              <tbody>
+                {lines.map((line, idx) => (
+                  <tr key={idx} className="hover:bg-[#161616] transition-colors">
+                    <td className="syntax-line-num select-none align-top w-7">
+                      {idx + 1}
+                    </td>
+                    <td className="whitespace-pre pl-2 align-top font-mono">
+                      {activeTab === 'cli' ? highlightCliLine(line) : highlightTsLine(line)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   );

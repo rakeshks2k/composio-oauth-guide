@@ -13,6 +13,7 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { clsx } from 'clsx';
+import { motion } from 'framer-motion';
 
 interface SidebarProps {
   guides: Guide[];
@@ -88,31 +89,41 @@ export function Sidebar({
 
       {/* 2. Primary Actions & Search Area */}
       <div className="p-3 space-y-2 border-b border-[#262626] flex-shrink-0">
-        <button
+        <motion.button
+          whileTap={{ scale: 0.98 }}
           onClick={() => {
             onGenerateClick();
             onCloseMobile?.();
           }}
           disabled={isGenerating}
           className={clsx(
-            'w-full h-9 px-3 rounded-md flex items-center justify-between transition-all text-left text-[13px]',
+            'relative w-full h-9 px-3 rounded-md flex items-center justify-between transition-all text-left text-[13px]',
             selectedGuide === null
-              ? 'bg-[#1e1e1e] text-white font-medium border border-[#333333] shadow-sm'
-              : 'bg-[#181818] hover:bg-[#202020] text-[#e0e0e0] border border-[#262626]'
+              ? 'text-white font-medium'
+              : 'text-[#e0e0e0] hover:bg-[#202020] border border-[#262626] bg-[#181818]'
           )}
         >
-          <div className="flex items-center gap-2.5">
-            {isGenerating ? (
-              <div className="w-3.5 h-3.5 border-2 border-[#51a2ff] border-t-transparent rounded-full animate-spin flex-shrink-0" />
-            ) : (
-              <Sparkles className="w-3.5 h-3.5 text-[#51a2ff] flex-shrink-0" />
-            )}
-            <span className="font-medium">Generate Guide</span>
+          {selectedGuide === null && (
+            <motion.div
+              layoutId="sidebar-active-indicator"
+              className="absolute inset-0 rounded-md bg-[#1e1e1e] border border-[#333333] shadow-sm"
+              transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+            />
+          )}
+          <div className="relative z-10 flex items-center justify-between w-full">
+            <div className="flex items-center gap-2.5">
+              {isGenerating ? (
+                <div className="w-3.5 h-3.5 border-2 border-[#51a2ff] border-t-transparent rounded-full animate-spin flex-shrink-0" />
+              ) : (
+                <Sparkles className="w-3.5 h-3.5 text-[#51a2ff] flex-shrink-0" />
+              )}
+              <span className="font-medium">Generate Guide</span>
+            </div>
+            <span className="text-[10px] font-mono text-[#737373] px-1.5 py-0.5 rounded bg-[#141414] border border-[#262626]">
+              AI
+            </span>
           </div>
-          <span className="text-[10px] font-mono text-[#737373] px-1.5 py-0.5 rounded bg-[#141414] border border-[#262626]">
-            AI
-          </span>
-        </button>
+        </motion.button>
 
         <div className="relative flex items-center">
           <Search className="w-3.5 h-3.5 text-[#737373] absolute left-3 pointer-events-none" />
@@ -151,25 +162,37 @@ export function Sidebar({
           const isSelected = selectedGuide?.id === guide.id;
 
           return (
-            <button
+            <motion.button
               key={guide.id}
+              whileTap={{ scale: 0.98 }}
               onClick={() => {
                 onSelectGuide(guide);
                 onCloseMobile?.();
               }}
               className={clsx(
-                'w-full h-9 px-2.5 rounded-md flex items-center gap-2.5 transition-colors text-left group',
+                'relative w-full h-9 px-2.5 rounded-md flex items-center gap-2.5 transition-colors text-left group',
                 isSelected
-                  ? 'bg-[#1e1e1e] text-white font-medium border border-[#303030]'
-                  : 'text-[#a3a3a3] hover:text-white hover:bg-[#181818] border border-transparent'
+                  ? 'text-white font-medium'
+                  : 'text-[#a3a3a3] hover:text-white hover:bg-[#181818]/60'
               )}
             >
-              <AppIcon name={guide.appName} size="sm" />
-              <span className="truncate flex-1 tracking-tight text-[13px]">{guide.appName}</span>
-              <span className="text-[10.5px] font-mono text-[#666666] group-hover:text-[#999999] px-1.5 py-0.5 rounded bg-[#181818] border border-[#242424]">
-                {guide.recommendedPath === 'managed' ? 'managed' : 'custom'}
-              </span>
-            </button>
+              {isSelected && (
+                <motion.div
+                  layoutId="sidebar-active-indicator"
+                  className="absolute inset-0 rounded-md bg-[#1e1e1e] border border-[#303030]"
+                  transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                />
+              )}
+              <div className="relative z-10 flex items-center gap-2.5 w-full min-w-0">
+                <div className="transition-transform duration-150 group-hover:scale-105 flex-shrink-0">
+                  <AppIcon name={guide.appName} size="sm" />
+                </div>
+                <span className="truncate flex-1 tracking-tight text-[13px]">{guide.appName}</span>
+                <span className="text-[10.5px] font-mono text-[#666666] group-hover:text-[#999999] px-1.5 py-0.5 rounded bg-[#181818] border border-[#242424] flex-shrink-0">
+                  {guide.recommendedPath === 'managed' ? 'managed' : 'custom'}
+                </span>
+              </div>
+            </motion.button>
           );
         })}
 
@@ -183,25 +206,37 @@ export function Sidebar({
             {recentGuides.map((guide) => {
               const isSelected = selectedGuide?.id === guide.id;
               return (
-                <button
+                <motion.button
                   key={guide.id}
+                  whileTap={{ scale: 0.98 }}
                   onClick={() => {
                     onSelectGuide(guide);
                     onCloseMobile?.();
                   }}
                   className={clsx(
-                    'w-full h-9 px-2.5 rounded-md flex items-center gap-2.5 transition-colors text-left group',
+                    'relative w-full h-9 px-2.5 rounded-md flex items-center gap-2.5 transition-colors text-left group',
                     isSelected
-                      ? 'bg-[#1e1e1e] text-white font-medium border border-[#303030]'
-                      : 'text-[#a3a3a3] hover:text-white hover:bg-[#181818] border border-transparent'
+                      ? 'text-white font-medium'
+                      : 'text-[#a3a3a3] hover:text-white hover:bg-[#181818]/60'
                   )}
                 >
-                  <AppIcon name={guide.appName} size="sm" />
-                  <span className="truncate flex-1 tracking-tight text-[13px]">{guide.appName}</span>
-                  <span className="text-[10.5px] font-mono text-[#737373] capitalize px-1.5 py-0.5 rounded bg-[#181818] border border-[#242424]">
-                    {guide.difficulty}
-                  </span>
-                </button>
+                  {isSelected && (
+                    <motion.div
+                      layoutId="sidebar-active-indicator"
+                      className="absolute inset-0 rounded-md bg-[#1e1e1e] border border-[#303030]"
+                      transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                    />
+                  )}
+                  <div className="relative z-10 flex items-center gap-2.5 w-full min-w-0">
+                    <div className="transition-transform duration-150 group-hover:scale-105 flex-shrink-0">
+                      <AppIcon name={guide.appName} size="sm" />
+                    </div>
+                    <span className="truncate flex-1 tracking-tight text-[13px]">{guide.appName}</span>
+                    <span className="text-[10.5px] font-mono text-[#737373] capitalize px-1.5 py-0.5 rounded bg-[#181818] border border-[#242424] flex-shrink-0">
+                      {guide.difficulty}
+                    </span>
+                  </div>
+                </motion.button>
               );
             })}
           </>

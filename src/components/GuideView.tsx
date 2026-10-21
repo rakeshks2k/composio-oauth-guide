@@ -9,9 +9,9 @@ import {
   Share2,
   ExternalLink,
   ChevronDown,
-  ChevronUp,
 } from 'lucide-react';
 import { clsx } from 'clsx';
+import { motion, AnimatePresence } from 'framer-motion';
 import { CodeEditorBlock } from './CodeEditorBlock';
 
 interface GuideViewProps {
@@ -123,7 +123,8 @@ await composio.authConfigs.create({
 
         {/* Action Buttons */}
         <div className="flex items-center gap-2 flex-shrink-0">
-          <button
+          <motion.button
+            whileTap={{ scale: 0.96 }}
             onClick={copyMarkdown}
             className="h-7 px-2.5 rounded bg-[#161616] border border-[#262626] hover:border-[#383838] text-white text-xs font-medium flex items-center gap-1.5 transition-colors"
           >
@@ -133,9 +134,10 @@ await composio.authConfigs.create({
               <Copy className="w-3.5 h-3.5 text-[#737373]" />
             )}
             <span>Copy as Markdown</span>
-          </button>
+          </motion.button>
 
-          <button
+          <motion.button
+            whileTap={{ scale: 0.96 }}
             onClick={copyShareLink}
             className="h-7 px-2.5 rounded bg-[#161616] border border-[#262626] hover:border-[#383838] text-[#a1a1a1] hover:text-white text-xs font-medium flex items-center gap-1.5 transition-colors"
             title="Copy permanent share link"
@@ -146,7 +148,7 @@ await composio.authConfigs.create({
               <Share2 className="w-3.5 h-3.5 text-[#737373]" />
             )}
             <span className="hidden sm:inline">Share link</span>
-          </button>
+          </motion.button>
         </div>
       </div>
 
@@ -177,7 +179,11 @@ await composio.authConfigs.create({
 
         {/* Effort & Time Breakdown Strip */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-          <div className="p-4 sm:p-4.5 rounded-lg bg-[#141414] border border-[#262626]">
+          <motion.div
+            whileHover={{ y: -2, borderColor: '#383838' }}
+            transition={{ duration: 0.15 }}
+            className="p-4 sm:p-4.5 rounded-lg bg-[#141414] border border-[#262626] cursor-default"
+          >
             <div className="text-[#737373] text-[11px] font-medium uppercase tracking-wider mb-1">
               Hands-on Effort
             </div>
@@ -187,9 +193,13 @@ await composio.authConfigs.create({
             <div className="text-[#666666] text-[11.5px] mt-0.5">
               Direct engineering setup
             </div>
-          </div>
+          </motion.div>
 
-          <div className="p-4 sm:p-4.5 rounded-lg bg-[#141414] border border-[#262626]">
+          <motion.div
+            whileHover={{ y: -2, borderColor: '#383838' }}
+            transition={{ duration: 0.15 }}
+            className="p-4 sm:p-4.5 rounded-lg bg-[#141414] border border-[#262626] cursor-default"
+          >
             <div className="text-[#737373] text-[11px] font-medium uppercase tracking-wider mb-1">
               Calendar Elapsed
             </div>
@@ -199,9 +209,13 @@ await composio.authConfigs.create({
             <div className="text-[#666666] text-[11.5px] mt-0.5">
               Kickoff to production live
             </div>
-          </div>
+          </motion.div>
 
-          <div className="p-4 sm:p-4.5 rounded-lg bg-[#141414] border border-[#262626]">
+          <motion.div
+            whileHover={{ y: -2, borderColor: '#383838' }}
+            transition={{ duration: 0.15 }}
+            className="p-4 sm:p-4.5 rounded-lg bg-[#141414] border border-[#262626] cursor-default"
+          >
             <div className="text-[#737373] text-[11px] font-medium uppercase tracking-wider mb-1">
               External Approval
             </div>
@@ -211,7 +225,7 @@ await composio.authConfigs.create({
             <div className="text-[#666666] text-[11.5px] mt-0.5">
               {guide.approvalDays ? 'Provider review queue' : 'No review required'}
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Composio Integration Code Snippet */}
@@ -375,27 +389,39 @@ await composio.authConfigs.create({
 
                       <div className="flex items-center gap-3 text-[#737373] font-mono text-[11px] flex-shrink-0">
                         <span className="capitalize">{b.severity} priority</span>
-                        {isOpen ? (
-                          <ChevronUp className="w-3.5 h-3.5 text-[#a1a1a1]" />
-                        ) : (
-                          <ChevronDown className="w-3.5 h-3.5 text-[#555555]" />
-                        )}
+                        <ChevronDown
+                          className={clsx(
+                            'w-3.5 h-3.5 transition-transform duration-200',
+                            isOpen ? 'transform rotate-180 text-[#a1a1a1]' : 'text-[#555555]'
+                          )}
+                        />
                       </div>
                     </button>
 
-                    {isOpen && (
-                      <div className="px-5 pb-5 pt-1 space-y-3.5 text-[#a1a1a1] leading-[1.7] text-[13px] border-t border-[#1c1c1c]">
-                        <p>{b.description}</p>
-                        <div className="p-3.5 rounded bg-[#181818] border border-[#262626] text-white">
-                          <span className="text-[#737373] font-mono text-[11px] uppercase tracking-wider block mb-1">
-                            Resolution:
-                          </span>
-                          <span className="text-[#e0e0e0] leading-[1.65]">
-                            {b.resolution}
-                          </span>
-                        </div>
-                      </div>
-                    )}
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          key="content"
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                          className="overflow-hidden"
+                        >
+                          <div className="px-5 pb-5 pt-1 space-y-3.5 text-[#a1a1a1] leading-[1.7] text-[13px] border-t border-[#1c1c1c]">
+                            <p>{b.description}</p>
+                            <div className="p-3.5 rounded bg-[#181818] border border-[#262626] text-white">
+                              <span className="text-[#737373] font-mono text-[11px] uppercase tracking-wider block mb-1">
+                                Resolution:
+                              </span>
+                              <span className="text-[#e0e0e0] leading-[1.65]">
+                                {b.resolution}
+                              </span>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 );
               })}

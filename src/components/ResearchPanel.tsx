@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { ResearchEvent } from '@/lib/types';
 import { ExternalLink, Copy, Check, Trash2 } from 'lucide-react';
 import { clsx } from 'clsx';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface ResearchPanelProps {
   events: ResearchEvent[];
@@ -41,10 +42,10 @@ export function ResearchPanel({
           <button
             onClick={() => setActiveTab('logs')}
             className={clsx(
-              'h-full flex items-center gap-2 text-[12px] font-mono font-medium transition-colors border-b-2 px-1 -mb-[1px] whitespace-nowrap flex-shrink-0',
+              'relative h-full flex items-center gap-2 text-[12px] font-mono font-medium transition-colors px-1 whitespace-nowrap flex-shrink-0',
               activeTab === 'logs'
-                ? 'border-white text-white'
-                : 'border-transparent text-[#737373] hover:text-[#a3a3a3]'
+                ? 'text-white'
+                : 'text-[#737373] hover:text-[#a3a3a3]'
             )}
           >
             <span className="text-[#51a2ff]">&gt;_</span>
@@ -52,20 +53,34 @@ export function ResearchPanel({
             {events.length > 0 && (
               <span className="text-[10px] text-[#737373] font-normal">({events.length})</span>
             )}
+            {activeTab === 'logs' && (
+              <motion.div
+                layoutId="research-tab-indicator"
+                className="absolute bottom-0 left-0 right-0 h-[2px] bg-white"
+                transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+              />
+            )}
           </button>
 
           <button
             onClick={() => setActiveTab('sources')}
             className={clsx(
-              'h-full flex items-center gap-2 text-[12px] font-mono font-medium transition-colors border-b-2 px-1 -mb-[1px] whitespace-nowrap flex-shrink-0',
+              'relative h-full flex items-center gap-2 text-[12px] font-mono font-medium transition-colors px-1 whitespace-nowrap flex-shrink-0',
               activeTab === 'sources'
-                ? 'border-white text-white'
-                : 'border-transparent text-[#737373] hover:text-[#a3a3a3]'
+                ? 'text-white'
+                : 'text-[#737373] hover:text-[#a3a3a3]'
             )}
           >
             <span>Citations</span>
             {sources.length > 0 && (
               <span className="text-[10px] text-[#737373] font-normal">({sources.length})</span>
+            )}
+            {activeTab === 'sources' && (
+              <motion.div
+                layoutId="research-tab-indicator"
+                className="absolute bottom-0 left-0 right-0 h-[2px] bg-white"
+                transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+              />
             )}
           </button>
         </div>
@@ -94,108 +109,129 @@ export function ResearchPanel({
           </div>
         )}
 
-        {activeTab === 'logs' ? (
-          <div className="space-y-1.5">
-            {events.map((event, i) => {
-              const time = new Date(event.timestamp).toLocaleTimeString('en-US', {
-                hour12: false,
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-              });
+        <AnimatePresence mode="wait" initial={false}>
+          {activeTab === 'logs' ? (
+            <motion.div
+              key="tab-logs"
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.15 }}
+              className="space-y-1.5"
+            >
+              {events.map((event, i) => {
+                const time = new Date(event.timestamp).toLocaleTimeString('en-US', {
+                  hour12: false,
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit',
+                });
 
-              return (
-                <div
-                  key={i}
-                  className="group relative flex items-start gap-2.5 hover:bg-[#141414] p-2 -mx-2 rounded-md transition-colors text-left"
-                >
-                  <span className="text-[#555555] flex-shrink-0 text-[10.5px] font-mono mt-0.5">
-                    {time}
-                  </span>
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: -4 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="group relative flex items-start gap-2.5 hover:bg-[#141414] p-2 -mx-2 rounded-md transition-colors text-left"
+                  >
+                    <span className="text-[#555555] flex-shrink-0 text-[10.5px] font-mono mt-0.5">
+                      {time}
+                    </span>
 
-                  <div className="flex-1 min-w-0">
-                    <div className="leading-[1.6] text-[12px]">
-                      <span className="text-[#666666] mr-1.5">&gt;</span>
-                      <span
-                        className={clsx(
-                          event.type === 'error' && 'text-[#ef4444]',
-                          event.type === 'warning' && 'text-[#a1a1a1]',
-                          event.type === 'finding' && 'text-white font-medium',
-                          event.type === 'complete' && 'text-white font-medium',
-                          event.type === 'step' && 'text-[#d4d4d4]',
-                          event.type === 'source' && 'text-[#a1a1a1]'
-                        )}
-                      >
-                        {event.message}
-                      </span>
+                    <div className="flex-1 min-w-0">
+                      <div className="leading-[1.6] text-[12px]">
+                        <span className="text-[#666666] mr-1.5">&gt;</span>
+                        <span
+                          className={clsx(
+                            event.type === 'error' && 'text-[#ef4444]',
+                            event.type === 'warning' && 'text-[#a1a1a1]',
+                            event.type === 'finding' && 'text-white font-medium',
+                            event.type === 'complete' && 'text-white font-medium',
+                            event.type === 'step' && 'text-[#d4d4d4]',
+                            event.type === 'source' && 'text-[#a1a1a1]'
+                          )}
+                        >
+                          {event.message}
+                        </span>
+                      </div>
+
+                      {event.detail && event.type !== 'complete' && (
+                        <div className="text-[11px] text-[#737373] pl-3.5 mt-1 leading-[1.5]">
+                          {event.detail}
+                        </div>
+                      )}
+
+                      {event.url && (
+                        <a
+                          href={event.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[11px] text-[#51a2ff] hover:underline pl-3.5 mt-1 inline-flex items-center gap-1 font-mono"
+                        >
+                          <span className="truncate max-w-[240px]">{event.url}</span>
+                          <ExternalLink className="w-2.5 h-2.5 flex-shrink-0" />
+                        </a>
+                      )}
                     </div>
 
-                    {event.detail && event.type !== 'complete' && (
-                      <div className="text-[11px] text-[#737373] pl-3.5 mt-1 leading-[1.5]">
-                        {event.detail}
-                      </div>
-                    )}
+                    <button
+                      onClick={() => copyLogLine(event.message, i)}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity p-1 text-[#737373] hover:text-white"
+                      title="Copy line"
+                    >
+                      {copiedIndex === i ? (
+                        <Check className="w-3 h-3 text-white" />
+                      ) : (
+                        <Copy className="w-3 h-3" />
+                      )}
+                    </button>
+                  </motion.div>
+                );
+              })}
 
-                    {event.url && (
-                      <a
-                        href={event.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[11px] text-[#51a2ff] hover:underline pl-3.5 mt-1 inline-flex items-center gap-1 font-mono"
-                      >
-                        <span className="truncate max-w-[240px]">{event.url}</span>
-                        <ExternalLink className="w-2.5 h-2.5 flex-shrink-0" />
-                      </a>
-                    )}
-                  </div>
-
-                  <button
-                    onClick={() => copyLogLine(event.message, i)}
-                    className="opacity-0 group-hover:opacity-100 transition-opacity p-1 text-[#737373] hover:text-white"
-                    title="Copy line"
-                  >
-                    {copiedIndex === i ? (
-                      <Check className="w-3 h-3 text-white" />
-                    ) : (
-                      <Copy className="w-3 h-3" />
-                    )}
-                  </button>
+              {isGenerating && (
+                <div className="flex items-center gap-2 p-2 text-[11.5px] text-[#737373]">
+                  <span className="text-[#51a2ff]">&gt;</span>
+                  <span className="animate-pulse">agent extracting oauth scopes &amp; review criteria...</span>
                 </div>
-              );
-            })}
-
-            {isGenerating && (
-              <div className="flex items-center gap-2 p-2 text-[11.5px] text-[#737373]">
-                <span className="text-[#51a2ff]">&gt;</span>
-                <span className="animate-pulse">agent extracting oauth scopes &amp; review criteria...</span>
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className="space-y-2">
-            {sources.length === 0 ? (
-              <div className="text-xs text-[#737373] py-4 text-center">No discovered citations yet.</div>
-            ) : (
-              sources.map((src, idx) => (
-                <a
-                  key={idx}
-                  href={src.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block p-3 rounded-md bg-[#141414] border border-[#262626] hover:border-[#383838] transition-colors group"
-                >
-                  <div className="text-white text-[12.5px] font-medium truncate font-sans">
-                    {src.message}
-                  </div>
-                  <div className="text-[#737373] text-[11px] truncate mt-1 flex items-center gap-1.5 font-mono">
-                    <span className="truncate">{src.url}</span>
-                    <ExternalLink className="w-2.5 h-2.5 text-[#737373] group-hover:text-[#51a2ff] flex-shrink-0" />
-                  </div>
-                </a>
-              ))
-            )}
-          </div>
-        )}
+              )}
+            </motion.div>
+          ) : (
+            <motion.div
+              key="tab-sources"
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.15 }}
+              className="space-y-2"
+            >
+              {sources.length === 0 ? (
+                <div className="text-xs text-[#737373] py-4 text-center">No discovered citations yet.</div>
+              ) : (
+                sources.map((src, idx) => (
+                  <motion.a
+                    key={idx}
+                    whileHover={{ x: 2 }}
+                    whileTap={{ scale: 0.99 }}
+                    href={src.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block p-3 rounded-md bg-[#141414] border border-[#262626] hover:border-[#383838] transition-colors group"
+                  >
+                    <div className="text-white text-[12.5px] font-medium truncate font-sans">
+                      {src.message}
+                    </div>
+                    <div className="text-[#737373] text-[11px] truncate mt-1 flex items-center gap-1.5 font-mono">
+                      <span className="truncate">{src.url}</span>
+                      <ExternalLink className="w-2.5 h-2.5 text-[#737373] group-hover:text-[#51a2ff] flex-shrink-0" />
+                    </div>
+                  </motion.a>
+                ))
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <div ref={bottomRef} />
       </div>

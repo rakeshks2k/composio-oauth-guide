@@ -82,3 +82,4 @@ export function getGuideResearchEvents(guide: Guide): ResearchEvent[] {
 
   return events;
 }
+
